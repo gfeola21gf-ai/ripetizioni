@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esercizi sui sistemi</title>
+<meta name="description" content="14 esercizi sui sistemi di disequazioni, con aiuto e soluzione.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sfondo: #fdfaf3; --carta: #ffffff; --testo: #1f2430; --tenue: #6b7180;
+    --blu: #2563eb; --arancio: #ea7a12; --viola: #8b3fd9; --verde: #15925a; --rosso: #d23b3b;
+    --bordo: #e6e0d2; --giallo: #fff1c2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--sfondo); color: var(--testo);
+    font-family: "Nunito", system-ui, sans-serif; font-size: 19px; line-height: 1.45;
+  }
+  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 60px; }
+  .etichetta { font-weight: 900; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--arancio); }
+  h1 { font-size: 34px; line-height: 1.1; margin: 4px 0 12px; }
+  h2 { font-size: 22px; margin: 32px 0 12px; }
+  p { margin: 0 0 10px; }
+  .tenue { color: var(--tenue); }
+  a.lezione {
+    display: inline-block; font-weight: 800; color: var(--blu); text-decoration: none;
+    border: 2px solid var(--bordo); background: var(--carta); border-radius: 12px; padding: 8px 14px; margin: 4px 0 8px;
+  }
+  .metodo { background: #fff8ef; border: 2px solid var(--arancio); border-radius: 16px; padding: 14px 16px; margin: 14px 0; }
+  .metodo ol { margin: 0; padding-left: 22px; }
+  .metodo li { margin: 4px 0; }
+  .card {
+    background: var(--carta); border: 2px solid var(--bordo); border-radius: 18px;
+    padding: 16px; margin-bottom: 14px;
+  }
+  .testa { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--blu); color: #fff;
+    display: grid; place-items: center; font-weight: 900; flex: none;
+  }
+  .formula { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 24px; }
+  .fr { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 3px; }
+  .fr > span { padding: 0 5px; line-height: 1.15; }
+  .fr > span:first-child { border-bottom: 2px solid currentColor; }
+  .sistema { display: inline-flex; align-items: stretch; gap: 8px; margin: 4px 0 8px; }
+  .graffa { width: 18px; display: block; color: var(--tenue); }
+  .graffa svg { width: 100%; height: 100%; display: block; }
+  .righe { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 2px 0; }
+  .blu { color: var(--blu); } .arancio { color: var(--arancio); } .viola { color: var(--viola); }
+  .verde { color: var(--verde); } .rosso { color: var(--rosso); }
+  .tasti { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tasti button {
+    font: inherit; font-weight: 800; font-size: 17px; border-radius: 12px; padding: 9px 16px; cursor: pointer;
+    border: 2px solid var(--bordo); background: var(--carta); color: var(--testo);
+  }
+  .tasti button.sol { background: var(--verde); border-color: var(--verde); color: #fff; }
+  .tasti button.aperto { background: var(--giallo); border-color: #e8cf7a; color: var(--testo); }
+  .aiuto, .soluzione { display: none; margin-top: 12px; border-radius: 14px; padding: 12px 14px; }
+  .aiuto { background: var(--giallo); }
+  .soluzione { background: #f0faf4; border: 2px solid var(--verde); }
+  .aperta { display: block; }
+  .pill { display: inline-block; font-weight: 900; font-size: 14px; padding: 1px 10px; border-radius: 999px; background: var(--carta); margin-right: 6px; border: 2px solid currentColor; }
+  .passo-sol { margin: 0 0 10px; }
+  .finale { font-size: 21px; font-weight: 900; margin: 6px 0 0; }
+  .graf { width: 100%; height: auto; display: block; background: var(--carta); border-radius: 12px; margin: 6px 0; }
+  svg text { font-family: "Nunito", sans-serif; }
+  @media (min-width: 700px) {
+    body { font-size: 21px; }
+    h1 { font-size: 44px; }
+    .formula { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <span class="etichetta">Matematica · esercizi</span>
+  <h1>Sistemi di disequazioni</h1>
+  <a class="lezione" href="lezione-sistemi.html">← Rivedi la lezione</a>
+
+  <div class="metodo">
+    <b>Il metodo</b>
+    <ol>
+      <li>Risolvi ogni disequazione da sola, fino alla fine.</li>
+      <li>Metti tutti i numeri trovati su una retta, in ordine.</li>
+      <li>Una riga per ogni disequazione: linea piena dove è vera.</li>
+      <li>La soluzione è dove <b>tutte</b> le righe sono piene.</li>
+    </ol>
+  </div>
+  <p class="tenue">Prima prova da solo sul quaderno. Poi apri l'aiuto, se serve. Alla fine controlla la soluzione.</p>
+
+  <div id="esercizi"></div>
+</main>
+
+<script>
+const C = { blu: '#2563eb', arancio: '#ea7a12', viola: '#8b3fd9', verde: '#15925a', testo: '#1f2430', tenue: '#9aa0ad' };
+const COL = ['blu', 'arancio', 'viola'];
+const fr = (n, d) => `<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+
+// ---------- grafico del sistema (come nella lezione) ----------
+function posizioni(n, x0, x1) {
+  return i => i < 0 ? x0 : i >= n ? x1 : x0 + (i + 1) * (x1 - x0) / (n + 1);
+}
+// pezzi: [da, a, pienoDa, pienoA]; -1 = meno infinito, n = più infinito
+function grafico(c) {
+  const n = c.punti.length, x0 = 80, x1 = 570, H = 58, top = 44;
+  const X = posizioni(n, x0, x1), yAsse = top + c.righe.length * H;
+  let s = `<svg class="graf" viewBox="0 0 620 ${yAsse + 58}" role="img">`;
+  c.punti.forEach((p, i) => s += `<line x1="${X(i)}" y1="${top - 30}" x2="${X(i)}" y2="${yAsse}" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`);
+  if (c.sol) c.sol.forEach(([a, b]) => s += `<rect x="${X(a)}" y="${top - 30}" width="${X(b) - X(a)}" height="${yAsse - top + 30}" fill="${C.verde}" fill-opacity=".18" rx="8"/>`);
+  c.righe.forEach((pezzi, k) => {
+    const y = top + k * H, col = C[COL[k]];
+    s += `<text x="8" y="${y + 10}" font-size="28" font-weight="800" fill="${col}">${k + 1}ª</text>`;
+    pezzi.forEach(([a, b, pa, pb]) => {
+      if (a !== b) s += `<line x1="${X(a)}" y1="${y}" x2="${X(b)}" y2="${y}" stroke="${col}" stroke-width="9" stroke-linecap="round"/>`;
+      const pallino = (i, pieno) => { if (i >= 0 && i < n) s += `<circle cx="${X(i)}" cy="${y}" r="11" fill="${pieno ? col : '#fff'}" stroke="${col}" stroke-width="4"/>`; };
+      pallino(a, pa); if (b !== a) pallino(b, pb);
+    });
+  });
+  s += `<line x1="${x0 - 20}" y1="${yAsse}" x2="${x1 + 10}" y2="${yAsse}" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<polygon points="${x1 + 10},${yAsse - 9} ${x1 + 28},${yAsse} ${x1 + 10},${yAsse + 9}" fill="${C.testo}"/>`;
+  c.punti.forEach((p, i) => s += `<text x="${X(i)}" y="${yAsse + 40}" font-size="30" font-weight="800" text-anchor="middle" fill="${C.testo}">${p}</text>`);
+  return s + '</svg>';
+}
+
+// ---------- i 14 esercizi ----------
+// sis: le disequazioni · aiuto: suggerimento · passi: soluzione di ognuna · sol: soluzione finale · g: grafico
+const LIVELLI = {
+  1: 'Livello 1 · disequazioni di 1° grado',
+  4: 'Livello 2 · 2° grado e 1° grado',
+  9: 'Livello 3 · due di 2° grado',
+  11: 'Livello 4 · con le fratte',
+};
+const E = [
+  { sis: ['2x − 4 &gt; 0', 'x − 5 &lt; 0'],
+    aiuto: 'Sono tutte e due di 1° grado. Porta i numeri a destra.',
+    passi: ['x &gt; 2', 'x &lt; 5'], sol: '2 &lt; x &lt; 5',
+    g: { punti: ['2', '5'], righe: [[[0, 2, 0, 0]], [[-1, 1, 0, 0]]], sol: [[0, 1]] } },
+  { sis: ['3x + 3 ≥ 0', '6 − 2x &gt; 0'],
+    aiuto: 'Nella 2ª dividi per −2: ricordati di girare il verso.',
+    passi: ['3x ≥ −3 → x ≥ −1', '−2x &gt; −6 → x &lt; 3 <span class="tenue">(verso girato)</span>'], sol: '−1 ≤ x &lt; 3',
+    g: { punti: ['−1', '3'], righe: [[[0, 2, 1, 0]], [[-1, 1, 0, 0]]], sol: [[0, 1]] } },
+  { sis: ['x + 2 &lt; 0', '3x − 3 &gt; 0'],
+    aiuto: 'Fai il grafico e guarda bene: le righe si incontrano?',
+    passi: ['x &lt; −2', '3x &gt; 3 → x &gt; 1'], sol: '<span class="rosso">Impossibile</span>', nota: 'Nessuna zona ha tutte e due le righe piene.',
+    g: { punti: ['−2', '1'], righe: [[[-1, 0, 0, 0]], [[1, 2, 0, 0]]] } },
+
+  { sis: ['x² − 9 &lt; 0', 'x − 1 &gt; 0'],
+    aiuto: 'x² − 9 = 0 dà x = −3 e x = 3. Con &lt; 0 prendi dentro.',
+    passi: ['x² = 9 → x = ±3 · &lt; 0: dentro → −3 &lt; x &lt; 3', 'x &gt; 1'], sol: '1 &lt; x &lt; 3',
+    g: { punti: ['−3', '1', '3'], righe: [[[0, 2, 0, 0]], [[1, 3, 0, 0]]], sol: [[1, 2]] } },
+  { sis: ['x² − 4x ≥ 0', 'x + 2 &gt; 0'],
+    aiuto: 'Nella 1ª raccogli la x: x(x − 4). Con ≥ 0 prendi fuori, numeri compresi.',
+    passi: ['x(x − 4) = 0 → x = 0, x = 4 · ≥ 0: fuori → x ≤ 0 oppure x ≥ 4', 'x &gt; −2'], sol: '−2 &lt; x ≤ 0 oppure x ≥ 4',
+    g: { punti: ['−2', '0', '4'], righe: [[[-1, 1, 0, 1], [2, 3, 1, 0]], [[0, 3, 0, 0]]], sol: [[0, 1], [2, 3]] } },
+  { sis: ['x² − 5x + 4 ≤ 0', '2x − 6 ≥ 0'],
+    aiuto: 'Δ = 25 − 16 = 9. Le soluzioni sono 1 e 4.',
+    passi: ['x = ' + fr('5 ± 3', '2') + ' → x = 1, x = 4 · ≤ 0: dentro → 1 ≤ x ≤ 4', '2x ≥ 6 → x ≥ 3'], sol: '3 ≤ x ≤ 4',
+    g: { punti: ['1', '3', '4'], righe: [[[0, 2, 1, 1]], [[1, 3, 1, 0]]], sol: [[1, 2]] } },
+  { sis: ['x² + 2 &gt; 0', '10 − 2x ≥ 0'],
+    aiuto: 'x² + 2 è sempre positivo? Pensa: x² non è mai negativo.',
+    passi: ['Δ &lt; 0, parabola sempre sopra → sempre vera', '−2x ≥ −10 → x ≤ 5 <span class="tenue">(verso girato)</span>'], sol: 'x ≤ 5',
+    g: { punti: ['5'], righe: [[[-1, 1, 0, 0]], [[-1, 0, 0, 1]]], sol: [[-1, 0]] } },
+  { sis: ['−x² + 1 &gt; 0', 'x ≥ 0'],
+    aiuto: 'Davanti a x² c\'è il meno. Moltiplica per −1 e gira il verso.',
+    passi: ['x² − 1 &lt; 0 → x = ±1 · &lt; 0: dentro → −1 &lt; x &lt; 1', 'x ≥ 0'], sol: '0 ≤ x &lt; 1',
+    g: { punti: ['−1', '0', '1'], righe: [[[0, 2, 0, 0]], [[1, 3, 1, 0]]], sol: [[1, 2]] } },
+
+  { sis: ['x² − 16 ≤ 0', 'x² − 1 &gt; 0'],
+    aiuto: 'La 1ª: dentro tra −4 e 4. La 2ª: fuori da −1 e 1.',
+    passi: ['x = ±4 · ≤ 0: dentro → −4 ≤ x ≤ 4', 'x = ±1 · &gt; 0: fuori → x &lt; −1 oppure x &gt; 1'], sol: '−4 ≤ x &lt; −1 oppure 1 &lt; x ≤ 4',
+    g: { punti: ['−4', '−1', '1', '4'], righe: [[[0, 3, 1, 1]], [[-1, 1, 0, 0], [2, 4, 0, 0]]], sol: [[0, 1], [2, 3]] } },
+  { sis: ['x² − 2x − 8 &lt; 0', 'x² − 4x + 4 &gt; 0'],
+    aiuto: 'La 2ª è (x − 2)²: Δ = 0. Quando è &gt; 0?',
+    passi: ['Δ = 36 → x = −2, x = 4 · &lt; 0: dentro → −2 &lt; x &lt; 4', '(x − 2)² &gt; 0 → tutti tranne 2: x ≠ 2'], sol: '−2 &lt; x &lt; 2 oppure 2 &lt; x &lt; 4',
+    g: { punti: ['−2', '2', '4'], righe: [[[0, 2, 0, 0]], [[-1, 1, 0, 0], [1, 3, 0, 0]]], sol: [[0, 1], [1, 2]] } },
+
+  { sis: [fr('x − 3', 'x + 1') + ' &gt; 0', 'x − 5 &lt; 0'],
+    aiuto: 'La 1ª è una fratta: N &gt; 0 e D &gt; 0, poi la tabella dei segni.',
+    passi: ['N &gt; 0: x &gt; 3 · D &gt; 0: x &gt; −1 · zone + → x &lt; −1 oppure x &gt; 3', 'x &lt; 5'], sol: 'x &lt; −1 oppure 3 &lt; x &lt; 5',
+    g: { punti: ['−1', '3', '5'], righe: [[[-1, 0, 0, 0], [1, 3, 0, 0]], [[-1, 2, 0, 0]]], sol: [[-1, 0], [1, 2]] } },
+  { sis: ['x² − 4 ≥ 0', fr('x + 1', 'x − 3') + ' &lt; 0'],
+    aiuto: 'Nella fratta cerchi la zona −. Il 3 è del denominatore: pallino vuoto.',
+    passi: ['x = ±2 · ≥ 0: fuori → x ≤ −2 oppure x ≥ 2', 'N &gt; 0: x &gt; −1 · D &gt; 0: x &gt; 3 · zona − → −1 &lt; x &lt; 3'], sol: '2 ≤ x &lt; 3',
+    g: { punti: ['−2', '−1', '2', '3'], righe: [[[-1, 0, 0, 1], [2, 4, 1, 0]], [[1, 3, 0, 0]]], sol: [[2, 3]] } },
+  { sis: [fr('2x − 4', 'x + 3') + ' ≤ 0', 'x² − x − 2 &gt; 0'],
+    aiuto: 'Attenzione al 2: è pieno nella 1ª, ma com\'è nella 2ª?',
+    passi: ['N ≥ 0: x ≥ 2 · D &gt; 0: x &gt; −3 · zona − → −3 &lt; x ≤ 2', 'Δ = 9 → x = −1, x = 2 · &gt; 0: fuori → x &lt; −1 oppure x &gt; 2'], sol: '−3 &lt; x &lt; −1',
+    nota: 'Il 2 non va bene: nella 2ª riga il pallino è vuoto.',
+    g: { punti: ['−3', '−1', '2'], righe: [[[0, 2, 0, 1]], [[-1, 1, 0, 0], [2, 3, 0, 0]]], sol: [[0, 1]] } },
+  { sis: ['x² + x + 1 &gt; 0', fr('x − 2', 'x + 4') + ' ≥ 0', 'x² − 9 &lt; 0'],
+    aiuto: 'Sono tre righe. Nella 1ª calcola Δ: è negativo.',
+    passi: ['Δ = 1 − 4 = −3 &lt; 0 → sempre vera', 'N ≥ 0: x ≥ 2 · D &gt; 0: x &gt; −4 · zone + → x &lt; −4 oppure x ≥ 2', 'x = ±3 · &lt; 0: dentro → −3 &lt; x &lt; 3'], sol: '2 ≤ x &lt; 3',
+    g: { punti: ['−4', '−3', '2', '3'], righe: [[[-1, 4, 0, 0]], [[-1, 0, 0, 0], [2, 4, 1, 0]], [[1, 3, 0, 0]]], sol: [[2, 3]] } },
+];
+
+const graffa = '<span class="graffa"><svg viewBox="0 0 20 100" preserveAspectRatio="none"><path d="M18 2 Q9 2 9 14 L9 38 Q9 50 2 50 Q9 50 9 62 L9 86 Q9 98 18 98" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg></span>';
+
+document.getElementById('esercizi').innerHTML = E.map((e, i) => `
+  ${LIVELLI[i + 1] ? `<h2>${LIVELLI[i + 1]}</h2>` : ''}
+  <div class="card">
+    <div class="testa"><span class="num">${i + 1}</span>
+      <div class="sistema formula">${graffa}<div class="righe">${e.sis.map((d, k) => `<div class="${COL[k]}">${d}</div>`).join('')}</div></div>
+    </div>
+    <div class="tasti">
+      <button data-apri="aiuto">Aiuto</button>
+      <button class="sol" data-apri="soluzione">Soluzione</button>
+    </div>
+    <div class="aiuto">${e.aiuto}</div>
+    <div class="soluzione">
+      ${e.passi.map((p, k) => `<p class="passo-sol"><span class="pill ${COL[k]}">${k + 1}ª</span>${p.split(' · ').join('<br>')}</p>`).join('')}
+      ${grafico(e.g)}
+      <p class="finale">Soluzione: <span class="verde">${e.sol}</span></p>
+      ${e.nota ? `<p class="tenue" style="margin:4px 0 0">${e.nota}</p>` : ''}
+    </div>
+  </div>`).join('');
+
+document.querySelectorAll('[data-apri]').forEach(b => b.onclick = () => {
+  const box = b.closest('.card').querySelector('.' + b.dataset.apri);
+  const aperta = box.classList.toggle('aperta');
+  b.classList.toggle('aperto', aperta);
+  b.textContent = (aperta ? 'Nascondi ' : '') + (b.dataset.apri === 'aiuto' ? (aperta ? 'aiuto' : 'Aiuto') : (aperta ? 'soluzione' : 'Soluzione'));
+});
+</script>
+</body>
+</html>

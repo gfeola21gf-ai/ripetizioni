@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Gas perfetti sul piano p-V</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una colonna da quaderno; ogni esercizio = testo + grafico p-V affiancati (impilati su telefono), soluzione richiudibile sotto. */
+:root {
+  --paper: #fbfcfe;
+  --ink: #1a2232;
+  --muted: #5b6678;
+  --grid: #d5e1f1;
+  --grid-strong: #a9bfdd;
+  --accent: #2153c2;
+  --pen: #c3303a;
+  --sol-bg: #f3f6fb;
+  --rule: #e3e8f0;
+  --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161e; --ink: #e6eaf2; --muted: #9aa5b8; --grid: #232c3b; --grid-strong: #3a4a63;
+    --accent: #7ea6ff; --pen: #ff7b83; --sol-bg: #19202b; --rule: #273041; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161e; --ink: #e6eaf2; --muted: #9aa5b8; --grid: #232c3b; --grid-strong: #3a4a63;
+  --accent: #7ea6ff; --pen: #ff7b83; --sol-bg: #19202b; --rule: #273041; color-scheme: dark;
+}
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 1.02rem; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+main { max-width: 960px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; font-weight: 600; }
+.lead { color: var(--muted); max-width: 65ch; margin: 8px 0 0; }
+.dati {
+  display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 18px; padding: 12px 14px;
+  border: 1px dashed var(--grid-strong); border-radius: 6px; font-size: 0.93rem;
+}
+.dati b { font-family: var(--f-mono); font-weight: 600; font-size: 0.88rem; }
+.es { display: grid; gap: 16px; padding-top: 28px; border-top: 2px solid var(--rule); }
+.es-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+.num { font-family: var(--f-mono); color: var(--accent); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.livello { display: inline-flex; gap: 4px; align-items: center; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.04em; }
+.livello i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--accent); display: inline-block; }
+.livello i.on { background: var(--accent); }
+.corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: 20px 28px; align-items: start; }
+@media (max-width: 720px) { .corpo { grid-template-columns: minmax(0, 1fr); } .grafico { order: -1; } }
+.testo p { margin: 0 0 10px; max-width: 65ch; }
+ol.domande { margin: 0; padding-left: 1.6em; display: grid; gap: 6px; }
+ol.domande { list-style: lower-alpha; }
+ol.domande li::marker { font-weight: 700; color: var(--accent); }
+.grafico { margin: 0; }
+.grafico svg { width: 100%; height: auto; display: block; }
+.grafico figcaption { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+svg .g-minor { stroke: var(--grid); stroke-width: 1; }
+svg .g-axis { stroke: var(--ink); stroke-width: 1.4; fill: none; }
+svg .g-axhead { fill: var(--ink); }
+svg .g-tick { fill: var(--muted); font-family: var(--f-mono); font-size: 10.5px; }
+svg .g-axlab { fill: var(--ink); font-family: var(--f-body); font-size: 12px; font-weight: 700; }
+svg .g-guide { stroke: var(--grid-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+svg .g-path { stroke: var(--accent); stroke-width: 2.6; fill: none; stroke-linejoin: round; }
+svg .g-arrow { fill: var(--accent); }
+svg .g-pt { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+svg .g-ptlab { fill: var(--ink); font-family: var(--f-display); font-weight: 800; font-size: 15px; }
+details.sol { background: var(--sol-bg); border-radius: 8px; padding: 0 16px; }
+details.sol summary {
+  cursor: pointer; padding: 12px 0; font-weight: 700; color: var(--pen); list-style-position: inside;
+}
+details.sol summary:focus-visible { outline: 2px solid var(--pen); outline-offset: 3px; border-radius: 4px; }
+details.sol[open] { padding-bottom: 14px; }
+details.sol ol { margin: 0; padding-left: 1.6em; list-style: lower-alpha; display: grid; gap: 8px; }
+details.sol li { max-width: 72ch; }
+.f { font-family: var(--f-mono); font-size: 0.88rem; white-space: nowrap; }
+.r { color: var(--pen); font-weight: 700; }
+.indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.indice a {
+  color: var(--ink); text-decoration: none; border: 1px solid var(--grid-strong); border-radius: 999px;
+  padding: 6px 14px; font-size: 0.9rem;
+}
+.indice a b { color: var(--accent); margin-right: 6px; }
+.indice a:hover, .indice a:focus-visible { border-color: var(--accent); outline: none; }
+h2.parte {
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 800; padding-top: 12px; margin-bottom: -12px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+}
+h2.parte span { font-family: var(--f-mono); font-size: 0.8rem; font-weight: 600; color: var(--pen); letter-spacing: 0.1em; text-transform: uppercase; }
+.tab-wrap { overflow-x: auto; }
+table.libro { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.94rem; }
+table.libro th, table.libro td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.libro th { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+table.libro td.n { font-family: var(--f-mono); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.libro tr.gruppo td { font-family: var(--f-display); font-weight: 600; color: var(--accent); padding-top: 18px; border-bottom-color: var(--grid-strong); }
+.star { color: var(--pen); font-weight: 700; }
+.gr { font-size: 0.75rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; padding: 0 5px; margin-left: 4px; white-space: nowrap; }
+.nota { font-size: 0.92rem; color: var(--muted); border-left: 3px solid var(--grid-strong); padding-left: 10px; margin-top: 10px; max-width: 70ch; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Trasformazioni del gas perfetto sul piano di Clapeyron</h1>
+    <p class="lead">Dodici esercizi in ordine di difficoltà, più una lista di problemi scelti dal capitolo 10 del libro. In ogni esercizio i dati vanno <strong>letti dal grafico p-V</strong>: prima di fare calcoli, scrivi le coordinate di ogni punto. Le soluzioni sono chiuse sotto ogni esercizio.</p>
+    <nav class="indice" aria-label="Parti della scheda">
+      <a href="#parte1"><b>Parte 1</b> Le trasformazioni sul grafico · es. 1–5</a>
+      <a href="#parte2"><b>Parte 2</b> Verso il compito · es. 6–12</a>
+      <a href="#parte3"><b>Parte 3</b> Dal libro, capitolo 10</a>
+    </nav>
+    <div class="dati">
+      <span><b>R = 8,31 J/(mol·K)</b></span>
+      <span><b>1 L = 10⁻³ m³</b></span>
+      <span><b>1 kPa = 10³ Pa</b></span>
+      <span>quindi <b>kPa · L = J</b></span>
+      <span>gas monoatomico: <b>ΔU = 3/2 nRΔT</b></span>
+      <span>primo principio: <b>Q = ΔU + W</b></span>
+      <span>adiabatica: <b>pV<sup>γ</sup> = cost.</b>, <b>γ = 5/3</b></span>
+    </div>
+    <p class="nota">Simboli: qui il lavoro si chiama <b>W</b> e l'energia interna <b>U</b>, come nell'Amaldi. Il libro di Walker scrive invece <b>L</b> e <b>E<sub>int</sub></b>: sono le stesse grandezze.</p>
+  </header>
+
+  <h2 class="parte" id="parte1"><span>Parte 1</span> Le trasformazioni sul grafico</h2>
+
+  <!-- ESERCIZIO 1 -->
+  <section class="es" aria-labelledby="t1">
+    <div class="es-head">
+      <span class="num">Esercizio 1</span>
+      <h2 id="t1">Un'espansione in linea retta</h2>
+      <span class="livello" aria-label="Difficoltà 1 su 5"><i class="on"></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico passa dallo stato A allo stato B come mostrato nel grafico. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 300 K</span>.</p>
+        <ol class="domande">
+          <li>Che tipo di trasformazione è? Da quale caratteristica del grafico lo capisci?</li>
+          <li>Leggi dal grafico la pressione e i volumi iniziale e finale.</li>
+          <li>Calcola il lavoro compiuto dal gas. Che segno ha?</li>
+          <li>Calcola la temperatura nello stato B.</li>
+          <li>Calcola la variazione di energia interna ΔU e il calore Q scambiato. Il gas assorbe o cede calore?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":300,"pstep":50,"plab":100,
+        "pts":{"A":[2,200,-16,-8],"B":[6,200,8,-8]},"segs":[["A","B"]]}'></div>
+        <figcaption>Trasformazione A → B</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li><strong>Isobara</strong> (pressione costante): nel grafico è un segmento orizzontale.</li>
+        <li><span class="f">p = 200 kPa</span>, <span class="f">V<sub>A</sub> = 2 L</span>, <span class="f">V<sub>B</sub> = 6 L</span>.</li>
+        <li><span class="f">W = p·ΔV = 200 kPa · 4 L = <span class="r">800 J</span></span>, positivo perché il gas si espande. È l'area del rettangolo sotto il segmento.</li>
+        <li>A pressione costante V/T è costante: <span class="f">T<sub>B</sub> = T<sub>A</sub>·V<sub>B</sub>/V<sub>A</sub> = 300·3 = <span class="r">900 K</span></span>.</li>
+        <li><span class="f">n = pV<sub>A</sub>/(RT<sub>A</sub>) = 400/(8,31·300) ≈ 0,160 mol</span>.<br>
+          <span class="f">ΔU = 3/2·nRΔT = 1,5·0,160·8,31·600 ≈ <span class="r">1200 J</span></span> (scorciatoia: ΔU = 3/2·pΔV).<br>
+          <span class="f">Q = ΔU + W = 1200 + 800 = <span class="r">2000 J</span></span>: il gas <strong>assorbe</strong> calore.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 2 -->
+  <section class="es" aria-labelledby="t2">
+    <div class="es-head">
+      <span class="num">Esercizio 2</span>
+      <h2 id="t2">Due tratti uno dopo l'altro</h2>
+      <span class="livello" aria-label="Difficoltà 2 su 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico va da A a B e poi da B a C, come nel grafico. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 250 K</span>.</p>
+        <ol class="domande">
+          <li>Riconosci le due trasformazioni AB e BC.</li>
+          <li>Calcola il lavoro in AB, in BC e il lavoro totale.</li>
+          <li>Calcola le temperature T<sub>B</sub> e T<sub>C</sub>.</li>
+          <li>Quante moli di gas ci sono?</li>
+          <li>Calcola il calore scambiato in AB e in BC. Verifica che il calore totale sia uguale a ΔU<sub>AC</sub> + W<sub>totale</sub>.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":6,"vstep":1,"pmax":400,"pstep":50,"plab":100,
+        "pts":{"A":[2,100,-18,14],"B":[2,300,-18,-6],"C":[5,300,8,-8]},"segs":[["A","B"],["B","C"]]}'></div>
+        <figcaption>Trasformazioni A → B → C</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>AB: <strong>isocora</strong> (segmento verticale, V = 2 L). BC: <strong>isobara</strong> (segmento orizzontale, p = 300 kPa).</li>
+        <li><span class="f">W<sub>AB</sub> = 0</span> (il volume non cambia, sotto un segmento verticale non c'è area).<br>
+          <span class="f">W<sub>BC</sub> = 300 kPa · 3 L = 900 J</span>. Totale <span class="f r">W = 900 J</span>.</li>
+        <li>Isocora: p/T costante, <span class="f">T<sub>B</sub> = 250·300/100 = <span class="r">750 K</span></span>.<br>
+          Isobara: V/T costante, <span class="f">T<sub>C</sub> = 750·5/2 = <span class="r">1875 K</span></span>.</li>
+        <li><span class="f">n = p<sub>A</sub>V<sub>A</sub>/(RT<sub>A</sub>) = 200/(8,31·250) ≈ <span class="r">0,096 mol</span></span>.</li>
+        <li><span class="f">Q<sub>AB</sub> = ΔU<sub>AB</sub> = 3/2·nR·(750−250) ≈ <span class="r">600 J</span></span> (W = 0).<br>
+          <span class="f">Q<sub>BC</sub> = ΔU<sub>BC</sub> + W<sub>BC</sub> = 1350 + 900 = <span class="r">2250 J</span></span> (oppure 5/2·pΔV).<br>
+          Totale <span class="f">2850 J</span>; e infatti <span class="f">ΔU<sub>AC</sub> = 3/2·(p<sub>C</sub>V<sub>C</sub> − p<sub>A</sub>V<sub>A</sub>) = 3/2·(1500 − 200) = 1950 J</span>, <span class="f">1950 + 900 = 2850 J</span>.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 3 -->
+  <section class="es" aria-labelledby="t3">
+    <div class="es-head">
+      <span class="num">Esercizio 3</span>
+      <h2 id="t3">Una curva da riconoscere</h2>
+      <span class="livello" aria-label="Difficoltà 3 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Il grafico mostra la trasformazione di <span class="f">n = 0,200 mol</span> di gas perfetto dallo stato A allo stato B, passando per lo stato C.</p>
+        <ol class="domande">
+          <li>Leggi le coordinate di A, C e B e calcola il prodotto p·V in ciascun punto. Cosa noti? Che trasformazione è?</li>
+          <li>Leggi dal grafico la pressione quando <span class="f">V = 1,5 L</span>. Il valore è coerente con la risposta precedente?</li>
+          <li>Calcola la temperatura del gas.</li>
+          <li>Calcola il lavoro con la formula <span class="f">W = nRT·ln(V<sub>B</sub>/V<sub>A</sub>)</span>, poi ΔU e Q.</li>
+          <li>Il lavoro è l'area sotto la curva. Stimala approssimando la curva con due trapezi (da A a C e da C a B) e confronta con il risultato esatto. La stima è per eccesso o per difetto? Perché?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":3.5,"vstep":0.5,"pmax":700,"pstep":50,"plab":100,
+        "pts":{"A":[1,600,8,-6],"C":[2,300,8,-8],"B":[3,200,6,-10]},"curve":["A","B",600]}'></div>
+        <figcaption>Trasformazione A → C → B</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>A(1 L; 600 kPa), C(2 L; 300 kPa), B(3 L; 200 kPa). In tutti e tre <span class="f">pV = 600 J</span>: il prodotto è costante, quindi anche T è costante. È un'<strong>isoterma</strong> (ramo di iperbole).</li>
+        <li>A 1,5 L si legge <span class="f">p = 400 kPa</span>; <span class="f">400·1,5 = 600 J</span>, coerente.</li>
+        <li><span class="f">T = pV/(nR) = 600/(0,200·8,31) ≈ <span class="r">361 K</span></span>.</li>
+        <li><span class="f">W = nRT·ln 3 = 600·1,099 ≈ <span class="r">659 J</span></span>. Isoterma: <span class="f">ΔU = 0</span>, quindi <span class="f r">Q = W = 659 J</span> (assorbito).</li>
+        <li>Trapezio AC: <span class="f">(600 + 300)/2 · 1 = 450 J</span>; trapezio CB: <span class="f">(300 + 200)/2 · 1 = 250 J</span>. Stima <span class="f">700 J</span>, cioè <strong>per eccesso</strong>: la curva sta sotto le corde dei trapezi, perché è "incurvata verso il basso" (convessa).</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 4 -->
+  <section class="es" aria-labelledby="t4">
+    <div class="es-head">
+      <span class="num">Esercizio 4</span>
+      <h2 id="t4">Un ciclo rettangolare</h2>
+      <span class="livello" aria-label="Difficoltà 4 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico compie il ciclo A → B → C → D → A rappresentato nel grafico. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 200 K</span>.</p>
+        <ol class="domande">
+          <li>Riconosci le quattro trasformazioni del ciclo.</li>
+          <li>Il ciclo è percorso in senso orario o antiorario? Si tratta di una macchina termica o di una macchina frigorifera?</li>
+          <li>Calcola il lavoro netto del ciclo, usando l'area.</li>
+          <li>Calcola le temperature in B, C e D. In quale punto il gas è più caldo? E più freddo?</li>
+          <li>Calcola il calore scambiato in ognuna delle quattro trasformazioni e il calore totale assorbito.</li>
+          <li>Calcola il rendimento del ciclo.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":500,"pstep":50,"plab":100,
+        "pts":{"A":[2,100,-18,16],"B":[2,400,-18,-6],"C":[6,400,8,-8],"D":[6,100,8,16]},"segs":[["A","B"],["B","C"],["C","D"],["D","A"]]}'></div>
+        <figcaption>Ciclo A → B → C → D → A</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>AB isocora (V = 2 L), BC isobara (p = 400 kPa), CD isocora (V = 6 L), DA isobara (p = 100 kPa).</li>
+        <li><strong>Orario</strong>: il lavoro netto è positivo, è una <strong>macchina termica</strong>.</li>
+        <li><span class="f">W = (400 − 100) kPa · (6 − 2) L = <span class="r">1200 J</span></span>.</li>
+        <li>T è proporzionale a pV. pV vale 200 J in A, 800 J in B, 2400 J in C, 600 J in D, quindi <span class="f">T<sub>B</sub> = <span class="r">800 K</span></span>, <span class="f">T<sub>C</sub> = <span class="r">2400 K</span></span>, <span class="f">T<sub>D</sub> = <span class="r">600 K</span></span>. Più caldo in C (in alto a destra), più freddo in A (in basso a sinistra).</li>
+        <li>Con ΔU = 3/2·Δ(pV):<br>
+          <span class="f">Q<sub>AB</sub> = 3/2·(800 − 200) = +900 J</span><br>
+          <span class="f">Q<sub>BC</sub> = 3/2·(2400 − 800) + 1600 = +4000 J</span><br>
+          <span class="f">Q<sub>CD</sub> = 3/2·(600 − 2400) = −2700 J</span><br>
+          <span class="f">Q<sub>DA</sub> = 3/2·(200 − 600) − 400 = −1000 J</span><br>
+          Assorbito: <span class="f r">Q<sub>ass</sub> = 4900 J</span>. Controllo: <span class="f">4900 − 3700 = 1200 J = W</span>.</li>
+        <li><span class="f">η = W/Q<sub>ass</sub> = 1200/4900 ≈ <span class="r">0,24 = 24%</span></span>.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 5 -->
+  <section class="es" aria-labelledby="t5">
+    <div class="es-head">
+      <span class="num">Esercizio 5</span>
+      <h2 id="t5">Un ciclo triangolare con un tratto obliquo</h2>
+      <span class="livello" aria-label="Difficoltà 5 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico compie il ciclo A → B → C → A del grafico. Il tratto BC è un segmento rettilineo e M è il suo punto medio. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 240 K</span>.</p>
+        <ol class="domande">
+          <li>Riconosci le trasformazioni AB e CA. Spiega perché BC <em>non</em> può essere un'isoterma (usa i valori di pV).</li>
+          <li>Calcola il lavoro in ciascuna trasformazione (per BC usa l'area del trapezio sotto il segmento) e il lavoro netto. Verifica che coincide con l'area del triangolo.</li>
+          <li>Calcola le temperature in B, C e M. Cosa succede alla temperatura lungo il tratto BC?</li>
+          <li>Calcola il calore scambiato in AB, BC e CA e verifica che il calore netto è uguale al lavoro netto.</li>
+          <li>Il ciclo è una macchina termica o frigorifera? Giustifica guardando il verso di percorrenza.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":600,"pstep":50,"plab":100,
+        "pts":{"A":[2,100,-18,16],"B":[2,500,-18,-6],"C":[6,100,8,16],"M":[4,300,8,-8]},"segs":[["A","B"],["B","C"],["C","A"]]}'></div>
+        <figcaption>Ciclo A → B → C → A, con M punto medio di BC</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>AB isocora (V = 2 L), CA isobara (p = 100 kPa). In B <span class="f">pV = 1000 J</span>, in C <span class="f">pV = 600 J</span>: il prodotto cambia, quindi la temperatura cambia e BC non è un'isoterma.</li>
+        <li><span class="f">W<sub>AB</sub> = 0</span>; <span class="f">W<sub>BC</sub> = (500 + 100)/2 · 4 = +1200 J</span>; <span class="f">W<sub>CA</sub> = 100 · (2 − 6) = −400 J</span>.<br>
+          Netto <span class="f r">W = 800 J</span>; area del triangolo <span class="f">= ½ · 4 L · 400 kPa = 800 J</span>.</li>
+        <li>T è proporzionale a pV, con <span class="f">T/pV = 240/200 = 1,2 K/J</span>: <span class="f">T<sub>B</sub> = <span class="r">1200 K</span></span>, <span class="f">T<sub>C</sub> = <span class="r">720 K</span></span>, in M (4 L; 300 kPa) <span class="f">pV = 1200 J</span> → <span class="f">T<sub>M</sub> = <span class="r">1440 K</span></span>.<br>
+          M è più caldo sia di B sia di C: lungo BC la temperatura prima <strong>sale</strong> e poi <strong>scende</strong>.</li>
+        <li><span class="f">Q<sub>AB</sub> = 3/2·(1000 − 200) = +1200 J</span><br>
+          <span class="f">Q<sub>BC</sub> = 3/2·(600 − 1000) + 1200 = −600 + 1200 = +600 J</span><br>
+          <span class="f">Q<sub>CA</sub> = 3/2·(200 − 600) − 400 = −1000 J</span><br>
+          Netto <span class="f">1200 + 600 − 1000 = 800 J = W</span>, come deve essere in un ciclo (ΔU = 0).</li>
+        <li>Verso <strong>orario</strong>, lavoro netto positivo: <strong>macchina termica</strong>.</li>
+      </ol>
+      <p class="nota">Per approfondire: la retta BC ha equazione p = 700 − 100·V (kPa, L), quindi pV = 700V − 100V², che è massimo per V = 3,5 L (p = 350 kPa, T ≈ 1470 K). Per questo lungo BC il gas prima assorbe e poi cede calore: i 600 J trovati sono il bilancio netto del tratto. È anche il motivo per cui qui non chiediamo il rendimento.</p>
+    </details>
+  </section>
+
+  <h2 class="parte" id="parte2"><span>Parte 2</span> Verso il compito</h2>
+
+  <!-- ESERCIZIO 6 -->
+  <section class="es" aria-labelledby="t6">
+    <div class="es-head">
+      <span class="num">Esercizio 6</span>
+      <h2 id="t6">Tre stati e una sola isoterma</h2>
+      <span class="livello" aria-label="Difficoltà 1 su 5"><i class="on"></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Nel grafico sono segnati tre stati A, B e C di uno stesso campione di <span class="f">n = 0,200 mol</span> di gas perfetto.</p>
+        <ol class="domande">
+          <li>Leggi pressione e volume di ciascuno stato.</li>
+          <li>Calcola la temperatura in A, B e C con l'equazione di stato.</li>
+          <li>Due dei tre stati stanno sulla stessa isoterma: quali? Come te ne accorgi senza calcolare T?</li>
+          <li>L'isoterma che passa per C è più vicina o più lontana dagli assi rispetto a quella che passa per A? Perché?</li>
+          <li>Uno stato D ha <span class="f">V = 6 L</span> e sta sulla stessa isoterma di A. Quanto vale la sua pressione?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":400,"pstep":50,"plab":100,
+        "pts":{"A":[2,300,-18,-6],"B":[3,200,8,-6],"C":[5,300,8,-6]}}'></div>
+        <figcaption>Tre stati dello stesso gas</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>A(2 L; 300 kPa), B(3 L; 200 kPa), C(5 L; 300 kPa).</li>
+        <li><span class="f">T = pV/(nR)</span>, con <span class="f">nR = 0,200·8,31 = 1,662 J/K</span>: <span class="f">T<sub>A</sub> = 600/1,662 ≈ <span class="r">361 K</span></span>, <span class="f">T<sub>B</sub> = 600/1,662 ≈ <span class="r">361 K</span></span>, <span class="f">T<sub>C</sub> = 1500/1,662 ≈ <span class="r">903 K</span></span>.</li>
+        <li><strong>A e B</strong>: hanno lo stesso prodotto <span class="f">pV = 600 J</span>, quindi la stessa temperatura.</li>
+        <li>Più <strong>lontana</strong>: C ha un prodotto pV più grande, quindi una temperatura più alta. Le isoterme più calde stanno più lontane dagli assi.</li>
+        <li><span class="f">p<sub>D</sub> = 600 J / 6 L = <span class="r">100 kPa</span></span>.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 7 -->
+  <section class="es" aria-labelledby="t7">
+    <div class="es-head">
+      <span class="num">Esercizio 7</span>
+      <h2 id="t7">Quattro strade da uno stesso punto</h2>
+      <span class="livello" aria-label="Difficoltà 2 su 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico parte dallo stato A. Il grafico mostra quattro trasformazioni diverse che potrebbe compiere, numerate da 1 a 4. Una è un'isoterma e una è un'adiabatica.</p>
+        <ol class="domande">
+          <li>Riconosci le quattro trasformazioni. Come distingui l'isoterma dall'adiabatica?</li>
+          <li>Completa una tabella con il segno (+, − oppure 0) di W, ΔU e Q per ciascuna trasformazione.</li>
+          <li>Metti in ordine le trasformazioni dal lavoro più grande al più piccolo, guardando solo le aree.</li>
+          <li>In quale trasformazione il gas si raffredda?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":6,"vstep":1,"pmax":550,"pstep":50,"plab":100,
+        "pts":{"A":[2,300,-18,-6],"1":[5,300,8,-6],"2":[2,500,8,4],"3":[5,120,8,4],"4":[5,65.2,8,6]},
+        "segs":[["A","1"],["A","2"]],"curves":[["A","3",600,1],["A","4",952.4,1.6666667]]}'></div>
+        <figcaption>Quattro trasformazioni che partono da A</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>1 isobara, 2 isocora, 3 isoterma, 4 adiabatica. L'adiabatica è la curva <strong>più ripida</strong>: la pressione scende di più perché il gas, oltre a espandersi, si raffredda.</li>
+        <li>1 isobara: W +, ΔU +, Q +. &nbsp;2 isocora: W 0, ΔU +, Q +. &nbsp;3 isoterma: W +, ΔU 0, Q +. &nbsp;4 adiabatica: W +, ΔU −, Q 0.</li>
+        <li><span class="f r">1 &gt; 3 &gt; 4 &gt; 2</span>. L'area sotto l'isobara è la più grande (900 J), poi l'isoterma (≈ 550 J), poi l'adiabatica (≈ 411 J). L'isocora ha area nulla.</li>
+        <li>Solo nella <strong>4</strong>: nell'adiabatica il gas compie lavoro senza ricevere calore e lo paga con la propria energia interna.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 8 -->
+  <section class="es" aria-labelledby="t8">
+    <div class="es-head">
+      <span class="num">Esercizio 8</span>
+      <h2 id="t8">Una compressione e un riscaldamento</h2>
+      <span class="livello" aria-label="Difficoltà 2 su 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico va da A a B e poi da B a C. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 450 K</span>.</p>
+        <ol class="domande">
+          <li>Riconosci le due trasformazioni. In AB il gas si espande o viene compresso?</li>
+          <li>Calcola il lavoro in AB e in BC. Che segno ha W<sub>AB</sub> e cosa significa?</li>
+          <li>Calcola T<sub>B</sub> e T<sub>C</sub>.</li>
+          <li>Calcola il calore scambiato in AB e in BC, dicendo ogni volta se è assorbito o ceduto.</li>
+          <li>Fai il bilancio da A a C: trova ΔU<sub>AC</sub>, W<sub>AC</sub> e Q<sub>AC</sub> e verifica il primo principio.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":700,"pstep":50,"plab":100,
+        "pts":{"A":[6,150,8,-6],"B":[2,150,-18,16],"C":[2,600,-18,-6]},"segs":[["A","B"],["B","C"]]}'></div>
+        <figcaption>Trasformazioni A → B → C</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>AB: <strong>isobara</strong> a 150 kPa, il volume passa da 6 L a 2 L, quindi è una <strong>compressione</strong>. BC: <strong>isocora</strong> a 2 L.</li>
+        <li><span class="f">W<sub>AB</sub> = 150 · (2 − 6) = <span class="r">−600 J</span></span>: negativo, il lavoro è fatto <em>sul</em> gas dall'esterno. <span class="f">W<sub>BC</sub> = 0</span>.</li>
+        <li>Isobara: <span class="f">T<sub>B</sub> = 450 · 2/6 = <span class="r">150 K</span></span>. Isocora: <span class="f">T<sub>C</sub> = 150 · 600/150 = <span class="r">600 K</span></span>.</li>
+        <li><span class="f">Q<sub>AB</sub> = 5/2 · pΔV = 2,5 · (−600) = <span class="r">−1500 J</span></span>, ceduto.<br>
+          <span class="f">Q<sub>BC</sub> = 3/2 · VΔp = 1,5 · 2 · 450 = <span class="r">+1350 J</span></span>, assorbito.</li>
+        <li><span class="f">ΔU<sub>AC</sub> = 3/2 · (1200 − 900) = 450 J</span>, <span class="f">W<sub>AC</sub> = −600 J</span>, <span class="f">Q<sub>AC</sub> = −1500 + 1350 = −150 J</span>.<br>
+          Verifica: <span class="f">ΔU + W = 450 − 600 = −150 J = Q</span>.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 9 -->
+  <section class="es" aria-labelledby="t9">
+    <div class="es-head">
+      <span class="num">Esercizio 9</span>
+      <h2 id="t9">Stessa partenza, stesso arrivo, tre percorsi</h2>
+      <span class="livello" aria-label="Difficoltà 3 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p><span class="f">n = 100 mol</span> di gas perfetto monoatomico vanno dallo stato A allo stato C. Lo possono fare in tre modi: lungo A → B → C, lungo A → D → C oppure lungo l'isoterma che collega direttamente A e C. <em>Attenzione: qui il volume è in m³.</em></p>
+        <ol class="domande">
+          <li>Calcola le temperature in A, B, C e D. Cosa noti confrontando A e C?</li>
+          <li>Quanto vale ΔU<sub>AC</sub> lungo ciascuno dei tre percorsi?</li>
+          <li>Calcola il lavoro lungo ciascun percorso (ricorda: kPa · m³ = kJ).</li>
+          <li>Calcola il calore assorbito lungo ciascun percorso.</li>
+          <li>Quale grandezza dipende dal percorso e quale no? Spiegalo con il grafico.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":5,"vstep":1,"pmax":500,"pstep":50,"plab":100,"vlab":"V (m³)",
+        "pts":{"A":[1,400,-18,-6],"B":[4,400,8,-6],"C":[4,100,8,16],"D":[1,100,-18,16]},
+        "segs":[["A","B"],["B","C"],["A","D"],["D","C"]],"curves":[["A","C",400,1]]}'></div>
+        <figcaption>Tre percorsi da A a C (la curva è l'isoterma)</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li><span class="f">nR = 831 J/K</span>. <span class="f">T<sub>A</sub> = 400 000/831 ≈ <span class="r">481 K</span></span>, <span class="f">T<sub>B</sub> ≈ <span class="r">1925 K</span></span>, <span class="f">T<sub>C</sub> ≈ <span class="r">481 K</span></span>, <span class="f">T<sub>D</sub> ≈ <span class="r">120 K</span></span>. A e C hanno la stessa temperatura (stesso pV = 400 kJ): stanno sulla stessa isoterma.</li>
+        <li>L'energia interna dipende solo da T, e T<sub>A</sub> = T<sub>C</sub>: <span class="f r">ΔU<sub>AC</sub> = 0</span> lungo tutti e tre i percorsi.</li>
+        <li><span class="f">W<sub>ABC</sub> = 400 kPa · 3 m³ = <span class="r">1200 kJ</span></span> (BC è isocora).<br>
+          <span class="f">W<sub>ADC</sub> = 100 kPa · 3 m³ = <span class="r">300 kJ</span></span> (AD è isocora).<br>
+          <span class="f">W<sub>iso</sub> = nRT·ln 4 = 400 kJ · 1,386 ≈ <span class="r">554 kJ</span></span>.</li>
+        <li>Con ΔU = 0 vale Q = W: <span class="f">1200 kJ</span>, <span class="f">300 kJ</span>, <span class="f">554 kJ</span>.</li>
+        <li>Lavoro e calore <strong>dipendono dal percorso</strong>: l'area sotto ciascun percorso è diversa. ΔU invece dipende solo dagli stati iniziale e finale.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 10 -->
+  <section class="es" aria-labelledby="t10">
+    <div class="es-head">
+      <span class="num">Esercizio 10</span>
+      <h2 id="t10">Isoterma o adiabatica?</h2>
+      <span class="livello" aria-label="Difficoltà 4 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico, inizialmente nello stato A a <span class="f">T<sub>A</sub> = 400 K</span>, si espande fino a 8 L in due modi diversi: lungo la curva A → B oppure lungo la curva A → C. Una delle due curve è un'isoterma, l'altra un'adiabatica.</p>
+        <ol class="domande">
+          <li>Quale curva è l'adiabatica? Giustifica guardando il grafico.</li>
+          <li>Verifica la risposta con i numeri: calcola pV in A, B, C e controlla che <span class="f">pV<sup>γ</sup></span> sia uguale in A e nello stato finale dell'adiabatica (<span class="f">8<sup>5/3</sup> = 32</span>).</li>
+          <li>Leggi dal grafico la pressione su ciascuna curva quando <span class="f">V = 2 L</span>.</li>
+          <li>Calcola T<sub>B</sub> e T<sub>C</sub>.</li>
+          <li>Calcola lavoro, ΔU e calore per entrambe le trasformazioni. Perché l'adiabatica produce meno lavoro?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":9,"vstep":1,"pmax":360,"pstep":20,"plab":80,
+        "pts":{"A":[1,320,8,-4],"B":[8,40,8,-4],"C":[8,10,8,6]},"curves":[["A","B",320,1],["A","C",320,1.6666667]]}'></div>
+        <figcaption>Due espansioni da A</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li><strong>A → C</strong>: è la curva più ripida, che a parità di volume arriva a una pressione più bassa.</li>
+        <li><span class="f">pV<sub>A</sub> = 320 J</span>, <span class="f">pV<sub>B</sub> = 320 J</span> (uguale: isoterma), <span class="f">pV<sub>C</sub> = 80 J</span>.<br>
+          <span class="f">p<sub>A</sub>V<sub>A</sub><sup>γ</sup> = 320 · 1 = 320</span>; <span class="f">p<sub>C</sub>V<sub>C</sub><sup>γ</sup> = 10 · 32 = 320</span>: uguali, quindi AC è adiabatica.</li>
+        <li>Isoterma: <span class="f">160 kPa</span>. Adiabatica: <span class="f">circa 100 kPa</span> (il valore esatto è 320/2<sup>5/3</sup> ≈ 101 kPa).</li>
+        <li><span class="f">T<sub>B</sub> = <span class="r">400 K</span></span> (isoterma). T è proporzionale a pV: <span class="f">T<sub>C</sub> = 400 · 80/320 = <span class="r">100 K</span></span>.</li>
+        <li>Isoterma: <span class="f">ΔU = 0</span>, <span class="f">W = pV<sub>A</sub>·ln 8 = 320 · 2,079 ≈ <span class="r">665 J</span></span>, <span class="f">Q = W = 665 J</span>.<br>
+          Adiabatica: <span class="f">Q = 0</span>, <span class="f">ΔU = 3/2 · (80 − 320) = −360 J</span>, <span class="f">W = −ΔU = <span class="r">360 J</span></span>.<br>
+          L'adiabatica sta sempre sotto l'isoterma, quindi l'area sotto di essa è più piccola. Il gas non riceve calore e la pressione cala più in fretta.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 11 -->
+  <section class="es" aria-labelledby="t11">
+    <div class="es-head">
+      <span class="num">Esercizio 11</span>
+      <h2 id="t11">Un ciclo con un'isoterma</h2>
+      <span class="livello" aria-label="Difficoltà 4 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Un gas perfetto monoatomico compie il ciclo A → B → C → A del grafico. AB è un'isoterma. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 480 K</span>.</p>
+        <ol class="domande">
+          <li>Riconosci BC e CA. Verifica dal grafico che AB è davvero un'isoterma.</li>
+          <li>Calcola le temperature in B e C e il numero di moli.</li>
+          <li>Calcola il lavoro in ciascuna trasformazione e il lavoro netto del ciclo.</li>
+          <li>Calcola il calore scambiato in ciascuna trasformazione.</li>
+          <li>Il ciclo è una macchina termica? Calcolane il rendimento.</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":7,"vstep":1,"pmax":700,"pstep":50,"plab":100,
+        "pts":{"A":[2,600,8,-6],"B":[6,200,8,-6],"C":[2,200,-18,16]},"segs":[["B","C"],["C","A"]],"curves":[["A","B",1200,1]]}'></div>
+        <figcaption>Ciclo A → B → C → A</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>BC isobara (200 kPa, compressione), CA isocora (2 L). In A e in B <span class="f">pV = 1200 J</span>; anche il punto intermedio (3 L; 400 kPa) dà 1200 J.</li>
+        <li><span class="f">T<sub>B</sub> = <span class="r">480 K</span></span>; <span class="f">T<sub>C</sub> = 480 · 400/1200 = <span class="r">160 K</span></span>; <span class="f">n = 1200/(8,31 · 480) ≈ <span class="r">0,30 mol</span></span>.</li>
+        <li><span class="f">W<sub>AB</sub> = 1200 · ln 3 ≈ +1318 J</span>; <span class="f">W<sub>BC</sub> = 200 · (2 − 6) = −800 J</span>; <span class="f">W<sub>CA</sub> = 0</span>. Netto <span class="f r">W ≈ 518 J</span>.</li>
+        <li><span class="f">Q<sub>AB</sub> = W<sub>AB</sub> ≈ +1318 J</span> (isoterma)<br>
+          <span class="f">Q<sub>BC</sub> = 5/2 · (−800) = −2000 J</span><br>
+          <span class="f">Q<sub>CA</sub> = 3/2 · (1200 − 400) = +1200 J</span><br>
+          Controllo: <span class="f">1318 − 2000 + 1200 = 518 J = W</span>.</li>
+        <li>Sì: verso orario, lavoro netto positivo. <span class="f">Q<sub>ass</sub> = 1318 + 1200 = 2518 J</span>, <span class="f">η = 518/2518 ≈ <span class="r">21%</span></span>.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ESERCIZIO 12 -->
+  <section class="es" aria-labelledby="t12">
+    <div class="es-head">
+      <span class="num">Esercizio 12</span>
+      <h2 id="t12">Un ciclo percorso al contrario</h2>
+      <span class="livello" aria-label="Difficoltà 5 su 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+    </div>
+    <div class="corpo">
+      <div class="testo">
+        <p>Lo stesso gas dell'esercizio 10 compie il ciclo A → B → C → A: un'adiabatica AB, un'isocora BC e un'isoterma CA. Nello stato A la temperatura è <span class="f">T<sub>A</sub> = 400 K</span>.</p>
+        <ol class="domande">
+          <li>Leggi le coordinate di A, B e C. Verifica che CA è un'isoterma e AB un'adiabatica.</li>
+          <li>Calcola le temperature in B e C.</li>
+          <li>Il ciclo è percorso in senso orario o antiorario? Che segno avrà il lavoro netto?</li>
+          <li>Calcola lavoro e calore in ciascuna trasformazione e il lavoro netto.</li>
+          <li>Il gas si comporta da macchina termica o da frigorifero? In quale tratto assorbe calore e in quale lo cede?</li>
+        </ol>
+      </div>
+      <figure class="grafico"><div class="pv" data-cfg='{"vmax":9,"vstep":1,"pmax":360,"pstep":20,"plab":80,
+        "pts":{"A":[1,320,8,-4],"B":[8,10,8,6],"C":[8,40,8,-4]},"segs":[["B","C"]],"curves":[["A","B",320,1.6666667],["C","A",320,1]]}'></div>
+        <figcaption>Ciclo A → B → C → A</figcaption></figure>
+    </div>
+    <details class="sol"><summary>Soluzione</summary>
+      <ol>
+        <li>A(1 L; 320 kPa), B(8 L; 10 kPa), C(8 L; 40 kPa). <span class="f">pV<sub>C</sub> = 320 J = pV<sub>A</sub></span>: isoterma. <span class="f">10 · 8<sup>5/3</sup> = 320 = 320 · 1<sup>5/3</sup></span>: adiabatica.</li>
+        <li><span class="f">T<sub>B</sub> = 400 · 80/320 = <span class="r">100 K</span></span>; <span class="f">T<sub>C</sub> = <span class="r">400 K</span></span>.</li>
+        <li><strong>Antiorario</strong>: si va verso destra lungo la curva più bassa e si torna lungo quella più alta. Il lavoro netto è <strong>negativo</strong>.</li>
+        <li>AB: <span class="f">Q = 0</span>, <span class="f">W = −ΔU = −3/2 · (80 − 320) = +360 J</span>.<br>
+          BC: <span class="f">W = 0</span>, <span class="f">Q = ΔU = 3/2 · (320 − 80) = +360 J</span>.<br>
+          CA: <span class="f">ΔU = 0</span>, <span class="f">W = Q = 320 · ln(1/8) ≈ −665 J</span>.<br>
+          Netto: <span class="f r">W = 360 + 0 − 665 = −305 J</span>; anche <span class="f">Q<sub>netto</sub> = 360 − 665 = −305 J</span>.</li>
+        <li><strong>Frigorifero</strong>: riceve lavoro dall'esterno (305 J per ciclo), assorbe 360 J nel tratto freddo BC e cede 665 J nella compressione isoterma CA.</li>
+      </ol>
+      <p class="nota">Se in classe avete visto il coefficiente di prestazione: <span class="f">COP = Q<sub>ass</sub>/|W| = 360/305 ≈ 1,2</span>.</p>
+    </details>
+  </section>
+
+  <h2 class="parte" id="parte3"><span>Parte 3</span> Dal libro, capitolo 10</h2>
+  <section class="es" aria-label="Problemi scelti dal libro">
+    <p style="margin:0;max-width:70ch">Walker, <em>Fisica. Modelli teorici e problem solving</em>, vol. 1, cap. 10 «Le leggi della termodinamica». I risultati sono tra parentesi quadre in fondo a ogni problema. <span class="star">★</span> = da fare di sicuro; <span class="gr">grafico</span> = c'è un grafico p-V da leggere. Ho lasciato fuori secondo principio, Carnot ed entropia (problemi 39–71): non sono nel programma.</p>
+    <div class="tab-wrap">
+      <table class="libro">
+        <thead><tr><th>N°</th><th>Titolo</th><th>Pag.</th><th>Cosa allena</th></tr></thead>
+        <tbody>
+          <tr class="gruppo"><td colspan="4">Primo principio</td></tr>
+          <tr><td class="n"><span class="star">★</span> 3</td><td>Tre diverse trasformazioni</td><td class="n">413</td><td>segni di Q e W nel primo principio</td></tr>
+          <tr><td class="n"><span class="star">★</span> 4</td><td>Variazione dell'energia interna <span class="gr">grafico</span></td><td class="n">413</td><td>in un ciclo ΔU totale = 0</td></tr>
+          <tr><td class="n">5</td><td>Calore acquistato o perduto?</td><td class="n">413</td><td>lavoro fatto sul gas, segno negativo</td></tr>
+          <tr><td class="n">8</td><td>Temperatura del gas</td><td class="n">414</td><td>da Q e W alla temperatura finale</td></tr>
+          <tr class="gruppo"><td colspan="4">Isobare e isocore</td></tr>
+          <tr><td class="n">10</td><td>Compressione isobara</td><td class="n">414</td><td>W = pΔV al contrario</td></tr>
+          <tr><td class="n"><span class="star">★</span> 12</td><td>Confronta il lavoro <span class="gr">grafico</span></td><td class="n">414</td><td>confrontare aree sotto tre percorsi</td></tr>
+          <tr><td class="n">16</td><td>Quanto calore è necessario?</td><td class="n">415</td><td>Q a p costante e a V costante</td></tr>
+          <tr><td class="n"><span class="star">★</span> 17</td><td>Lavoro durante l'espansione <span class="gr">grafico</span></td><td class="n">415</td><td>area di un percorso obliquo</td></tr>
+          <tr><td class="n"><span class="star">★</span> 19</td><td>Problema svolto <span class="gr">grafico</span></td><td class="n">415</td><td>area spezzata in trapezio + rettangolo, T, Q (prima prova da sola, poi confronta)</td></tr>
+          <tr><td class="n"><span class="star">★</span> 20</td><td>Espansione isobara</td><td class="n">415</td><td>il problema “tipo” da compito</td></tr>
+          <tr><td class="n">24</td><td>Quantità di calore scambiata</td><td class="n">416</td><td>Q = 5/2·pΔV</td></tr>
+          <tr><td class="n"><span class="star">★</span> 26</td><td>Compressione ed espansione <span class="gr">grafico</span></td><td class="n">416</td><td>calcolo con lettere (p<sub>i</sub>, V<sub>i</sub>) invece che numeri</td></tr>
+          <tr class="gruppo"><td colspan="4">Isoterme e adiabatiche</td></tr>
+          <tr><td class="n">27</td><td>Espansione isoterma 1</td><td class="n">416</td><td>legge di Boyle</td></tr>
+          <tr><td class="n">28</td><td>Espansione isoterma 2</td><td class="n">416</td><td>W = nRT·ln(V<sub>f</sub>/V<sub>i</sub>)</td></tr>
+          <tr><td class="n"><span class="star">★</span> 30</td><td>A quale temperatura? <span class="gr">grafico</span></td><td class="n">416</td><td>leggere un'isoterma e trovare T</td></tr>
+          <tr><td class="n">33</td><td>Raffreddamento adiabatico</td><td class="n">417</td><td>W = −ΔU</td></tr>
+          <tr><td class="n"><span class="star">★</span> 34</td><td>Espansione adiabatica</td><td class="n">417</td><td>pV<sup>γ</sup> e TV<sup>γ−1</sup> costanti</td></tr>
+          <tr><td class="n">36</td><td>Compressione adiabatica 1</td><td class="n">417</td><td>trovare il volume con pV<sup>γ</sup></td></tr>
+          <tr><td class="n">37</td><td>Compressione adiabatica 2</td><td class="n">417</td><td>la temperatura sale comprimendo</td></tr>
+          <tr><td class="n"><span class="star">★</span> 38</td><td>Tre diverse trasformazioni</td><td class="n">417</td><td>confronto isobara / isoterma / adiabatica (va bene dopo l'es. 7)</td></tr>
+          <tr class="gruppo"><td colspan="4">Prova finale</td></tr>
+          <tr><td class="n"><span class="star">★</span> V1–V3</td><td>Verifica del capitolo: domande 1, 2, 3</td><td class="n">421</td><td>risposta multipla su isobara, isocora, compressione</td></tr>
+          <tr><td class="n"><span class="star">★</span> P1, P2</td><td>Verifica del capitolo: problemi 1 e 2</td><td class="n">421</td><td>simulazione del compito, con il cronometro (circa 25 minuti)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota">Ordine consigliato: scheda Parte 1 → problemi del libro con la ★ su isobare e isocore → scheda Parte 2 → problemi con la ★ su isoterme e adiabatiche → verifica finale a tempo.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var W = 380, H = 290, L = 54, R = 20, T = 18, B = 44;
+  function el(name, attrs, parent, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function fmt(x) { return String(Math.round(x * 100) / 100).replace(".", ","); }
+  function arrow(g, x, y, ang) {
+    var s = 7, c = Math.cos(ang), n = Math.sin(ang);
+    var pts = [[x + c * s, y + n * s], [x - c * s - n * s * 0.8, y - n * s + c * s * 0.8], [x - c * s + n * s * 0.8, y - n * s - c * s * 0.8]];
+    el("polygon", { points: pts.map(function (p) { return p.join(","); }).join(" "), class: "g-arrow" }, g);
+  }
+  document.querySelectorAll(".pv").forEach(function (box) {
+    var c = JSON.parse(box.dataset.cfg);
+    var x0 = L, x1 = W - R, y0 = H - B, y1 = T;
+    var sx = function (v) { return x0 + v / c.vmax * (x1 - x0 - 10); };
+    var sy = function (p) { return y0 - p / c.pmax * (y0 - y1 - 10); };
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Grafico pressione-volume" }, box);
+    var v, p, k;
+    // quadretti
+    for (v = c.vstep / 2; v <= c.vmax + 1e-9; v += c.vstep / 2) el("line", { x1: sx(v), x2: sx(v), y1: y0, y2: sy(c.pmax), class: "g-minor" }, svg);
+    for (p = c.pstep; p <= c.pmax + 1e-9; p += c.pstep) el("line", { x1: x0, x2: sx(c.vmax), y1: sy(p), y2: sy(p), class: "g-minor" }, svg);
+    // tacche
+    for (v = c.vstep; v <= c.vmax + 1e-9; v += c.vstep) el("text", { x: sx(v), y: y0 + 16, "text-anchor": "middle", class: "g-tick" }, svg, fmt(v));
+    for (p = c.plab; p <= c.pmax + 1e-9; p += c.plab) el("text", { x: x0 - 7, y: sy(p) + 3.5, "text-anchor": "end", class: "g-tick" }, svg, fmt(p));
+    el("text", { x: x0 - 7, y: y0 + 16, "text-anchor": "end", class: "g-tick" }, svg, "0");
+    // assi
+    el("path", { d: "M" + x0 + " " + (y1 - 4) + " V" + y0 + " H" + (x1 + 4), class: "g-axis" }, svg);
+    el("polygon", { points: (x0 - 4) + "," + (y1 + 2) + " " + (x0 + 4) + "," + (y1 + 2) + " " + x0 + "," + (y1 - 8), class: "g-axhead" }, svg);
+    el("polygon", { points: (x1 - 2) + "," + (y0 - 4) + " " + (x1 - 2) + "," + (y0 + 4) + " " + (x1 + 8) + "," + y0, class: "g-axhead" }, svg);
+    el("text", { x: x0 + 8, y: y1 + 4, class: "g-axlab" }, svg, "p (kPa)");
+    el("text", { x: x1 + 6, y: y0 + 34, "text-anchor": "end", class: "g-axlab" }, svg, c.vlab || "V (L)");
+    // linee guida tratteggiate verso gli assi
+    for (k in c.pts) {
+      var q = c.pts[k];
+      el("line", { x1: sx(q[0]), x2: sx(q[0]), y1: sy(q[1]), y2: y0, class: "g-guide" }, svg);
+      el("line", { x1: x0, x2: sx(q[0]), y1: sy(q[1]), y2: sy(q[1]), class: "g-guide" }, svg);
+    }
+    // trasformazioni
+    (c.segs || []).forEach(function (s) {
+      var a = c.pts[s[0]], b = c.pts[s[1]];
+      var ax = sx(a[0]), ay = sy(a[1]), bx = sx(b[0]), by = sy(b[1]);
+      el("line", { x1: ax, y1: ay, x2: bx, y2: by, class: "g-path", "stroke-linecap": "round" }, svg);
+      arrow(svg, (ax + bx) / 2, (ay + by) / 2, Math.atan2(by - ay, bx - ax));
+    });
+    // curve: isoterme (g = 1) e adiabatiche (g = 5/3), p = k / V^g
+    var curves = c.curves || (c.curve ? [[c.curve[0], c.curve[1], c.curve[2], 1]] : []);
+    curves.forEach(function (cv) {
+      var a = c.pts[cv[0]], b = c.pts[cv[1]], kk = cv[2], g = cv[3], pts = [], N = 60, i;
+      for (i = 0; i <= N; i++) { v = a[0] + (b[0] - a[0]) * i / N; pts.push([sx(v), sy(kk / Math.pow(v, g))]); }
+      el("polyline", { points: pts.map(function (p) { return p.join(","); }).join(" "), class: "g-path" }, svg);
+      [0.3, 0.75].forEach(function (f) {
+        var j = Math.round(N * f), p0 = pts[j - 1], p1 = pts[j + 1];
+        arrow(svg, pts[j][0], pts[j][1], Math.atan2(p1[1] - p0[1], p1[0] - p0[0]));
+      });
+    });
+    // punti
+    for (k in c.pts) {
+      var q = c.pts[k];
+      el("circle", { cx: sx(q[0]), cy: sy(q[1]), r: 4.5, class: "g-pt" }, svg);
+      el("text", { x: sx(q[0]) + q[2], y: sy(q[1]) + q[3], class: "g-ptlab" }, svg, k);
+    }
+  });
+})();
+</script>
+</body>
+</html>
