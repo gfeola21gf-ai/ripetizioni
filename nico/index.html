@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Materiali delle ripetizioni</title>
+<meta name="description" content="Lezioni di teoria ed esercizi delle ripetizioni.">
+<meta name="apple-mobile-web-app-title" content="Ripetizioni">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap">
+<style>
+/* Pagina uguale per ogni studente: l'elenco arriva da materiali.json (creato da strumenti/catalogo.py). */
+:root {
+  --paper: #fbfaf7; --card: #ffffff; --ink: #1d2433; --muted: #5d6677; --rule: #e4e2dc; --soft: #f3f1ec;
+  --teoria: #2b4c9b; --teoria-soft: #e6ecf9; --esercizi: #18874a; --esercizi-soft: #ddf2e5;
+  --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14171d; --card: #1b1f27; --ink: #e8eaf0; --muted: #a0a8b8; --rule: #2c323d; --soft: #20252e;
+    --teoria: #8fb0ff; --teoria-soft: #1c2640; --esercizi: #4cc97f; --esercizi-soft: #17301f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14171d; --card: #1b1f27; --ink: #e8eaf0; --muted: #a0a8b8; --rule: #2c323d; --soft: #20252e;
+  --teoria: #8fb0ff; --teoria-soft: #1c2640; --esercizi: #4cc97f; --esercizi-soft: #17301f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 18px; line-height: 1.5; }
+main { max-width: 760px; margin: 0 auto; padding: 36px 16px 60px; }
+h1, h2 { font-family: var(--f-display); line-height: 1.15; }
+h1 { font-size: clamp(2rem, 7vw, 2.8rem); font-weight: 800; margin: .2em 0 .3em; }
+.kicker { font-family: var(--f-display); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-size: .85rem; }
+.lead { color: var(--muted); margin: 0 0 8px; }
+.jump { display: flex; gap: 8px; margin: 18px 0 8px; flex-wrap: wrap; }
+.jump a { text-decoration: none; font-weight: 700; padding: 8px 16px; border-radius: 999px; border: 1.5px solid currentColor; }
+.jump a.t { color: var(--teoria); } .jump a.e { color: var(--esercizi); }
+section { margin-top: 34px; }
+section h2 { display: flex; align-items: center; gap: 12px; font-size: 1.7rem; margin: 0 0 4px; }
+section h2 .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+#teoria .dot { background: var(--teoria); } #esercizi .dot { background: var(--esercizi); }
+section > p { color: var(--muted); margin: 0 0 14px; }
+ul.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.item { background: var(--card); border: 1px solid var(--rule); border-left: 6px solid var(--c); border-radius: 16px; padding: 14px 16px; }
+#teoria .item { --c: var(--teoria); --c-soft: var(--teoria-soft); }
+#esercizi .item { --c: var(--esercizi); --c-soft: var(--esercizi-soft); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: .85rem; color: var(--muted); font-weight: 700; }
+.meta .subj { background: var(--c-soft); color: var(--c); padding: 1px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
+.meta .new { background: var(--c); color: var(--paper); padding: 1px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
+.topic { font-family: var(--f-display); font-weight: 700; font-size: 1.25rem; margin: 6px 0 2px; }
+.desc { color: var(--muted); margin: 0 0 10px; font-size: 1rem; }
+.open { display: inline-flex; align-items: center; gap: 6px; background: var(--c); color: var(--paper); text-decoration: none;
+  font-weight: 700; padding: 9px 16px; border-radius: 10px; min-height: 44px; margin-top: 6px; }
+.open:hover { filter: brightness(1.08); }
+.empty { color: var(--muted); font-style: italic; }
+.tip { margin-top: 40px; background: var(--soft); border-radius: 14px; padding: 12px 16px; font-size: .95rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Ripetizioni</div>
+  <h1 id="titolo">I tuoi materiali</h1>
+  <p class="lead">Qui trovi tutte le lezioni e gli esercizi che facciamo insieme, dai più recenti. Tocca <strong>Apri</strong> per aprirli: non serve nessun account.</p>
+  <nav class="jump" aria-label="Sezioni"><a class="t" href="#teoria">Teoria</a><a class="e" href="#esercizi">Esercizi</a></nav>
+
+  <section id="teoria">
+    <h2><span class="dot"></span>Teoria</h2>
+    <p>Le spiegazioni, con disegni, grafici e domande per verificare se hai capito.</p>
+    <ul class="list" id="list-teoria"><li class="empty">Carico…</li></ul>
+  </section>
+
+  <section id="esercizi">
+    <h2><span class="dot"></span>Esercizi</h2>
+    <p>Esercizi in ordine di difficoltà, con le soluzioni da aprire solo dopo averci provato.</p>
+    <ul class="list" id="list-esercizi"><li class="empty">Carico…</li></ul>
+  </section>
+
+  <p class="tip">Consiglio: su iPad o iPhone apri questa pagina in Safari, tocca il pulsante Condividi e scegli «Aggiungi alla schermata Home». Così la ritrovi come un'app.</p>
+</main>
+
+<script>
+var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+function dataBella(iso) { var p = iso.split('-'); return +p[2] + ' ' + MESI[+p[1] - 1] + ' ' + p[0]; }
+function giorniFa(iso) { return (Date.now() - new Date(iso + 'T00:00:00').getTime()) / 86400000; }
+
+fetch('materiali.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (cat) {
+  document.getElementById('titolo').textContent = 'I materiali di ' + cat.studente;
+  document.title = 'Materiali di ' + cat.studente;
+  ['teoria', 'esercizi'].forEach(function (k) {
+    var ul = document.getElementById('list-' + k), voci = cat.materiali.filter(function (m) { return m.tipo === k; });
+    ul.innerHTML = voci.length ? '' : '<li class="empty">Ancora niente qui.</li>';
+    voci.forEach(function (m) {
+      var li = document.createElement('li'); li.className = 'item';
+      li.innerHTML = '<div class="meta"><span class="subj"></span><span class="date"></span></div><div class="topic"></div><p class="desc"></p><a class="open">Apri →</a>';
+      var subj = li.querySelector('.subj');
+      if (m.materia) subj.textContent = m.materia; else subj.remove();
+      li.querySelector('.date').textContent = 'aggiunto il ' + dataBella(m.data);
+      if (giorniFa(m.data) < 7) { var n = document.createElement('span'); n.className = 'new'; n.textContent = 'nuovo'; li.querySelector('.meta').appendChild(n); }
+      li.querySelector('.topic').textContent = m.argomento;
+      var d = li.querySelector('.desc'); if (m.descrizione) d.textContent = m.descrizione; else d.remove();
+      var a = li.querySelector('.open'); a.href = m.link; a.setAttribute('aria-label', 'Apri: ' + m.argomento);
+      ul.appendChild(li);
+    });
+  });
+}).catch(function () {
+  document.querySelectorAll('.list').forEach(function (ul) { ul.innerHTML = '<li class="empty">Non riesco a caricare l\'elenco: controlla la connessione e ricarica la pagina.</li>'; });
+});
+</script>
+</body>
+</html>

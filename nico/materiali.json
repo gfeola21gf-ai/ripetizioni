@@ -1,0 +1,53 @@
+{
+  "studente": "Nico",
+  "materiali": [
+    {
+      "tipo": "esercizi",
+      "materia": "Matematica",
+      "argomento": "Verifica 2: sistemi di disequazioni",
+      "descrizione": "Scheda di verifica da 30 minuti: 6 nuovi sistemi di disequazioni, da fare sul quaderno.",
+      "data": "2026-11-11",
+      "link": "../verifica-sistemi-2.html"
+    },
+    {
+      "tipo": "teoria",
+      "materia": "Matematica",
+      "argomento": "Le equazioni di grado superiore al secondo",
+      "descrizione": "Come si risolvono le equazioni di 3° grado e oltre: raccoglimento, prodotti notevoli, raccoglimento a coppie, Ruffini, binomie, biquadratiche e trinomie, con tanti esempi.",
+      "data": "2026-11-11",
+      "link": "../lezione-grado-superiore.html"
+    },
+    {
+      "tipo": "esercizi",
+      "materia": "Matematica",
+      "argomento": "Verifica: sistemi di disequazioni",
+      "descrizione": "Scheda di verifica da 30 minuti: 6 sistemi di disequazioni, da fare sul quaderno.",
+      "data": "2026-11-04",
+      "link": "../verifica-sistemi.html"
+    },
+    {
+      "tipo": "teoria",
+      "materia": "Matematica",
+      "argomento": "Il piano cartesiano e la retta",
+      "descrizione": "Piano cartesiano, distanza e punto medio, equazione della retta, coefficiente angolare, rette parallele e perpendicolari, fasci, distanza punto-retta.",
+      "data": "2026-11-04",
+      "link": "../lezione-piano-cartesiano.html"
+    },
+    {
+      "tipo": "esercizi",
+      "materia": "Matematica",
+      "argomento": "Sistemi di disequazioni",
+      "descrizione": "Esercizi sui sistemi di disequazioni con il metodo delle righe sulla retta, aiuti e soluzioni da aprire.",
+      "data": "2026-10-28",
+      "link": "../esercizi-sistemi.html"
+    },
+    {
+      "tipo": "teoria",
+      "materia": "Matematica",
+      "argomento": "I sistemi di disequazioni",
+      "descrizione": "Ripasso delle disequazioni di primo e secondo grado e fratte, poi come si risolve un sistema mettendo le soluzioni sulla retta.",
+      "data": "2026-10-28",
+      "link": "../lezione-sistemi.html"
+    }
+  ]
+}

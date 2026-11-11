@@ -1,0 +1,21 @@
+{
+  "studente": "Valeria",
+  "materiali": [
+    {
+      "tipo": "teoria",
+      "materia": "Fisica",
+      "argomento": "Il secondo principio della termodinamica",
+      "descrizione": "Trasformazioni cicliche, macchine termiche, enunciati di Kelvin-Planck e Clausius, ciclo di Carnot, frigoriferi e pompe di calore, entropia.",
+      "data": "2026-11-03",
+      "link": "../secondo-principio-termodinamica.html"
+    },
+    {
+      "tipo": "esercizi",
+      "materia": "Fisica",
+      "argomento": "Gas perfetti sul piano p-V",
+      "descrizione": "Dodici esercizi sulle trasformazioni dei gas perfetti (isobara, isocora, isoterma, adiabatica) e sul primo principio, più problemi scelti dal libro.",
+      "data": "2026-10-27",
+      "link": "../termodinamica.html"
+    }
+  ]
+}

@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Secondo principio della termodinamica</title>
+<meta name="materiale:studente" content="Valeria">
+<meta name="materiale:tipo" content="teoria">
+<meta name="materiale:materia" content="Fisica">
+<meta name="materiale:argomento" content="Il secondo principio della termodinamica">
+<meta name="materiale:descrizione" content="Trasformazioni cicliche, macchine termiche, enunciati di Kelvin-Planck e Clausius, ciclo di Carnot, frigoriferi e pompe di calore, entropia.">
+<meta name="description" content="Dispensa interattiva sul secondo principio della termodinamica.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+/* Dispensa a una colonna, pensata per iPad e computer. Pagina bianca, struttura in nero, colore solo dove ha un significato:
+   rosso = caldo, blu = freddo, verde = lavoro. Domande: ocra = ripasso, viola = spiegalo tu, magenta = trappola, grigio = verifica.
+   Ogni parte ha sempre gli stessi blocchi, nello stesso ordine:
+   domanda guida → ripasso lampo → definizione d'esame → immagina → come funziona → formula → laboratorio → esempio → domande → in sintesi. */
+:root {
+  --paper: #ffffff;
+  --ink: #18202e;
+  --muted: #5a6477;
+  --rule: #dde2ea;
+  --formal: #f1f3f7;
+  --soft: #f6f7f9;
+  --hot: #d23a2a;
+  --hot-soft: #fdecea;
+  --cold: #2563c9;
+  --cold-soft: #e7effc;
+  --work: #16803c;
+  --work-soft: #e5f4ea;
+  --adia: #6b7280;
+  --rip: #a8620a;   --rip-soft: #fcf4e8;
+  --fey: #7a3fd6;   --fey-soft: #f4effd;
+  --trap: #b8236f;  --trap-soft: #fcedf4;
+  --chk: #4b5563;   --chk-soft: #f1f2f4;
+  --f-body: "Literata", Georgia, "Times New Roman", serif;
+  --f-label: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 18px; line-height: 1.65;
+  padding: 32px max(20px, env(safe-area-inset-right)) 90px max(20px, env(safe-area-inset-left));
+}
+main { max-width: 46rem; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; font-weight: 600; }
+h1 { font-size: 2.4rem; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+a { color: var(--ink); }
+b, strong { font-weight: 600; }
+.hot { color: var(--hot); font-weight: 600; }
+.cold { color: var(--cold); font-weight: 600; }
+.work { color: var(--work); font-weight: 600; }
+.katex { font-size: 1.04em; }
+
+/* etichette e intestazioni */
+.eyebrow, .tag, .level, .part-n, summary, .btn, .done, nav a, .prog-txt, .label, .lab-title, .step-n, .caption, th {
+  font-family: var(--f-label); letter-spacing: .04em;
+}
+.eyebrow { font-size: .82rem; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.sub { color: var(--muted); }
+.tag { align-self: flex-start; font-size: .74rem; text-transform: uppercase; font-weight: 600; padding: 2px 9px; border-radius: 3px; background: var(--formal); color: var(--ink); }
+section { display: flex; flex-direction: column; gap: 14px; }
+.part { display: flex; flex-direction: column; gap: 34px; padding-top: 30px; border-top: 2px solid var(--ink); scroll-margin-top: 64px; }
+.part-head { display: flex; flex-direction: column; gap: 6px; }
+.part-n { font-family: var(--f-mono); font-size: .95rem; color: var(--muted); }
+.level { font-size: .78rem; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+.badge { font-family: var(--f-label); font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--rip); border: 1.5px solid var(--rip); border-radius: 3px; padding: 1px 7px; vertical-align: middle; }
+.guide { font-size: 1.12rem; }
+.guide b:first-child { font-family: var(--f-label); letter-spacing: .03em; }
+
+/* indice e avanzamento */
+nav ol { list-style: none; padding: 0; gap: 0; border-top: 1px solid var(--rule); }
+nav li { border-bottom: 1px solid var(--rule); }
+nav a { display: flex; gap: 14px; align-items: baseline; padding: 10px 2px; text-decoration: none; font-size: 1rem; }
+nav a:hover { color: var(--muted); }
+nav a span:first-child { font-family: var(--f-mono); color: var(--muted); min-width: 1.6em; }
+nav a span:nth-child(2) { flex: 1; min-width: 0; }
+nav a span:last-child { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+nav a.is-done span:nth-child(2)::after { content: " ✓"; color: var(--work); }
+.progress { position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 10px 0; margin: -10px 0; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--rule); }
+.prog-txt { display: flex; justify-content: space-between; gap: 12px; font-size: .85rem; color: var(--muted); }
+.prog-txt span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-weight: 600; }
+.bar { position: relative; height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; }
+.bar .read { position: absolute; inset: 0 auto 0 0; width: 0; background: #b9c2d0; }
+.bar .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--work); transition: width .4s ease; }
+.done { align-self: flex-start; font-size: .95rem; font-weight: 600; padding: 10px 18px; border-radius: 6px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+.done.is-done { background: var(--work); border-color: var(--work); color: #fff; }
+
+/* blocchi */
+.formal { background: var(--formal); border-left: 4px solid var(--ink); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.formal dl { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.formal dt { font-weight: 600; }
+.formal dd { margin: 0; }
+.chain { counter-reset: c; list-style: none; padding: 0; gap: 12px; }
+.chain li { counter-increment: c; display: grid; grid-template-columns: 2em 1fr; gap: 8px; }
+.chain li::before { content: counter(c); font-family: var(--f-mono); color: var(--muted); font-size: 1.05rem; }
+.chain li > div { min-width: 0; }
+.oneline { border-top: 1px solid var(--rule); padding-top: 10px; }
+.oneline b:first-child { font-family: var(--f-label); letter-spacing: .03em; }
+.formula { text-align: center; padding: 6px 12px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); overflow-x: auto; }
+.formula .katex-display { margin: .8em 0; }
+.formula .katex { font-size: 1.3em; }
+.formula .note { font-size: .95rem; color: var(--muted); padding-bottom: 8px; }
+.why { color: var(--muted); font-size: .96rem; }
+.why b { font-family: var(--f-label); letter-spacing: .03em; color: var(--ink); }
+.sintesi { background: var(--ink); color: #fff; padding: 16px 20px; border-radius: 4px; }
+.sintesi .katex { color: #fff; }
+.sintesi b:first-child { font-family: var(--f-label); letter-spacing: .04em; text-transform: uppercase; font-size: .8rem; display: block; color: #aab3c2; margin-bottom: 4px; }
+.symbols { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: baseline; }
+.symbols > span:nth-child(odd) { text-align: right; font-size: 1.1rem; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .96rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .8rem; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td.num { text-align: right; font-family: var(--f-mono); font-size: .9rem; white-space: nowrap; }
+
+/* laboratori */
+.lab { border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.lab-title { font-weight: 600; font-size: 1rem; }
+.lab-title::before { content: "Laboratorio · "; color: var(--muted); }
+.lab .sub { font-size: .96rem; }
+.lab-split { border-top: 1px dashed var(--rule); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.btn { font-size: .92rem; font-weight: 600; padding: 8px 14px; border-radius: 5px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; min-height: 42px; }
+.btn.on { background: var(--ink); color: #fff; }
+.btn:disabled { opacity: .35; cursor: default; }
+.seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 5px; overflow: hidden; }
+.seg .btn { border: 0; border-radius: 0; border-right: 1.5px solid var(--ink); }
+.seg .btn:last-child { border-right: 0; }
+.slider { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; flex: 1 1 16rem; min-width: 0; }
+.slider label { font-family: var(--f-label); font-size: .92rem; }
+.slider output { font-family: var(--f-mono); font-size: .92rem; }
+.slider input { grid-column: 1 / -1; width: 100%; height: 30px; accent-color: var(--ink); }
+.slider.hot input { accent-color: var(--hot); } .slider.hot output { color: var(--hot); }
+.slider.cold input { accent-color: var(--cold); } .slider.cold output { color: var(--cold); }
+.slider.work input { accent-color: var(--work); } .slider.work output { color: var(--work); }
+.readout { display: flex; flex-wrap: wrap; gap: 8px; }
+.readout .pill { background: var(--soft); border-radius: 5px; padding: 5px 11px; font-variant-numeric: tabular-nums; }
+.big { font-size: 1.5rem; }
+.stepper { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.stepper .count { font-family: var(--f-mono); font-size: .9rem; color: var(--muted); }
+.caption { font-size: .9rem; color: var(--muted); }
+.lab .caption.step-cap { font-family: var(--f-body); font-size: 1rem; color: var(--ink); background: var(--soft); border-radius: 5px; padding: 10px 14px; min-height: 3.4em; }
+.phase-desc { background: var(--soft); border-radius: 5px; padding: 10px 14px; min-height: 5em; }
+svg { display: block; max-width: 100%; height: auto; }
+svg text { font-family: var(--f-label); fill: var(--ink); }
+canvas { width: 100%; height: auto; display: block; border-radius: 6px; background: var(--soft); }
+.two { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: center; }
+@media (min-width: 640px) { .two { grid-template-columns: 1fr 1fr; } .two.wide { grid-template-columns: 1.5fr 1fr; } }
+.flowline { stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1 11; fill: none; opacity: .85; animation: flow 1s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -12; } }
+@media (prefers-reduced-motion: reduce) { .flowline { animation: none; } }
+
+/* a tendina */
+details { border: 1px solid var(--rule); border-radius: 6px; background: #fff; }
+summary { cursor: pointer; padding: 12px 40px 12px 14px; font-weight: 600; font-size: .98rem; list-style: none; position: relative; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; position: absolute; right: 14px; top: 10px; font-family: var(--f-mono); font-size: 1.2rem; color: var(--muted); }
+details[open] > summary::after { content: "−"; }
+details > .ans { padding: 2px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+details.q { border-left: 4px solid var(--c); }
+details.q > .ans { background: var(--c-soft); }
+details.q > summary .qt { font-family: var(--f-body); font-weight: 400; font-size: 1rem; letter-spacing: 0; }
+.qtag { display: inline-block; font-size: .7rem; text-transform: uppercase; font-weight: 600; padding: 1px 7px; border-radius: 3px; background: var(--c); color: #fff; margin-right: 8px; vertical-align: 2px; }
+.q-rip { --c: var(--rip); --c-soft: var(--rip-soft); }
+.q-fey { --c: var(--fey); --c-soft: var(--fey-soft); }
+.q-trap { --c: var(--trap); --c-soft: var(--trap-soft); }
+.q-chk { --c: var(--chk); --c-soft: var(--chk-soft); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; }
+.legend .qtag { margin: 0; font-family: var(--f-label); }
+.ans h5 { font-family: var(--f-label); font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; margin: 6px 0 0; color: var(--muted); }
+.ans .why::before { content: "↪ "; color: var(--rip); }
+ul.check { list-style: none; padding-left: 0; gap: 3px; }
+ul.check li { padding-left: 26px; position: relative; }
+ul.check li::before { content: "☐"; position: absolute; left: 2px; color: var(--fey); }
+ul.warn { padding-left: 1.2em; gap: 3px; }
+ul.warn li::marker { content: "⚠ "; color: var(--trap); }
+.goto { font-family: var(--f-label); font-size: .92rem; font-weight: 600; }
+details.ex > summary .exn { display: block; font-size: .75rem; text-transform: uppercase; color: var(--muted); }
+.ex-grid { display: grid; grid-template-columns: 6.5em 1fr; gap: 6px 12px; align-items: baseline; }
+.ex-grid > span:nth-child(odd) { font-family: var(--f-label); font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.ex-grid > div { min-width: 0; }
+.result { background: var(--work-soft); padding: 1px 8px; border-radius: 4px; font-weight: 600; }
+footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--rule); padding-top: 16px; }
+
+@media (max-width: 560px) {
+  body { font-size: 16.5px; }
+  h1 { font-size: 1.9rem; }
+  .ex-grid { grid-template-columns: 1fr; gap: 2px; }
+  .formula .katex { font-size: 1.05em; }
+  #carnotPiston { max-width: 200px; margin: 0 auto; }
+}
+@media print {
+  .progress, .controls, .stepper, .btn, .done, input { display: none !important; }
+  body { font-size: 11pt; padding: 0; }
+  .part { break-before: page; }
+  .lab, details, .formal { break-inside: avoid; }
+  summary::after { display: none; }
+  .sintesi { background: #fff; color: #000; border: 2px solid #000; }
+  .sintesi .katex { color: #000; }
+}
+/* ===== Modalità libro: pagine fisse da sfogliare (Mac e iPad). Due pagine affiancate su schermo largo, una su schermo stretto. ===== */
+html { height: 100%; font-size: var(--fs, 17px); }
+body { height: 100%; overflow: hidden; padding: 0; font-size: calc(var(--fs, 17px) * 1.06); }
+.sheet { position: fixed; z-index: 1; top: calc(env(safe-area-inset-top, 0px) + 14px); bottom: calc(env(safe-area-inset-bottom, 0px) + 66px);
+  left: 50%; transform: translateX(-50%); width: min(1320px, calc(100vw - 28px)); box-sizing: border-box; padding: 28px 36px;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 6px 24px rgb(24 32 46 / .08); }
+.sheet main { display: block; max-width: none; margin: 0; height: 100%; overflow: hidden; column-fill: auto; column-rule: 1px solid var(--rule); touch-action: pinch-zoom; }
+.sheet header { display: block !important; }
+.sheet .part, .sheet section, .sheet .part-head { display: block; }
+.sheet main > * { margin: 0; }
+.sheet main > * + * { margin-top: 30px; }
+.sheet .part > * + * { margin-top: 26px; }
+.sheet section > * + *, .sheet header > * + *, .sheet .part-head > * + * { margin-top: 12px; }
+.sheet .part { break-before: column; border-top: 0; padding-top: 0; }
+.sheet .part-head { border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.sheet h2, .sheet h3, .sheet .tag, .sheet .part-head, .sheet .step-n { break-after: avoid; }
+.sheet .formal, .sheet figure, .sheet .lab, .sheet details, .sheet .task, .sheet .warnbox, .sheet .tbl, .sheet mjx-container[display="true"],
+.sheet .fcard, .sheet .chain li, .sheet .cover li, .sheet .links li, .sheet .flow > div, .sheet .done, .sheet nav li { break-inside: avoid; }
+.sheet .lab canvas { margin: 0 auto; }
+.sheet .tag { display: table; }
+.toolbar { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px max(12px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  font-family: var(--f-label); letter-spacing: .03em; background: var(--paper); }
+.tb-btn { height: 40px; min-width: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--rule); background: var(--card); color: var(--ink);
+  font-family: var(--f-label); font-size: 14px; font-weight: 600; cursor: pointer; }
+.tb-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.tb-btn:disabled { opacity: .35; cursor: default; }
+.tb-btn.arrow { font-size: 20px; color: var(--accent); min-width: 52px; }
+.tb-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#pgNum { min-width: 10em; text-align: center; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tb-sep { width: 1px; height: 26px; background: var(--rule); margin: 0 4px; }
+.toolbar .rail { position: static; width: auto; padding: 0; border: 0; background: none; box-shadow: none; flex-direction: row; align-items: center; gap: 8px; }
+.toolbar .rail-pct { font-size: 12px; }
+.toolbar .rail-pct b { font-size: 14px; }
+.toolbar .vbar { width: 56px; }
+/* adattamenti per questa lezione */
+.sheet .progress { position: static; margin: 0; padding: 0; border: 0; width: 210px; }
+.toolbar .prog-txt { font-size: 12px; }
+.sheet .part-head { display:block; }
+.sheet .lab, .sheet .ex, .sheet .sintesi { break-inside: avoid; }
+.sheet svg { max-height: 44vh; }
+.sheet .lab svg { max-height: 34vh; }
+@media (max-width: 600px) { .toolbar { gap: 4px; } .toolbar .tb-sep { display: none; } .tb-btn { padding: 0 8px; } .tb-btn.arrow { min-width: 44px; } #pgNum { min-width: 0; font-size: 13px; } .sheet { top: 8px; padding: 16px 16px; } }
+@media (max-width: 899px) { .toolbar .progress, #bFlip { display: none !important; } .sheet { padding: 20px 20px; } }
+
+</style>
+</head>
+<body>
+<div class="sheet">
+<main>
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <span class="eyebrow">Fisica · quarto anno · Dispensa</span>
+    <h1>Il secondo principio della termodinamica</h1>
+    <p class="sub">Perché il caffè si raffredda e non si scalda mai da solo? Perché nessun motore trasforma in lavoro tutto il carburante? Nove tappe, dalla macchina termica all'entropia. Tempo di studio: circa 2 ore, in più volte.</p>
+    <div class="legend"><span class="qtag q-rip">Ripasso</span><span class="qtag q-fey">Spiegalo tu</span><span class="qtag q-trap">Trappola</span><span class="qtag q-chk">Verifica</span></div>
+    <p class="sub" style="font-size:.95rem">Le domande sono chiuse: <b>rispondi prima a voce</b>, poi aprile. Nei disegni il <span class="hot">rosso</span> è il caldo, il <span class="cold">blu</span> il freddo, il <span class="work">verde</span> il lavoro.</p>
+  </header>
+
+  <div class="progress" id="prog" role="group" aria-label="Avanzamento">
+    <div class="prog-txt"><span id="pgWhere">Inizio</span><span id="pgPct">0 di 10 fatte</span></div>
+    <div class="bar" aria-hidden="true"><div class="read" id="pgRead"></div><div class="fill" id="pgFill"></div></div>
+  </div>
+
+  <nav aria-label="Indice">
+    <ol>
+      <li><a href="#s0"><span>0</span><span>Il quadro e i simboli</span><span>5 min</span></a></li>
+      <li><a href="#s1"><span>1</span><span>Trasformazioni cicliche</span><span>10 min</span></a></li>
+      <li><a href="#s2"><span>2</span><span>Macchine termiche e rendimento</span><span>15 min</span></a></li>
+      <li><a href="#s3"><span>3</span><span>Gli enunciati del secondo principio</span><span>15 min</span></a></li>
+      <li><a href="#s4"><span>4</span><span>Reversibile o irreversibile</span><span>10 min</span></a></li>
+      <li><a href="#s5"><span>5</span><span>Il ciclo di Carnot</span><span>25 min</span></a></li>
+      <li><a href="#s6"><span>6</span><span>Frigoriferi e pompe di calore</span><span>15 min</span></a></li>
+      <li><a href="#s7"><span>7</span><span>Entropia <span class="badge">approfondimento</span></span><span>20 min</span></a></li>
+      <li><a href="#s8"><span>8</span><span>Domande trappola</span><span>15 min</span></a></li>
+      <li><a href="#s9"><span>9</span><span>Scheda per l'interrogazione</span><span>ripasso</span></a></li>
+    </ol>
+  </nav>
+
+<!-- ============================ 0 ============================ -->
+<div class="part" id="s0" data-part="0 · Il quadro">
+  <div class="part-head"><span class="part-n">0 / 9</span><h2>Il quadro e i simboli</h2><span class="level">5 minuti</span></div>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Scrivi il primo principio e spiega i segni di \(Q\) e \(L\).</span></summary>
+      <div class="ans"><p>\(\Delta U = Q - L\). \(Q>0\) se il gas assorbe calore, \(Q<0\) se lo cede. \(L>0\) se il gas si espande e spinge, \(L<0\) se viene compresso.</p><p class="why">Tutti i rendimenti della lezione dipendono da questi segni.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Il primo principio vieta al caffè tiepido di scaldarsi prendendo calore dall'aria più fresca?</span></summary>
+      <div class="ans"><p>No: se il caffè prendesse 100 J e l'aria ne perdesse 100, l'energia si conserverebbe. Eppure non succede mai.</p><p class="why">È la domanda da cui nasce il secondo principio.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Il quadro</span>
+    <p>Il <b>primo principio</b> è un bilancio: l'energia non si crea e non si distrugge. Ma un bilancio non dice <em>quali movimenti sono possibili</em>. Il caffè caldo cede calore all'aria; il film al contrario rispetterebbe lo stesso bilancio, e non lo vedrai mai.</p>
+    <p>Il <b>secondo principio</b> risponde a due domande:</p>
+    <ul>
+      <li><b>In che verso vanno le cose da sole?</b> Il calore passa dal caldo al freddo, mai al contrario.</li>
+      <li><b>Quanto lavoro posso ricavare dal calore?</b> Mai tutto: una parte va sempre ceduta a un corpo più freddo.</li>
+    </ul>
+    <p>Il filo che lega la lezione: <b>per ottenere lavoro dal calore serve una differenza di temperatura</b>, come per far girare un mulino serve un dislivello.</p>
+  </section>
+
+  <section>
+    <span class="tag">I simboli, una volta per tutte</span>
+    <div class="formal symbols">
+      <span>\(Q_{\text{ass}}\)</span><span>calore <span class="hot">assorbito</span> dalla sorgente calda (positivo)</span>
+      <span>\(Q_{\text{ced}}\)</span><span>calore <span class="cold">ceduto</span> alla sorgente fredda (negativo: nelle formule si usa \(|Q_{\text{ced}}|\))</span>
+      <span>\(L\)</span><span><span class="work">lavoro</span> fatto dal gas (positivo in espansione)</span>
+      <span>\(T_c,\ T_f\)</span><span>temperature della sorgente calda e fredda, <b>sempre in kelvin</b></span>
+      <span>\(\eta\)</span><span>rendimento di una macchina (si legge "eta")</span>
+      <span>COP</span><span>coefficiente di prestazione di un frigorifero o di una pompa di calore</span>
+    </div>
+    <p class="why">Nel libro Amaldi il lavoro si chiama \(W\): è la stessa grandezza.</p>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Il primo principio dice quanta energia c'è; il secondo dice dove può andare e quanta se ne può trasformare in lavoro.</div>
+  <button class="done" type="button" data-sec="s0">Segna «Il quadro» come fatto</button>
+</div>
+
+<!-- ============================ 1 ============================ -->
+<div class="part" id="s1" data-part="1 · Trasformazioni cicliche">
+  <div class="part-head"><span class="part-n">1 / 9</span><h2>Trasformazioni cicliche</h2><span class="level">Base · 10 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Un motore deve funzionare per ore, ripetendo sempre lo stesso movimento. Cosa succede al gas se ogni volta torna esattamente com'era?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Come si vede il lavoro nel piano p-V?</span></summary>
+      <div class="ans"><p>È l'area sotto la curva: positiva se il volume aumenta (verso destra), negativa se diminuisce.</p><p class="why">Il lavoro di un ciclo sarà una differenza di due aree.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">\(U\) è una funzione di stato. E \(Q\) e \(L\)?</span></summary>
+      <div class="ans"><p>\(U\) dipende solo dallo stato del gas; \(Q\) e \(L\) dipendono dal percorso.</p><p class="why">Per questo in un ciclo \(\Delta U = 0\) ma \(L\) no.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><p>Si chiama <b>trasformazione ciclica</b> (o ciclo) una successione di trasformazioni al termine della quale il sistema ritorna nello <b>stato iniziale</b>. Poiché l'energia interna è una funzione di stato, in un ciclo \(\Delta U = 0\) e quindi, per il primo principio, il calore totale scambiato è uguale al lavoro totale. Nel piano p-V un ciclo è una curva chiusa e il lavoro è uguale all'<b>area racchiusa</b>: positivo se il ciclo è percorso in senso <b>orario</b>, negativo se in senso <b>antiorario</b>.</p></div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <p>Fai un giro in bici in collina e torni a casa. Il <b>dislivello totale</b> è zero: sei alla stessa quota di prima. La <b>fatica</b> invece no: dipende dalla strada che hai fatto. \(\Delta U\) è il dislivello, \(L\) è la fatica.</p>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>Il gas torna allo stato di partenza</b>: stessa \(p\), stesso \(V\), stessa \(T\). Quindi \(\Delta U = 0\).</div></li>
+      <li><div><b>Dal primo principio</b> \(0 = Q - L\): tutto il calore netto che entra esce come lavoro.</div></li>
+      <li><div><b>All'andata</b> il gas si espande ad <b>alta</b> pressione: fa tanto lavoro (area grande sotto la curva alta).</div></li>
+      <li><div><b>Al ritorno</b> viene compresso a <b>bassa</b> pressione: riceve poco lavoro (area piccola sotto la curva bassa).</div></li>
+      <li><div><b>Il guadagno netto</b> è la differenza delle due aree, cioè l'area chiusa dentro il ciclo. Se giri al contrario, guadagno e spesa si scambiano: \(L < 0\).</div></li>
+    </ol>
+    <p class="oneline"><b>In una frase:</b> conviene espandersi quando la pressione è alta e comprimersi quando è bassa.</p>
+  </section>
+
+  <div class="formula">\[\Delta U_{\text{ciclo}} = 0 \;\Rightarrow\; Q_{\text{tot}} = L_{\text{tot}}\]<p class="note">e \(L_{\text{tot}}\) è l'area racchiusa dal ciclo</p></div>
+
+  <section>
+    <div class="lab" id="cycleLab">
+      <span class="lab-title">L'area che si riempie</span>
+      <p class="sub">Guarda il punto girare. In <span class="work">verde</span> il lavoro fatto dal gas mentre si espande, in grigio a righe quello che riceve mentre viene compresso. Quello che resta è l'area del ciclo.</p>
+      <div class="controls"><div class="seg"><button class="btn on" data-dir="1">Senso orario</button><button class="btn" data-dir="-1">Senso antiorario</button></div></div>
+      <svg id="cycleSvg" viewBox="0 0 520 330" aria-label="Ciclo rettangolare nel piano p-V con le aree del lavoro"></svg>
+      <div class="readout" id="cycleTot"></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Esempio svolto</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Il ciclo del laboratorio, in senso orario</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>A \((2{,}0\ \text{L};\ 300\ \text{kPa})\) → B \((6{,}0\ \text{L};\ 300\ \text{kPa})\) → C \((6{,}0\ \text{L};\ 100\ \text{kPa})\) → D \((2{,}0\ \text{L};\ 100\ \text{kPa})\) → A</div>
+      <span>Cerco</span><div>il lavoro del ciclo e il calore netto</div>
+      <span>Formula</span><div>isobara \(L = p\,\Delta V\), isocora \(L = 0\)</div>
+      <span>Conti</span><div>\(\Delta V = 4{,}0\cdot10^{-3}\ \text{m}^3\). A→B: \(3{,}0\cdot10^5\cdot4{,}0\cdot10^{-3} = +1200\ \text{J}\). C→D: \(1{,}0\cdot10^5\cdot(-4{,}0\cdot10^{-3}) = -400\ \text{J}\).</div>
+      <span>Risultato</span><div><span class="result">\(L = +800\ \text{J}\)</span> = area \((3{,}0-1{,}0)\cdot10^5\cdot4{,}0\cdot10^{-3}\) ✓, e \(Q_{\text{tot}} = +800\ \text{J}\).</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Perché in un ciclo \(\Delta U = 0\) ma il lavoro di solito no? Usa la gita in bici o inventa un'altra metafora.</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"\(U\) è come l'altitudine: dipende solo da dove sei, e se torni a casa non cambia. Il lavoro è come la fatica: dipende dalla strada. Se mi espando ad alta pressione e mi comprimo a bassa, ottengo più lavoro di quello che spendo."</p>
+        <h5>Deve dire</h5><ul class="check"><li>\(U\) funzione di stato, \(L\) no</li><li>andata e ritorno a pressioni diverse</li><li>lavoro netto = area racchiusa</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>dice "torna uguale, quindi \(L = 0\)"</li><li>dice "area racchiusa" ma non sa perché è una differenza di aree</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">Un ciclo percorso in senso orario racchiude un'area di 250 J. Quanto calore netto assorbe il gas?</span></summary>
+      <div class="ans"><p>\(Q_{\text{tot}} = L = +250\ \text{J}\), perché \(\Delta U = 0\).</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>In un ciclo \(\Delta U = 0\) e \(Q_{\text{tot}} = L\). Il lavoro è l'area racchiusa: positivo in senso orario (macchina termica), negativo in senso antiorario (frigorifero).</div>
+  <button class="done" type="button" data-sec="s1">Segna «Trasformazioni cicliche» come fatto</button>
+</div>
+
+<!-- ============================ 2 ============================ -->
+<div class="part" id="s2" data-part="2 · Macchine termiche">
+  <div class="part-head"><span class="part-n">2 / 9</span><h2>Macchine termiche e rendimento</h2><span class="level">Base · 15 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Il motore di un'auto brucia benzina, cioè riceve calore. Perché solo un quarto di quell'energia fa muovere l'auto?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§1) In un ciclo, che relazione c'è tra calore totale e lavoro?</span></summary>
+      <div class="ans"><p>\(Q_{\text{tot}} = L\), perché \(\Delta U = 0\).</p><p class="why">Da qui nasce il bilancio della macchina: \(L = Q_{\text{ass}} - |Q_{\text{ced}}|\).</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Da solo, il calore va dal caldo al freddo o viceversa?</span></summary>
+      <div class="ans"><p>Dal caldo al freddo, finché le temperature diventano uguali.</p><p class="why">La macchina sfrutta questo "scorrere", come un mulino sfrutta l'acqua che cade.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><dl>
+      <dt>Macchina termica</dt><dd>Dispositivo che, funzionando <b>ciclicamente</b>, assorbe il calore \(Q_{\text{ass}}\) da una sorgente a temperatura più alta \(T_c\), ne trasforma una parte in lavoro \(L\) e cede il resto \(|Q_{\text{ced}}|\) a una sorgente a temperatura più bassa \(T_f\).</dd>
+      <dt>Sorgente (o termostato)</dt><dd>Corpo così grande che la sua temperatura resta costante anche quando scambia calore, come il mare o l'atmosfera.</dd>
+      <dt>Rendimento</dt><dd>Rapporto tra il lavoro prodotto in un ciclo e il calore assorbito dalla sorgente calda. È un numero puro, compreso tra 0 e 1.</dd>
+    </dl></div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <div class="two">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <p>Un mulino ad acqua. L'acqua cade dal bacino alto a quello basso e fa girare la ruota. Tre cose:</p>
+        <ul><li>serve un <b>dislivello</b>;</li><li>la ruota prende solo <b>una parte</b> dell'energia;</li><li>l'acqua arrivata in basso <b>non si riusa gratis</b>.</li></ul>
+        <p>Nella macchina termica l'acqua è il <b>calore</b> e il dislivello è la <b>differenza di temperatura</b>.</p>
+      </div>
+      <svg id="waterfall" viewBox="0 0 300 260" aria-label="Mulino: l'acqua cade e fa girare la ruota"></svg>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>Il gas si espande a contatto con il caldo</b>: assorbe \(Q_{\text{ass}}\) e spinge il pistone.</div></li>
+      <li><div><b>Per ricominciare il ciclo</b> deve tornare al volume iniziale: va compresso.</div></li>
+      <li><div><b>Se lo comprimessi ancora caldo</b> spenderei tutto il lavoro guadagnato. Allora lo raffreddo, e comprimerlo costa meno.</div></li>
+      <li><div><b>Raffreddarlo vuol dire cedere calore</b> a un corpo più freddo: è \(|Q_{\text{ced}}|\), e non si può evitare.</div></li>
+      <li><div><b>Bilancio</b>: il lavoro è quello che resta, \(L = Q_{\text{ass}} - |Q_{\text{ced}}|\).</div></li>
+    </ol>
+    <p class="oneline"><b>In una frase:</b> il calore ceduto al freddo è il prezzo per poter chiudere il ciclo.</p>
+  </section>
+
+  <div class="formula">\[L = Q_{\text{ass}} - |Q_{\text{ced}}|\]\[\eta = \frac{L}{Q_{\text{ass}}} = 1 - \frac{|Q_{\text{ced}}|}{Q_{\text{ass}}}\]</div>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">Dove va l'energia</span>
+      <p class="sub">La macchina assorbe sempre 1000 J per ciclo. Lo spessore di ogni freccia è proporzionale all'energia che trasporta.</p>
+      <div class="controls"><div class="slider work"><label for="etaSlider">Rendimento \(\eta\)</label><output id="etaOut"></output><input type="range" id="etaSlider" min="5" max="90" step="1" value="25"></div></div>
+      <svg id="etaFlow" viewBox="0 0 360 300" aria-label="Schema a blocchi della macchina termica" style="max-width:460px;margin:0 auto"></svg>
+      <p class="caption">Qui puoi arrivare al 90%. Nella parte 5 scoprirai che la natura mette un limite preciso.</p>
+    </div>
+  </section>
+
+  <div class="tbl"><table>
+    <tr><th>Macchina reale</th><th>Sorgente fredda</th><th>Rendimento</th></tr>
+    <tr><td>Macchina a vapore di Watt (fine Settecento)</td><td>condensatore</td><td class="num">3–5%</td></tr>
+    <tr><td>Motore a benzina</td><td>aria</td><td class="num">25–30%</td></tr>
+    <tr><td>Motore diesel</td><td>aria</td><td class="num">35–40%</td></tr>
+    <tr><td>Centrale termoelettrica</td><td>fiume, mare, torri</td><td class="num">35–45%</td></tr>
+  </table></div>
+
+  <section>
+    <span class="tag">Esempi svolti</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Motore d'auto</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>\(Q_{\text{ass}} = 2000\ \text{J}\), \(L = 500\ \text{J}\) per ciclo</div>
+      <span>Cerco</span><div>\(\eta\) e il calore ceduto</div>
+      <span>Formula</span><div>\(\eta = L/Q_{\text{ass}}\); \(Q_{\text{ced}} = L - Q_{\text{ass}}\)</div>
+      <span>Conti</span><div>\(\eta = 500/2000\); \(Q_{\text{ced}} = 500 - 2000\)</div>
+      <span>Risultato</span><div><span class="result">\(\eta = 0{,}25 = 25\%\)</span>, <span class="result">\(Q_{\text{ced}} = -1500\ \text{J}\)</span>. Controllo: \(1 - 1500/2000 = 0{,}25\) ✓</div>
+    </div></div></details>
+    <details class="ex"><summary><span class="exn">Esempio 2</span>Centrale termoelettrica</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>potenza elettrica \(P_L = 600\ \text{MW}\), \(\eta = 40\%\)</div>
+      <span>Cerco</span><div>potenza assorbita, potenza ceduta al fiume, calore assorbito in un'ora</div>
+      <span>Formula</span><div>\(\eta = P_L/P_{\text{ass}}\) (il rendimento vale anche con le potenze)</div>
+      <span>Conti</span><div>\(P_{\text{ass}} = 600/0{,}40\); \(|P_{\text{ced}}| = 1500 - 600\); \(Q = 1{,}5\cdot10^9\ \text{W}\cdot3600\ \text{s}\)</div>
+      <span>Risultato</span><div><span class="result">\(1500\ \text{MW}\)</span>, <span class="result">\(900\ \text{MW}\)</span> al fiume (più di quella elettrica!), <span class="result">\(5{,}4\cdot10^{12}\ \text{J}\)</span> in un'ora</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Spiega con parole tue perché una macchina termica ha bisogno di due sorgenti a temperature diverse.</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Il calore scorre solo da caldo a freddo, come l'acqua scende. La macchina sta in mezzo e ne ruba un po'. Per ricominciare il ciclo devo comprimere il gas, e per spendere poco lo comprimo da freddo: così una parte del calore finisce per forza nella sorgente fredda."</p>
+        <h5>Deve dire</h5><ul class="check"><li>il calore va da solo dal caldo al freddo</li><li>la macchina lavora a cicli: deve tornare indietro</li><li>una parte del calore va ceduta per forza</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>"la sorgente fredda serve a non far surriscaldare il motore"</li><li>pensa che il calore ceduto sia uno spreco che una tecnologia migliore eliminerebbe</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">Una macchina ha \(\eta = 30\%\) e cede 1400 J per ciclo. Quanto calore assorbe?</span></summary>
+      <div class="ans"><p>\(|Q_{\text{ced}}| = (1 - \eta)\,Q_{\text{ass}}\), quindi \(Q_{\text{ass}} = 1400/0{,}70 = 2000\ \text{J}\) e \(L = 600\ \text{J}\).</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Una macchina termica assorbe \(Q_{\text{ass}}\) dal caldo, produce \(L\) e cede \(|Q_{\text{ced}}|\) al freddo. \(\eta = L/Q_{\text{ass}} = 1 - |Q_{\text{ced}}|/Q_{\text{ass}}\).</div>
+  <button class="done" type="button" data-sec="s2">Segna «Macchine termiche» come fatto</button>
+</div>
+
+<!-- ============================ 3 ============================ -->
+<div class="part" id="s3" data-part="3 · Gli enunciati">
+  <div class="part-head"><span class="part-n">3 / 9</span><h2>Gli enunciati del secondo principio</h2><span class="level">Pieno · 15 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Un inventore propone una nave che si muove prendendo calore dall'oceano, senza carburante. L'energia ci sarebbe: perché non funziona?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§2) Con quale \(Q_{\text{ced}}\) una macchina avrebbe \(\eta = 1\)?</span></summary>
+      <div class="ans"><p>Con \(Q_{\text{ced}} = 0\): tutto il calore diventerebbe lavoro.</p><p class="why">È proprio ciò che vieta Kelvin-Planck.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§0) Quale processo rispetta il primo principio ma non avviene mai da solo?</span></summary>
+      <div class="ans"><p>Il calore che passa da un corpo freddo a uno caldo.</p><p class="why">È l'enunciato di Clausius.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><dl>
+      <dt>Enunciato di Kelvin-Planck</dt><dd>È impossibile realizzare una trasformazione il cui <b>unico risultato</b> sia trasformare in lavoro tutto il calore assorbito da <b>una sola sorgente</b>.</dd>
+      <dt>Enunciato di Clausius</dt><dd>È impossibile realizzare una trasformazione il cui <b>unico risultato</b> sia trasferire calore da un corpo più <b>freddo</b> a uno più <b>caldo</b>.</dd>
+      <dt>Equivalenza</dt><dd>I due enunciati sono equivalenti: se uno dei due fosse falso, lo sarebbe anche l'altro.</dd>
+    </dl></div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <p>Kelvin-Planck: nessun motore può "bere" calore da una sola fonte e restituirlo tutto come movimento. Un po' va sempre buttato in un posto più freddo.</p>
+    <p>Clausius: il calore è come l'acqua, scende da solo. Per farlo salire ci vuole una pompa, cioè lavoro: è quello che fa il frigorifero.</p>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>La parola chiave è "unico".</b> Un'espansione isoterma trasforma tutto il calore in lavoro, ma intanto il gas si è espanso: non è l'unico risultato e non può andare avanti per sempre.</div></li>
+      <li><div><b>In un ciclo</b> il gas torna com'era: lì sì che l'unico risultato sarebbe "calore → lavoro". Ed è impossibile.</div></li>
+      <li><div><b>Il frigorifero</b> porta calore dal freddo al caldo, ma consuma lavoro: non è l'unico risultato, quindi Clausius è rispettato.</div></li>
+      <li><div><b>Per mostrare che i due enunciati sono la stessa legge</b> si attaccano due macchine e si guarda il bilancio netto delle sorgenti: se una delle due fosse possibile, si costruirebbe anche l'altra.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">Se cade Clausius, cade anche Kelvin-Planck</span>
+      <p class="sub">Premi «Avanti»: un passo alla volta.</p>
+      <div class="stepper" data-combo="A"><button class="btn" data-step="-1">◀ Indietro</button><button class="btn on" data-step="1">Avanti ▶</button><span class="count"></span></div>
+      <svg id="comboA" viewBox="0 0 480 300" aria-label="Dimostrazione: violazione di Clausius implica violazione di Kelvin-Planck"></svg>
+      <p class="caption step-cap" id="comboAcap"></p>
+    </div>
+  </section>
+  <section>
+    <div class="lab">
+      <span class="lab-title">Se cade Kelvin-Planck, cade anche Clausius</span>
+      <p class="sub">Premi «Avanti»: un passo alla volta.</p>
+      <div class="stepper" data-combo="B"><button class="btn" data-step="-1">◀ Indietro</button><button class="btn on" data-step="1">Avanti ▶</button><span class="count"></span></div>
+      <svg id="comboB" viewBox="0 0 480 300" aria-label="Dimostrazione: violazione di Kelvin-Planck implica violazione di Clausius"></svg>
+      <p class="caption step-cap" id="comboBcap"></p>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Spiega i due enunciati a un ragazzo di seconda media, senza formule.</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Kelvin: nessun motore trasforma tutto il calore in movimento, un po' va sempre buttato in un posto più freddo. Clausius: il calore va da solo dal caldo al freddo; per farlo salire devi spendere energia, come fa il frigo."</p>
+        <h5>Deve dire</h5><ul class="check"><li>il senso di "unico risultato"</li><li>Kelvin parla di lavoro, Clausius di flusso di calore</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>dice che il frigorifero viola Clausius</li><li>dice che un'isoterma viola Kelvin-Planck</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">La nave che prende calore dall'oceano e lo trasforma tutto in lavoro: quale enunciato viola?</span></summary>
+      <div class="ans"><p>Kelvin-Planck: una sola sorgente, tutto in lavoro, in modo ciclico. Si chiama "moto perpetuo di seconda specie".</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Kelvin-Planck: nessuna macchina ciclica ha \(\eta = 1\). Clausius: il calore non sale da solo dal freddo al caldo. Sono la stessa legge vista da due lati.</div>
+  <button class="done" type="button" data-sec="s3">Segna «Gli enunciati» come fatto</button>
+</div>
+
+<!-- ============================ 4 ============================ -->
+<div class="part" id="s4" data-part="4 · Reversibile o irreversibile">
+  <div class="part-head"><span class="part-n">4 / 9</span><h2>Reversibile o irreversibile</h2><span class="level">Base · 10 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Se guardi un film al contrario, a volte sembra normale e a volte assurdo. Che cosa distingue le due situazioni?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Cosa rappresenta un punto del piano p-V?</span></summary>
+      <div class="ans"><p>Uno stato di equilibrio: pressione e temperatura uguali in tutto il gas. In una trasformazione brusca gli stati intermedi non sono punti del piano.</p><p class="why">Solo le trasformazioni reversibili si disegnano come una linea continua.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§3) Quale enunciato vieta al calore di passare da solo dal freddo al caldo?</span></summary>
+      <div class="ans"><p>L'enunciato di Clausius.</p><p class="why">È il motivo per cui il raffreddamento del caffè non si può riavvolgere.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal">
+      <p>Una trasformazione è <b>reversibile</b> se può essere percorsa in senso inverso riportando allo stato iniziale <b>sia il sistema sia l'ambiente</b>, senza lasciare alcuna traccia. Per esserlo deve essere <b>quasi-statica</b> (una successione di stati di equilibrio), avvenire <b>senza attriti</b> né altre dissipazioni e scambiare calore solo tra corpi a temperature <b>quasi uguali</b>. In caso contrario è <b>irreversibile</b>. Tutti i processi reali sono irreversibili: quelli reversibili sono un caso limite ideale.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <p>Un pendolo senza attrito, filmato e mandato al contrario, sembra un pendolo normale: è <b>reversibile</b>. Un uovo che si ricompone, il latte che si separa dal caffè, una frenata che riscalda i freni e rimette in moto l'auto: assurdi, quindi <b>irreversibili</b>.</p>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>Attrito</b>: trasforma lavoro in calore. Quel calore non torna da solo a fare lavoro (Kelvin-Planck).</div></li>
+      <li><div><b>Salto di temperatura</b>: il calore passa da un corpo caldo a uno freddo. Non torna indietro da solo (Clausius).</div></li>
+      <li><div><b>Trasformazione brusca</b>: il gas si agita, con zone a pressioni diverse. Il ritorno non ripercorre gli stessi stati.</div></li>
+      <li><div><b>Togli tutte e tre le cause</b> (lentissima, senza attriti, senza salti di temperatura): la trasformazione diventa reversibile. È un ideale, come il piano senza attrito.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">Il gas che si espande nel vuoto</span>
+      <p class="sub">Il gas sta a sinistra, a destra c'è il vuoto. Togli il setto: nessuno spinge (\(L = 0\)), la scatola è isolata (\(Q = 0\)), quindi \(\Delta U = 0\). Eppure le molecole non tornano mai tutte a sinistra da sole.</p>
+      <div class="controls"><button class="btn" id="gasOpen">Togli il setto</button><button class="btn" id="gasReverse">Inverti il film</button><button class="btn" id="gasReset">Ricomincia</button></div>
+      <canvas id="gasCanvas" width="680" height="300"></canvas>
+      <div class="readout"><span class="pill" id="gasCount"></span></div>
+      <p class="caption">«Inverti il film» rovescia tutte le velocità: allora sì, le molecole tornano a sinistra. In natura però nessuno le rovescia, e che succeda per caso è praticamente impossibile.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Esempio svolto</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Quanto costa rimettere a posto il gas?</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>\(n = 1{,}00\ \text{mol}\) a \(T = 300\ \text{K}\), espanso nel vuoto da 10,0 L a 20,0 L; lo riporto a 10,0 L con un'isoterma reversibile</div>
+      <span>Cerco</span><div>il lavoro per rimetterlo a posto</div>
+      <span>Formula</span><div>\(L = nRT\ln\dfrac{V_f}{V_i}\)</div>
+      <span>Conti</span><div>\(L = 1{,}00\cdot8{,}314\cdot300\cdot\ln0{,}5\), con \(\ln0{,}5 = -0{,}693\)</div>
+      <span>Risultato</span><div><span class="result">\(L = -1{,}73\cdot10^3\ \text{J}\)</span>: devo fornire 1730 J, e il gas cede 1730 J di calore all'ambiente. Il gas torna come prima, l'ambiente no: l'espansione nel vuoto è <b>irreversibile</b>.</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Perché è praticamente impossibile che tutte le molecole tornino a sinistra da sole?</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Ogni molecola ha metà probabilità di stare a destra o a sinistra. Tutte e 60 a sinistra è come fare testa 60 volte di fila: \((1/2)^{60}\), circa una volta su un miliardo di miliardi. In un gas vero le molecole sono \(10^{23}\)."</p>
+        <h5>Deve dire</h5><ul class="check"><li>le disposizioni "sparpagliate" sono enormemente più numerose</li><li>non è vietato dalle leggi del moto: è improbabilissimo</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>dice "perché c'è una forza che le spinge a destra"</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">Che differenza c'è tra "tornare allo stato iniziale" (come in un ciclo) ed "essere reversibile"?</span></summary>
+      <div class="ans"><p>In un ciclo torna come prima il <b>gas</b>; l'ambiente può essere cambiato. Reversibile vuol dire che si rimettono a posto <b>tutti e due</b>. Un ciclo può quindi essere irreversibile.</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Reversibile = si annulla senza lasciare traccia nel sistema e nell'ambiente: serve un processo lentissimo, senza attriti e senza salti di temperatura. Tutti i processi reali sono irreversibili.</div>
+  <button class="done" type="button" data-sec="s4">Segna «Reversibile o irreversibile» come fatto</button>
+</div>
+
+<!-- ============================ 5 ============================ -->
+<div class="part" id="s5" data-part="5 · Il ciclo di Carnot">
+  <div class="part-head"><span class="part-n">5 / 9</span><h2>Il ciclo di Carnot</h2><span class="level">Pieno · 25 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Tra due temperature date, qual è la macchina migliore possibile? E quanto rende, al massimo?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Isoterma e adiabatica di un gas perfetto: equazioni, e quanto valgono \(Q\), \(L\), \(\Delta U\)?</span></summary>
+      <div class="ans"><p><b>Isoterma</b>: \(pV = \text{cost}\) (iperbole), \(\Delta U = 0\), \(Q = L = nRT\ln\frac{V_f}{V_i}\).</p><p><b>Adiabatica</b>: \(pV^\gamma = \text{cost}\) e \(TV^{\gamma-1} = \text{cost}\) (\(\gamma = 5/3\) monoatomico, \(7/5\) biatomico), \(Q = 0\), \(L = -\Delta U = -nc_V\Delta T\): in espansione il gas si raffredda.</p><p class="why">Il ciclo di Carnot è fatto proprio di due isoterme e due adiabatiche.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§4) Quali condizioni rendono reversibile una trasformazione?</span></summary>
+      <div class="ans"><p>Lentissima, senza attriti, calore scambiato solo senza salti di temperatura.</p><p class="why">Carnot ha costruito il suo ciclo per rispettarle tutte.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal">
+      <p>Il <b>ciclo di Carnot</b> è un ciclo reversibile formato da <b>due isoterme</b> e <b>due adiabatiche</b>, in cui il gas scambia calore soltanto con due sorgenti, alle temperature \(T_c\) e \(T_f\):</p>
+      <ol>
+        <li><b>1→2 espansione isoterma</b> a \(T_c\): il gas assorbe \(Q_{\text{ass}}\) e lo trasforma tutto in lavoro;</li>
+        <li><b>2→3 espansione adiabatica</b>: compie lavoro e si raffredda da \(T_c\) a \(T_f\);</li>
+        <li><b>3→4 compressione isoterma</b> a \(T_f\): riceve lavoro e cede \(|Q_{\text{ced}}|\);</li>
+        <li><b>4→1 compressione adiabatica</b>: si riscalda da \(T_f\) a \(T_c\).</li>
+      </ol>
+      <p>Il suo rendimento è \(\eta = 1 - T_f/T_c\), con le temperature in kelvin.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <p>Un cilindro con un pistone, che appoggi in quattro posti diversi: sul <span class="hot">fornello</span>, su un tappetino isolante, su un blocco di <span class="cold">ghiaccio</span>, di nuovo sull'isolante. Ogni volta il pistone sale o scende piano piano. Il laboratorio qui sotto fa proprio questo.</p>
+  </section>
+
+  <section>
+    <div class="lab" id="carnotLab">
+      <span class="lab-title">Il ciclo di Carnot, fase per fase</span>
+      <p class="sub">1 mol di gas, \(V_1 = 10\) L, \(V_2 = 20\) L. Premi ▶ o tocca una fase. Le molecole si muovono più veloci quando il gas è più caldo.</p>
+      <div class="controls">
+        <button class="btn" id="carnotPlay">▶ Anima</button>
+        <div class="seg" id="phaseBtns"><button class="btn" data-ph="0">1→2</button><button class="btn" data-ph="1">2→3</button><button class="btn" data-ph="2">3→4</button><button class="btn" data-ph="3">4→1</button></div>
+      </div>
+      <div class="two wide">
+        <svg id="carnotPV" viewBox="0 0 420 320" aria-label="Ciclo di Carnot nel piano p-V"></svg>
+        <svg id="carnotPiston" viewBox="0 0 220 330" aria-label="Cilindro con pistone"></svg>
+      </div>
+      <div class="phase-desc" id="phaseDesc"></div>
+    </div>
+    <div class="lab">
+        <span class="lab-title">Il ciclo di Carnot: cambia le temperature</span>
+        <div class="controls">
+          <div class="slider hot"><label for="tcSlider">Sorgente calda \(T_c\)</label><output id="tcOut"></output><input type="range" id="tcSlider" min="350" max="900" step="10" value="600"></div>
+          <div class="slider cold"><label for="tfSlider">Sorgente fredda \(T_f\)</label><output id="tfOut"></output><input type="range" id="tfSlider" min="250" max="600" step="10" value="300"></div>
+        </div>
+        <div class="controls"><span class="caption">Gas:</span><div class="seg" id="gammaBtns"><button class="btn on" data-g="mono">monoatomico</button><button class="btn" data-g="bi">biatomico</button></div></div>
+        <div class="two">
+          <div style="display:flex;flex-direction:column;gap:10px"><div id="carnotEta" class="big"></div><div class="readout" id="carnotReadout"></div></div>
+          <svg id="carnotFlow" viewBox="0 0 360 300" aria-label="Flussi di energia del ciclo di Carnot"></svg>
+        </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>Il calore si scambia solo sulle isoterme</b>, cioè quando il gas ha la stessa temperatura della sorgente: niente salti di temperatura, quindi niente sprechi.</div></li>
+      <li><div><b>Le adiabatiche fanno da "ascensore"</b>: portano il gas da \(T_c\) a \(T_f\) e ritorno senza scambiare calore.</div></li>
+      <li><div><b>Il calore scambiato su un'isoterma è proporzionale alla sua temperatura</b>: \(Q = nRT\ln(V_f/V_i)\). Le due adiabatiche fanno sì che i rapporti dei volumi siano uguali sulle due isoterme.</div></li>
+      <li><div><b>Allora</b> \(|Q_{\text{ced}}|/Q_{\text{ass}} = T_f/T_c\): il rendimento dipende solo dalle temperature, non dal gas né dai volumi.</div></li>
+      <li><div><b>Per avere \(\eta = 1\)</b> servirebbe \(T_f = 0\ \text{K}\), lo zero assoluto, che non si può raggiungere.</div></li>
+    </ol>
+  </section>
+
+  <div class="formula">\[\frac{|Q_{\text{ced}}|}{Q_{\text{ass}}} = \frac{T_f}{T_c}\]\[\eta_{\text{Carnot}} = 1 - \frac{T_f}{T_c}\]<p class="note">Temperature sempre in kelvin: \(T = t + 273{,}15\).</p></div>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><p><b>Teorema di Carnot.</b> Nessuna macchina che lavora tra due sorgenti a temperature \(T_c\) e \(T_f\) può avere un rendimento <b>maggiore</b> di quello di una macchina reversibile che lavora tra le stesse sorgenti. Tutte le macchine reversibili tra le stesse temperature hanno lo stesso rendimento, \(1 - T_f/T_c\).</p></div>
+  </section>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">Perché nessuno batte Carnot</span>
+      <p class="sub">Supponi che esista una macchina X migliore di Carnot (60% contro 50%). Segui i passi.</p>
+      <div class="stepper" data-combo="C"><button class="btn" data-step="-1">◀ Indietro</button><button class="btn on" data-step="1">Avanti ▶</button><span class="count"></span></div>
+      <svg id="comboC" viewBox="0 0 480 300" aria-label="Dimostrazione del teorema di Carnot"></svg>
+      <p class="caption step-cap" id="comboCcap"></p>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Esempi svolti</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Carnot tra 527 °C e 27 °C</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>\(t_c = 527\ ^\circ\text{C}\), \(t_f = 27\ ^\circ\text{C}\), \(Q_{\text{ass}} = 1000\ \text{J}\)</div>
+      <span>Cerco</span><div>\(\eta\), \(L\) e \(|Q_{\text{ced}}|\)</div>
+      <span>Formula</span><div>\(\eta = 1 - T_f/T_c\), con \(T = t + 273\)</div>
+      <span>Conti</span><div>\(T_c = 800\ \text{K}\), \(T_f = 300\ \text{K}\); \(\eta = 1 - 300/800\)</div>
+      <span>Risultato</span><div><span class="result">\(\eta = 62{,}5\%\)</span>, \(L = 625\ \text{J}\), \(|Q_{\text{ced}}| = 375\ \text{J}\). ⚠ Con i °C sarebbe venuto \(1 - 27/527 = 95\%\): sbagliato!</div>
+    </div></div></details>
+    <details class="ex"><summary><span class="exn">Esempio 2</span>Il ciclo del laboratorio, fase per fase</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>1,00 mol monoatomico (\(c_V = \tfrac32R\)), \(T_c = 600\ \text{K}\), \(T_f = 300\ \text{K}\), \(V_1 = 10{,}0\ \text{L}\), \(V_2 = 20{,}0\ \text{L}\)</div>
+      <span>1 → 2</span><div>\(Q_{\text{ass}} = nRT_c\ln2 = 8{,}314\cdot600\cdot0{,}693 = 3{,}46\cdot10^3\ \text{J}\)</div>
+      <span>2 → 3</span><div>\(V_3 = V_2\,(T_c/T_f)^{1/(\gamma-1)} = 20{,}0\cdot2^{1{,}5} = 56{,}6\ \text{L}\); \(L_{23} = nc_V(T_c - T_f) = 3{,}74\cdot10^3\ \text{J}\)</div>
+      <span>3 → 4</span><div>\(V_4 = 28{,}3\ \text{L}\); \(Q_{\text{ced}} = nRT_f\ln0{,}5 = -1{,}73\cdot10^3\ \text{J}\)</div>
+      <span>4 → 1</span><div>\(L_{41} = -3{,}74\cdot10^3\ \text{J}\): i lavori delle due adiabatiche si annullano</div>
+      <span>Risultato</span><div><span class="result">\(L = 3458 - 1729 = 1{,}73\cdot10^3\ \text{J}\)</span>, \(\eta = 0{,}500 = 1 - 300/600\) ✓</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Perché nemmeno una macchina perfetta, senza attriti, arriva al 100%?</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Per chiudere il ciclo devo comprimere il gas, e per spendere poco lo comprimo da freddo, cedendo calore alla sorgente fredda. Quel calore è proporzionale a \(T_f\): sarebbe zero solo allo zero assoluto, che non esiste."</p>
+        <h5>Deve dire</h5><ul class="check"><li>è un limite di principio, non solo colpa degli attriti</li><li>\(|Q_{\text{ced}}|/Q_{\text{ass}} = T_f/T_c\)</li><li>0 K è irraggiungibile</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>risponde solo "perché ci sono gli attriti"</li><li>dice "reversibile = non perde niente = 100%"</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">Un inventore dichiara un motore con \(\eta = 45\%\) tra 100 °C e 20 °C. Ci credi?</span></summary>
+      <div class="ans"><p>No: \(\eta_{\text{Carnot}} = 1 - 293/373 = 21\%\). Il 45% supera il limite di Carnot.</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Carnot = 2 isoterme + 2 adiabatiche, tutto reversibile. \(\eta = 1 - T_f/T_c\) (in kelvin) è il rendimento massimo tra due sorgenti, ed è sempre minore di 1.</div>
+  <button class="done" type="button" data-sec="s5">Segna «Il ciclo di Carnot» come fatto</button>
+</div>
+
+<!-- ============================ 6 ============================ -->
+<div class="part" id="s6" data-part="6 · Frigoriferi e pompe di calore">
+  <div class="part-head"><span class="part-n">6 / 9</span><h2>Frigoriferi e pompe di calore</h2><span class="level">Base · 15 minuti</span></div>
+  <p class="guide"><b>La domanda guida.</b> Il frigorifero porta calore dall'interno freddo alla cucina più calda. Come fa, se il calore non sale da solo?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§1) Un ciclo percorso in senso antiorario: il lavoro è positivo o negativo?</span></summary>
+      <div class="ans"><p>Negativo: il gas riceve lavoro dall'esterno.</p><p class="why">Il frigorifero è un ciclo antiorario.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§5) In una macchina di Carnot, quanto vale \(|Q_{\text{ced}}|/Q_{\text{ass}}\)?</span></summary>
+      <div class="ans"><p>\(T_f/T_c\).</p><p class="why">Con lo stesso rapporto si trova il COP di Carnot.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><dl>
+      <dt>Frigorifero</dt><dd>Macchina che, funzionando ciclicamente e ricevendo il lavoro \(|L|\), assorbe il calore \(Q_f\) da una sorgente fredda e cede il calore \(|Q_c| = Q_f + |L|\) a una sorgente calda.</dd>
+      <dt>Pompa di calore</dt><dd>Lo stesso dispositivo, usato per <b>riscaldare</b> la sorgente calda (la casa) prendendo calore da quella fredda (l'aria esterna).</dd>
+      <dt>Coefficiente di prestazione (COP)</dt><dd>Rapporto tra il calore utile (tolto al freddo per il frigorifero, dato al caldo per la pompa di calore) e il lavoro speso. Può essere maggiore di 1 senza violare la conservazione dell'energia, perché il calore non viene creato: viene <b>spostato</b>.</dd>
+    </dl></div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <div class="two">
+      <p>Il frigo è una <b>pompa che riporta l'acqua in cima alla cascata</b>. Prende calore dai cibi e lo butta in cucina dalla serpentina dietro, che infatti è tiepida. La pompa è il compressore, e per questo consuma corrente.</p>
+      <svg id="fridgeDraw" viewBox="0 0 300 300" aria-label="Frigorifero di casa con i flussi di calore"></svg>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>È una macchina termica al contrario</b>: il ciclo gira in senso antiorario e il gas riceve lavoro.</div></li>
+      <li><div><b>Il gas, espanso e freddissimo</b>, passa nei tubi dentro il frigo: è più freddo dei cibi e prende calore \(Q_f\).</div></li>
+      <li><div><b>Il compressore lo comprime</b> (lavoro \(|L|\)): il gas si scalda, più della cucina.</div></li>
+      <li><div><b>Nella serpentina dietro</b> il gas, ora più caldo della cucina, le cede \(|Q_c| = Q_f + |L|\). Il calore è "salito" perché abbiamo pagato con il lavoro.</div></li>
+      <li><div><b>Più le due temperature sono vicine</b>, meno lavoro serve: per questo il COP cresce quando \(T_c - T_f\) diminuisce.</div></li>
+    </ol>
+  </section>
+
+  <div class="formula">\[\text{COP}_{\text{frigo}} = \frac{Q_f}{|L|}\]\[\text{COP}_{\text{pdc}} = \frac{|Q_c|}{|L|} = \text{COP}_{\text{frigo}} + 1\]<p class="note">Per una macchina di Carnot:</p>\[\text{COP}_{\text{frigo}} = \frac{T_f}{T_c - T_f}\]\[\text{COP}_{\text{pdc}} = \frac{T_c}{T_c - T_f} = \frac{1}{\eta_{\text{Carnot}}}\]</div>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">Rendimento contro COP</span>
+      <p class="sub">Stesse due sorgenti, due usi opposti. Il frigorifero di Carnot riceve 100 J di lavoro. Avvicina le temperature e guarda cosa succede.</p>
+      <div class="controls">
+        <div class="slider hot"><label for="copTc">Sorgente calda</label><output id="copTcOut"></output><input type="range" id="copTc" min="-10" max="60" step="1" value="35"></div>
+        <div class="slider cold"><label for="copTf">Sorgente fredda</label><output id="copTfOut"></output><input type="range" id="copTf" min="-30" max="30" step="1" value="0"></div>
+      </div>
+      <div class="two"><div id="copBars"></div><svg id="copFlow" viewBox="0 0 360 300" aria-label="Flussi di energia nel frigorifero di Carnot"></svg></div>
+    </div>
+  </section>
+
+  <p>In casa: il <b>frigorifero</b> (interno a 4 °C, COP reale 2–3), il <b>condizionatore</b> (un frigo in cui la "scatola fredda" è la stanza e il caldo va sul balcone), la <b>pompa di calore</b> (d'inverno prende calore dall'aria fuori e lo porta in casa, COP reale 3–4, contro 1 di una stufetta elettrica).</p>
+
+  <section>
+    <span class="tag">Esempi svolti</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Il frigo di casa</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>interno 4 °C, cucina 25 °C; frigo reale con COP = 3,0 che toglie \(Q_f = 90\ \text{kJ}\)</div>
+      <span>Cerco</span><div>il COP massimo, il lavoro speso, il calore che arriva in cucina</div>
+      <span>Formula</span><div>\(\text{COP}_C = T_f/(T_c - T_f)\); \(|L| = Q_f/\text{COP}\); \(|Q_c| = Q_f + |L|\)</div>
+      <span>Conti</span><div>\(277{,}15/21{,}0\); \(90/3{,}0\); \(90 + 30\)</div>
+      <span>Risultato</span><div>COP di Carnot <span class="result">\(13{,}2\)</span>, <span class="result">\(|L| = 30\ \text{kJ}\)</span>, in cucina <span class="result">\(120\ \text{kJ}\)</span></div>
+    </div></div></details>
+    <details class="ex"><summary><span class="exn">Esempio 2</span>Riscaldare casa con la pompa di calore</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>aria esterna 0 °C, termosifoni 35 °C, servono 10 kWh di calore, pompa reale con COP = 4,0</div>
+      <span>Cerco</span><div>il COP massimo, la corrente consumata, il calore preso dall'aria</div>
+      <span>Formula</span><div>\(\text{COP}_C = T_c/(T_c - T_f)\); \(|L| = |Q_c|/\text{COP}\)</div>
+      <span>Conti</span><div>\(308{,}15/35{,}0\); \(10/4{,}0\); \(10 - 2{,}5\)</div>
+      <span>Risultato</span><div>COP di Carnot <span class="result">\(8{,}80\)</span>, corrente <span class="result">\(2{,}5\ \text{kWh}\)</span>, dall'aria <span class="result">\(7{,}5\ \text{kWh}\)</span> gratis. Una stufetta ne consumerebbe 10.</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Spiega a un bambino perché il frigorifero consuma corrente.</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Il caldo va da solo verso il freddo, come una palla rotola in discesa. Il frigo deve portarlo dall'interno freddo alla cucina più calda: è come riportare la palla in cima, serve fatica. La fatica del frigo è la corrente."</p>
+        <h5>Deve dire</h5><ul class="check"><li>il verso spontaneo del calore</li><li>serve lavoro per invertirlo</li><li>il calore tolto finisce in cucina</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>dice "consuma corrente per produrre il freddo"</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">Un condizionatore toglie 3000 J dalla stanza usando 1000 J di lavoro. COP? Quanto calore va all'esterno?</span></summary>
+      <div class="ans"><p>COP = 3000/1000 = 3,0; all'esterno vanno 3000 + 1000 = 4000 J.</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>Il frigorifero sposta calore dal freddo al caldo spendendo lavoro: \(|Q_c| = Q_f + |L|\). \(\text{COP}_{\text{frigo}} = Q_f/|L|\) e \(\text{COP}_{\text{pdc}} = |Q_c|/|L|\), di solito maggiori di 1.</div>
+  <button class="done" type="button" data-sec="s6">Segna «Frigoriferi» come fatto</button>
+</div>
+
+<!-- ============================ 7 ============================ -->
+<div class="part" id="s7" data-part="7 · Entropia">
+  <div class="part-head"><span class="part-n">7 / 9</span><h2>Entropia <span class="badge">approfondimento</span></h2><span class="level">Pieno · 20 minuti · potrebbe non essere nel programma</span></div>
+  <p class="guide"><b>La domanda guida.</b> Nell'espansione nel vuoto \(Q\), \(L\) e \(\Delta U\) sono tutti zero, eppure il processo non torna indietro. Esiste una grandezza che "se ne accorge"?</p>
+
+  <section>
+    <span class="tag">Ripasso lampo</span>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">Quanto calore assorbe un gas in un'isoterma reversibile? E in un'isocora?</span></summary>
+      <div class="ans"><p>Isoterma: \(Q = nRT\ln\frac{V_f}{V_i}\). Isocora: \(Q = nc_V\Delta T\).</p><p class="why">Dividendo il calore per \(T\) si ottiene l'entropia.</p></div></details>
+    <details class="q q-rip"><summary><span class="qtag">Ripasso</span><span class="qt">(§5) Riscrivi \(|Q_{\text{ced}}|/Q_{\text{ass}} = T_f/T_c\) come uguaglianza tra due rapporti "calore diviso temperatura".</span></summary>
+      <div class="ans"><p>\(Q_{\text{ass}}/T_c = |Q_{\text{ced}}|/T_f\).</p><p class="why">Il calore non si conserva, ma \(Q/T\) sì: quella è l'entropia.</p></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Definizione d'esame</span>
+    <div class="formal"><dl>
+      <dt>Entropia</dt><dd>Funzione di stato \(S\) la cui variazione, in una trasformazione <b>reversibile</b> a temperatura \(T\), è il calore scambiato diviso per la temperatura assoluta: \(\Delta S = Q_{\text{rev}}/T\). Si misura in J/K. Se la temperatura cambia, si somma \(Q/T\) su tanti piccoli tratti. Per un processo irreversibile \(\Delta S\) si calcola lungo un qualsiasi percorso reversibile tra gli stessi due stati.</dd>
+      <dt>Principio di aumento dell'entropia</dt><dd>In un sistema <b>isolato</b> l'entropia non può diminuire: \(\Delta S \ge 0\), con il segno uguale solo per le trasformazioni reversibili. È la forma più generale del secondo principio.</dd>
+    </dl></div>
+  </section>
+
+  <section>
+    <span class="tag">Immagina</span>
+    <p>Lo stesso calore "pesa" di più se arriva a un corpo freddo: le sue molecole sono calme, e un po' di energia le scombussola tanto. In un corpo caldo sono già agitatissime. È come urlare in una biblioteca o in uno stadio: lo stesso urlo fa molto più "disordine" in biblioteca. Per questo si divide per \(T\).</p>
+  </section>
+
+  <section>
+    <span class="tag">Come funziona</span>
+    <ol class="chain">
+      <li><div><b>1000 J passano da un corpo a 400 K a uno a 300 K.</b> Il caldo perde \(1000/400 = 2{,}50\ \text{J/K}\), il freddo guadagna \(1000/300 = 3{,}33\ \text{J/K}\).</div></li>
+      <li><div><b>In totale l'entropia aumenta</b> di 0,83 J/K. Al contrario diminuirebbe: è il processo che Clausius vieta.</div></li>
+      <li><div><b>Nel ciclo di Carnot</b> \(Q_{\text{ass}}/T_c = |Q_{\text{ced}}|/T_f\): l'entropia totale resta uguale. È il caso reversibile, il limite migliore.</div></li>
+      <li><div><b>Nell'espansione nel vuoto</b> \(Q = 0\), ma \(S\) è una funzione di stato: la calcolo su un'isoterma reversibile tra gli stessi stati e trovo \(\Delta S = nR\ln(V_f/V_i) > 0\).</div></li>
+      <li><div><b>Un sistema non isolato può diminuire la sua entropia</b> (l'acqua che gela, l'interno del frigo), ma l'ambiente la aumenta di più.</div></li>
+    </ol>
+    <p class="oneline"><b>In una frase:</b> le cose vanno da sole nel verso in cui l'entropia totale cresce. Per questo distinguiamo il passato dal futuro: è la "freccia del tempo".</p>
+  </section>
+
+  <div class="formula">\[\Delta S = \frac{Q_{\text{rev}}}{T}\]\[\Delta S_{\text{isolato}} \ge 0\]</div>
+
+  <div class="tbl"><table>
+    <tr><th>Trasformazione</th><th>\(\Delta S\)</th></tr>
+    <tr><td>Isoterma</td><td>\(nR\ln\dfrac{V_f}{V_i}\)</td></tr>
+    <tr><td>Isocora</td><td>\(nc_V\ln\dfrac{T_f}{T_i}\)</td></tr>
+    <tr><td>Isobara</td><td>\(nc_p\ln\dfrac{T_f}{T_i}\)</td></tr>
+    <tr><td>Adiabatica reversibile</td><td>\(0\) (isoentropica)</td></tr>
+  </table></div>
+
+  <section>
+    <div class="lab">
+      <span class="lab-title">L'entropia di un'isoterma</span>
+      <p class="sub">\(\Delta S = nR\ln(V_f/V_i)\): positiva se il gas si espande, negativa se viene compresso, zero se il volume non cambia.</p>
+      <div class="controls">
+        <div class="slider"><label for="sRatio">Rapporto \(V_f/V_i\)</label><output id="sRatioOut"></output><input type="range" id="sRatio" min="0.1" max="5" step="0.05" value="2"></div>
+        <div class="slider"><label for="sMol">Moli \(n\)</label><output id="sMolOut"></output><input type="range" id="sMol" min="0.5" max="3" step="0.5" value="1"></div>
+      </div>
+      <svg id="entropySvg" viewBox="0 0 460 300" aria-label="Variazione di entropia in funzione del rapporto dei volumi"></svg>
+      <div class="readout" id="entropyReadout"></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="tag">Esempi svolti</span>
+    <details class="ex"><summary><span class="exn">Esempio 1</span>Espansione isoterma</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>\(n = 2{,}00\ \text{mol}\), \(T = 300\ \text{K}\), da 10,0 L a 30,0 L</div>
+      <span>Cerco</span><div>\(\Delta S\) e il calore assorbito</div>
+      <span>Formula</span><div>\(\Delta S = nR\ln(V_f/V_i)\); \(Q = T\Delta S\)</div>
+      <span>Conti</span><div>\(2{,}00\cdot8{,}314\cdot\ln3{,}00 = 16{,}63\cdot1{,}0986\); \(300\cdot18{,}27\)</div>
+      <span>Risultato</span><div><span class="result">\(\Delta S = 18{,}3\ \text{J/K}\)</span>, <span class="result">\(Q = 5{,}48\cdot10^3\ \text{J}\)</span>. Nel rapporto i litri vanno bene.</div>
+    </div></div></details>
+    <details class="ex"><summary><span class="exn">Esempio 2</span>Riscaldamento a volume costante</summary><div class="ans"><div class="ex-grid">
+      <span>Dati</span><div>1,00 mol di gas monoatomico (\(c_V = \tfrac32R = 12{,}47\ \text{J/(mol·K)}\)) da 300 K a 600 K</div>
+      <span>Cerco</span><div>\(\Delta S\)</div>
+      <span>Formula</span><div>\(\Delta S = nc_V\ln(T_f/T_i)\)</div>
+      <span>Conti</span><div>\(12{,}47\cdot\ln2 = 12{,}47\cdot0{,}693\)</div>
+      <span>Risultato</span><div><span class="result">\(\Delta S = 8{,}64\ \text{J/K}\)</span>. Il calore è \(3741\ \text{J}\): diviso per 300 K darebbe 12,5, diviso per 600 K 6,2. Il valore giusto sta in mezzo, perché \(T\) cambia.</div>
+    </div></div></details>
+  </section>
+
+  <section>
+    <span class="tag">Domande</span>
+    <details class="q q-fey"><summary><span class="qtag">Spiegalo tu</span><span class="qt">Cosa c'entra l'entropia con il fatto che ricordiamo il passato e non il futuro?</span></summary>
+      <div class="ans">
+        <h5>Risposta modello</h5><p>"Le leggi che muovono le singole molecole funzionano uguali avanti e indietro. Ma l'universo va sempre verso più entropia: è questo che dice cosa viene prima e cosa dopo. Un uovo rotto viene dopo un uovo intero, mai il contrario."</p>
+        <h5>Deve dire</h5><ul class="check"><li>le leggi microscopiche non distinguono avanti e indietro</li><li>l'aumento dell'entropia dà una direzione</li></ul>
+        <h5>Non ha capito se</h5><ul class="warn"><li>dice "l'entropia è il tempo"</li><li>pensa che l'entropia sia una forma di energia</li></ul>
+      </div></details>
+    <details class="q q-chk"><summary><span class="qtag">Verifica</span><span class="qt">In una compressione isoterma reversibile l'entropia del gas diminuisce. Viola il secondo principio?</span></summary>
+      <div class="ans"><p>No: il gas non è isolato. Cede calore alla sorgente, la cui entropia aumenta della stessa quantità.</p></div></details>
+  </section>
+
+  <div class="sintesi"><b>In sintesi</b>\(\Delta S = Q_{\text{rev}}/T\), in J/K, ed è una funzione di stato. In un sistema isolato l'entropia non diminuisce mai: è il secondo principio nella forma più generale.</div>
+  <button class="done" type="button" data-sec="s7">Segna «Entropia» come fatto</button>
+</div>
+
+<!-- ============================ 8 ============================ -->
+<div class="part" id="s8" data-part="8 · Domande trappola">
+  <div class="part-head"><span class="part-n">8 / 9</span><h2>Domande trappola</h2><span class="level">Ripasso · 15 minuti</span></div>
+  <p class="guide"><b>Come usarle.</b> Rispondi d'istinto, a voce, poi ragionaci. Ognuna nasconde un errore che si fa spesso nei compiti.</p>
+  <section>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 1</span><span class="qt">Carnot tra 27 °C e 327 °C: il rendimento è \(1 - 27/327 \approx 92\%\)?</span></summary>
+      <div class="ans"><p><b>No: \(\eta = 1 - 300/600 = 50\%\).</b> Lo zero dei gradi Celsius è arbitrario (il ghiaccio che fonde). La formula ha senso solo con la temperatura assoluta.</p><p class="goto">Ripassa: <a href="#s5">parte 5</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 2</span><span class="qt">D'estate lascio il frigo aperto, con porte e finestre chiuse: la cucina si rinfresca?</span></summary>
+      <div class="ans"><p><b>No, si scalda.</b> Il frigo prende \(Q_f\) dalla cucina e restituisce \(Q_f + |L|\) alla cucina stessa: il saldo è \(+|L|\). Il condizionatore funziona perché butta il calore <em>fuori</em>.</p><p class="goto">Ripassa: <a href="#s6">parte 6</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 3</span><span class="qt">Una pompa di calore con COP = 4 dà 4 J di calore per ogni joule di corrente: crea energia?</span></summary>
+      <div class="ans"><p><b>No.</b> 1 J viene dalla corrente, 3 J sono presi dall'aria esterna. Il calore è spostato, non creato. Il COP non è un rendimento.</p><p class="goto">Ripassa: <a href="#s6">parte 6</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 4</span><span class="qt">L'entropia non può mai diminuire. Allora l'acqua che gela nel freezer viola il secondo principio?</span></summary>
+      <div class="ans"><p><b>No.</b> L'entropia non diminuisce nei sistemi <em>isolati</em>. L'acqua cede calore, e l'entropia dell'ambiente cresce più di quanto cala quella dell'acqua.</p><p class="goto">Ripassa: <a href="#s7">parte 7</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 5</span><span class="qt">In un ciclo il gas torna allo stato iniziale, quindi il lavoro totale è zero?</span></summary>
+      <div class="ans"><p><b>Falso.</b> È \(\Delta U\) a essere zero, perché \(U\) è una funzione di stato. Il lavoro è l'area racchiusa: se fosse zero, nessun motore funzionerebbe.</p><p class="goto">Ripassa: <a href="#s1">parte 1</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 6</span><span class="qt">Una macchina reversibile non ha perdite, quindi ha rendimento 1?</span></summary>
+      <div class="ans"><p><b>Falso.</b> Deve comunque cedere calore alla sorgente fredda: \(\eta = 1 - T_f/T_c < 1\). Non è uno spreco evitabile: lo impone Kelvin-Planck.</p><p class="goto">Ripassa: <a href="#s5">parte 5</a> e <a href="#s3">parte 3</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 7</span><span class="qt">\(Q_{\text{ass}} = 1000\ \text{J}\) e \(Q_{\text{ced}} = -600\ \text{J}\): allora \(\eta = 1 - (-600)/1000 = 1{,}6\)?</span></summary>
+      <div class="ans"><p><b>No: \(\eta = 1 - 600/1000 = 0{,}40\).</b> Il calore ceduto è negativo, quindi nella formula serve il valore assoluto. Un rendimento maggiore di 1 è sempre un campanello d'allarme.</p><p class="goto">Ripassa: <a href="#s2">parte 2</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 8</span><span class="qt">Se raddoppio entrambe le temperature (in kelvin), il rendimento di Carnot raddoppia?</span></summary>
+      <div class="ans"><p><b>No, resta uguale</b>: conta il rapporto \(T_f/T_c\). E nemmeno la differenza basta: tra 400 K e 300 K si ha il 25%, tra 1000 K e 900 K solo il 10%.</p><p class="goto">Ripassa: <a href="#s5">parte 5</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 9</span><span class="qt">In un'adiabatica il gas non scambia calore, quindi la sua temperatura resta costante?</span></summary>
+      <div class="ans"><p><b>Falso.</b> \(Q = 0\) ma \(\Delta U = -L\): espandendosi il gas si raffredda, comprimendosi si scalda. È così che Carnot passa da \(T_c\) a \(T_f\).</p><p class="goto">Ripassa: <a href="#s5">parte 5</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 10</span><span class="qt">Nell'espansione nel vuoto \(Q = 0\), quindi \(\Delta S = Q/T = 0\)?</span></summary>
+      <div class="ans"><p><b>Falso: \(\Delta S = nR\ln(V_f/V_i) > 0\).</b> \(Q/T\) vale solo lungo un percorso reversibile. L'aumento di entropia è proprio il segno dell'irreversibilità.</p><p class="goto">Ripassa: <a href="#s7">parte 7</a> e <a href="#s4">parte 4</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 11</span><span class="qt">Un ciclo percorso in senso antiorario è un motore "girato" che produce lavoro?</span></summary>
+      <div class="ans"><p><b>Falso.</b> In senso antiorario il lavoro netto è negativo: il gas riceve lavoro. È un frigorifero.</p><p class="goto">Ripassa: <a href="#s1">parte 1</a></p></div></details>
+    <details class="q q-trap"><summary><span class="qtag">Trappola 12</span><span class="qt">Tra le stesse temperature, la macchina di Carnot ha \(\eta = 25\%\). Allora il frigo di Carnot ha COP = 0,25?</span></summary>
+      <div class="ans"><p><b>No.</b> Con 400 K e 300 K: \(\text{COP}_{\text{frigo}} = 300/100 = 3\) e \(\text{COP}_{\text{pdc}} = 1/\eta = 4\). Una macchina che rende poco è un ottimo frigorifero.</p><p class="goto">Ripassa: <a href="#s6">parte 6</a></p></div></details>
+  </section>
+  <button class="done" type="button" data-sec="s8">Segna «Domande trappola» come fatto</button>
+</div>
+
+<!-- ============================ 9 ============================ -->
+<div class="part" id="s9" data-part="9 · Scheda per l'interrogazione">
+  <div class="part-head"><span class="part-n">9 / 9</span><h2>Scheda per l'interrogazione</h2><span class="level">Da ripassare prima della verifica</span></div>
+  <p class="guide"><b>Come usarla.</b> Leggi una definizione, coprila e ripetila a voce. Poi controlla le formule e gli errori da evitare.</p>
+
+  <section>
+    <span class="tag">Tutte le definizioni d'esame</span>
+    <div id="defsAll" style="display:flex;flex-direction:column;gap:14px"></div>
+  </section>
+
+  <section>
+    <span class="tag">Le formule</span>
+    <div class="tbl"><table>
+      <tr><th>Cosa</th><th>Formula</th><th>Attenzione</th></tr>
+      <tr><td>Primo principio</td><td>\(\Delta U = Q - L\)</td><td>\(Q>0\) assorbito, \(L>0\) fatto dal gas</td></tr>
+      <tr><td>Ciclo</td><td>\(\Delta U = 0,\ Q_{\text{tot}} = L\)</td><td>\(L\) = area racchiusa</td></tr>
+      <tr><td>Macchina termica</td><td>\(L = Q_{\text{ass}} - |Q_{\text{ced}}|\)</td><td>\(Q_{\text{ced}} < 0\)</td></tr>
+      <tr><td>Rendimento</td><td>\(\eta = \dfrac{L}{Q_{\text{ass}}} = 1 - \dfrac{|Q_{\text{ced}}|}{Q_{\text{ass}}}\)</td><td>sempre minore di 1</td></tr>
+      <tr><td>Carnot</td><td>\(\eta_C = 1 - \dfrac{T_f}{T_c}\)</td><td>temperature in kelvin</td></tr>
+      <tr><td>COP frigorifero</td><td>\(\dfrac{Q_f}{|L|}\); Carnot \(\dfrac{T_f}{T_c - T_f}\)</td><td>può superare 1</td></tr>
+      <tr><td>COP pompa di calore</td><td>\(\dfrac{|Q_c|}{|L|}\); Carnot \(\dfrac{T_c}{T_c - T_f}\)</td><td>\(|Q_c| = Q_f + |L|\)</td></tr>
+      <tr><td>Isoterma</td><td>\(Q = L = nRT\ln\dfrac{V_f}{V_i}\)</td><td>\(R = 8{,}314\ \text{J/(mol·K)}\)</td></tr>
+      <tr><td>Adiabatica</td><td>\(pV^\gamma = \text{cost},\ L = -nc_V\Delta T\)</td><td>\(\gamma = 5/3\) mono, \(7/5\) bi</td></tr>
+      <tr><td>Entropia</td><td>\(\Delta S = \dfrac{Q_{\text{rev}}}{T}\)</td><td>isolato: \(\Delta S \ge 0\)</td></tr>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="tag">Errori da non fare</span>
+    <ul>
+      <li>Gradi Celsius nelle formule di Carnot, del COP e dell'entropia: <b>sempre kelvin</b>. Solo le differenze sono uguali in °C e K.</li>
+      <li>Dimenticare il valore assoluto su \(Q_{\text{ced}}\) e su \(L\) nelle formule di \(\eta\) e del COP.</li>
+      <li>Dire "il lavoro di un ciclo è zero": è \(\Delta U\) a essere zero.</li>
+      <li>Confondere rendimento e COP: \(\eta < 1\) sempre, il COP di solito è maggiore di 1.</li>
+      <li>Usare i litri in \(p\,\Delta V\) con \(p\) in pascal: servono i m³ (1 L = \(10^{-3}\) m³).</li>
+    </ul>
+  </section>
+
+  <div class="sintesi"><b>La lezione in tre righe</b>Il calore va da solo dal caldo al freddo e non si trasforma mai tutto in lavoro. La macchina migliore è quella di Carnot, con \(\eta = 1 - T_f/T_c\). Spendendo lavoro si sposta il calore al contrario, con un COP spesso maggiore di 1.</div>
+  <button class="done" type="button" data-sec="s9">Segna «Scheda» come fatta</button>
+</div>
+
+  <footer>Dispensa per Valeria · Fisica, quarto anno · Secondo principio della termodinamica.</footer>
+</main>
+</div>
+
+<div class="toolbar" id="toolbar" role="toolbar" aria-label="Sfoglia la dispensa">
+  <button class="tb-btn" id="bIdx" type="button" title="Vai all'indice">Indice</button>
+  <span class="tb-sep"></span>
+  <button class="tb-btn arrow" id="bPrev" type="button" aria-label="Pagina precedente">‹</button>
+  <span id="pgNum" aria-live="polite">pag. 1</span>
+  <button class="tb-btn arrow" id="bNext" type="button" aria-label="Pagina successiva">›</button>
+  <span class="tb-sep"></span>
+  <button class="tb-btn" id="bFlip" type="button" title="Quante pagine girare a ogni passo">sfoglia di 2</button>
+  <button class="tb-btn" id="bSmall" type="button" aria-label="Testo più piccolo">A−</button>
+  <button class="tb-btn" id="bBig" type="button" aria-label="Testo più grande">A+</button>
+  <span class="tb-sep"></span>
+  <span id="railSlot"></span>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+'use strict';
+var NS = 'http://www.w3.org/2000/svg';
+var R = 8.314;
+
+/* ---------- utilità ---------- */
+function el(tag, attrs, parent, text) {
+  var e = document.createElementNS(NS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+function fmt(x, d) { return x.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function tex(s) {
+  if (window.katex) { try { return katex.renderToString(s, { throwOnError: false }); } catch (e) {} }
+  return s;
+}
+function niceStep(range, target) {
+  var raw = range / target, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
+  return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+}
+/* freccia piena da (x1,y1) a (x2,y2), spessore w; con flow=true una riga tratteggiata animata scorre lungo l'asta */
+function arrow(svg, x1, y1, x2, y2, w, color, flow) {
+  var dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len, nx = -uy, ny = ux;
+  var hw = Math.max(w * 0.9 + 6, 9), hl = Math.min(len * 0.45, Math.max(w * 0.8, 13));
+  var bx = x2 - ux * hl, by = y2 - uy * hl, a = w / 2;
+  var pts = [[x1 + nx * a, y1 + ny * a], [bx + nx * a, by + ny * a], [bx + nx * hw, by + ny * hw], [x2, y2],
+             [bx - nx * hw, by - ny * hw], [bx - nx * a, by - ny * a], [x1 - nx * a, y1 - ny * a]];
+  var p = el('polygon', { points: pts.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '), style: 'fill:' + color }, svg);
+  if (flow && w >= 6) el('line', { x1: x1 + ux * 3, y1: y1 + uy * 3, x2: bx, y2: by, 'class': 'flowline' }, svg);
+  return p;
+}
+function label(svg, x, y, main, sub, rest, color, anchor, size) {
+  var t = el('text', { x: x, y: y, 'text-anchor': anchor || 'middle', style: 'font-size:' + (size || 14) + 'px;font-weight:600;fill:' + (color || 'var(--ink)') }, svg);
+  el('tspan', {}, t, main);
+  if (sub) el('tspan', { dy: 4, style: 'font-size:' + Math.round((size || 14) * 0.72) + 'px' }, t, sub);
+  if (rest) el('tspan', { dy: sub ? -4 : 0 }, t, rest);
+  return t;
+}
+function axes(svg, o) {
+  var X = function (v) { return o.left + (v - o.xmin) / (o.xmax - o.xmin) * (o.W - o.left - o.right); };
+  var Y = function (v) { return o.H - o.bottom - (v - o.ymin) / (o.ymax - o.ymin) * (o.H - o.top - o.bottom); };
+  var g = el('g', {}, svg);
+  var xs = niceStep(o.xmax - o.xmin, o.xt || 5), ys = niceStep(o.ymax - o.ymin, o.yt || 5);
+  for (var v = Math.ceil(o.xmin / xs) * xs; v <= o.xmax + 1e-9; v += xs) {
+    el('line', { x1: X(v), x2: X(v), y1: Y(o.ymin), y2: Y(o.ymax), style: 'stroke:#eef0f4;stroke-width:1' }, g);
+    el('text', { x: X(v), y: o.H - o.bottom + 17, 'text-anchor': 'middle', style: 'font-size:12px;fill:var(--muted)' }, g, fmt(v, xs < 1 ? 1 : 0));
+  }
+  for (v = Math.ceil(o.ymin / ys) * ys; v <= o.ymax + 1e-9; v += ys) {
+    el('line', { x1: X(o.xmin), x2: X(o.xmax), y1: Y(v), y2: Y(v), style: 'stroke:#eef0f4;stroke-width:1' }, g);
+    el('text', { x: o.left - 7, y: Y(v) + 4, 'text-anchor': 'end', style: 'font-size:12px;fill:var(--muted)' }, g, fmt(v, ys < 1 ? 1 : 0));
+  }
+  el('line', { x1: X(o.xmin), x2: X(o.xmax), y1: Y(o.ymin), y2: Y(o.ymin), style: 'stroke:var(--ink);stroke-width:1.5' }, g);
+  el('line', { x1: X(o.xmin), x2: X(o.xmin), y1: Y(o.ymin), y2: Y(o.ymax), style: 'stroke:var(--ink);stroke-width:1.5' }, g);
+  el('text', { x: o.W - o.right, y: o.H - 6, 'text-anchor': 'end', style: 'font-size:13px;font-weight:600' }, g, o.xlabel);
+  el('text', { x: 6, y: o.top - 10, style: 'font-size:13px;font-weight:600' }, g, o.ylabel);
+  return { X: X, Y: Y };
+}
+function hatch(svg, id, color) {
+  var d = el('defs', {}, svg), p = el('pattern', { id: id, width: 7, height: 7, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, d);
+  el('line', { x1: 0, y1: 0, x2: 0, y2: 7, style: 'stroke:' + color + ';stroke-width:2.2' }, p);
+}
+
+/* ---------- scheda finale: raccoglie tutte le definizioni d'esame ---------- */
+(function () {
+  var box = document.getElementById('defsAll');
+  document.querySelectorAll('.part:not(#s9) .formal:not(.symbols)').forEach(function (f) {
+    var part = f.closest('.part'), h = document.createElement('div');
+    h.className = 'caption'; h.textContent = part.querySelector('.part-n').textContent + ' · ' + part.querySelector('h2').childNodes[0].textContent.trim();
+    box.appendChild(h); box.appendChild(f.cloneNode(true));
+  });
+})();
+
+/* ---------- formule ---------- */
+if (window.renderMathInElement) {
+  renderMathInElement(document.body, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+}
+
+/* ---------- avanzamento: dove sei e cosa hai segnato come fatto ---------- */
+(function () {
+  var parts = Array.prototype.slice.call(document.querySelectorAll('.part'));
+  var navLinks = {}; document.querySelectorAll('nav a').forEach(function (a) { navLinks[a.getAttribute('href').slice(1)] = a; });
+  var KEY = 'secondo-principio-fatto', done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
+  function paint() {
+    var n = 0;
+    document.querySelectorAll('.done').forEach(function (b) {
+      var on = !!done[b.dataset.sec]; if (on) n++;
+      b.classList.toggle('is-done', on);
+      b.textContent = on ? '✓ Fatto (tocca per annullare)' : b.dataset.label;
+      if (navLinks[b.dataset.sec]) navLinks[b.dataset.sec].classList.toggle('is-done', on);
+    });
+    document.getElementById('pgPct').textContent = n + ' di ' + parts.length + ' fatte';
+    document.getElementById('pgFill').style.width = (n / parts.length * 100) + '%';
+  }
+  document.querySelectorAll('.done').forEach(function (b) {
+    b.dataset.label = b.textContent;
+    b.addEventListener('click', function () { done[b.dataset.sec] = !done[b.dataset.sec]; save(); paint(); });
+  });
+  function where() {
+    var y = window.scrollY + 90, cur = null;
+    parts.forEach(function (p) { if (p.offsetTop <= y) cur = p; });
+    document.getElementById('pgWhere').textContent = cur ? cur.dataset.part : 'Inizio';
+    var h = document.documentElement.scrollHeight - innerHeight;
+    document.getElementById('pgRead').style.width = (h > 0 ? Math.min(1, scrollY / h) * 100 : 0) + '%';
+  }
+  paint();
+})();
+
+/* ---------- stampa: apri tutte le tendine ---------- */
+var wasOpen = [];
+window.addEventListener('beforeprint', function () { wasOpen = []; document.querySelectorAll('details').forEach(function (d) { wasOpen.push(d.open); d.open = true; }); });
+window.addEventListener('afterprint', function () { document.querySelectorAll('details').forEach(function (d, i) { d.open = wasOpen[i]; }); });
+
+/* ---------- 1. ciclo: l'area che si riempie ---------- */
+(function () {
+  var svg = document.getElementById('cycleSvg'), tot = document.getElementById('cycleTot');
+  var P = { A: [2, 300], B: [6, 300], C: [6, 100], D: [2, 100] };
+  var dir = 1, order, ax, dyn, dot, t0 = performance.now(), DUR = 9000, running = false;
+  function workSeg(a, b, f) { return a[1] === b[1] ? a[1] * (b[0] - a[0]) * f : 0; } // kPa·L = J
+  function draw() {
+    clear(svg);
+    hatch(svg, 'hatchNeg', '#9aa3b2');
+    ax = axes(svg, { W: 520, H: 330, left: 52, right: 20, top: 34, bottom: 36, xmin: 0, xmax: 8, ymin: 0, ymax: 400, xt: 8, yt: 4, xlabel: 'V (L)', ylabel: 'p (kPa)' });
+    order = dir === 1 ? ['A', 'B', 'C', 'D'] : ['A', 'D', 'C', 'B'];
+    dyn = el('g', {}, svg);
+    for (var i = 0; i < 4; i++) {
+      var a = P[order[i]], b = P[order[(i + 1) % 4]];
+      el('line', { x1: ax.X(a[0]), y1: ax.Y(a[1]), x2: ax.X(b[0]), y2: ax.Y(b[1]), style: 'stroke:var(--ink);stroke-width:2.5' }, svg);
+      var mx = (ax.X(a[0]) + ax.X(b[0])) / 2, my = (ax.Y(a[1]) + ax.Y(b[1])) / 2, ux = Math.sign(b[0] - a[0]) * 9, uy = -Math.sign(b[1] - a[1]) * 9;
+      arrow(svg, mx - ux, my - uy, mx + ux, my + uy, 2.5, 'var(--ink)');
+    }
+    Object.keys(P).forEach(function (k) {
+      var x = ax.X(P[k][0]), y = ax.Y(P[k][1]);
+      el('circle', { cx: x, cy: y, r: 4.5, style: 'fill:var(--ink)' }, svg);
+      el('text', { x: x + (P[k][0] > 4 ? 9 : -18), y: y + (P[k][1] > 200 ? -8 : 20), style: 'font-size:16px;font-weight:600' }, svg, k);
+    });
+    dot = el('circle', { r: 8, style: 'fill:#fff;stroke:var(--ink);stroke-width:3' }, svg);
+  }
+  function frame(now) {
+    var s = ((now - t0) % (DUR + 1800)) / DUR; if (s > 1) s = 1;
+    var seg = Math.min(3, Math.floor(s * 4)), f = s >= 1 ? 1 : s * 4 - seg;
+    while (dyn.firstChild) dyn.removeChild(dyn.firstChild);
+    var Lsum = 0;
+    for (var i = 0; i <= seg; i++) {
+      var a = P[order[i]], b = P[order[(i + 1) % 4]], ff = i < seg ? 1 : f;
+      if (a[1] !== b[1]) continue;
+      var xe = a[0] + (b[0] - a[0]) * ff, x0 = Math.min(a[0], xe), x1 = Math.max(a[0], xe), pos = b[0] > a[0];
+      el('rect', { x: ax.X(x0), y: ax.Y(a[1]), width: ax.X(x1) - ax.X(x0), height: ax.Y(0) - ax.Y(a[1]),
+        style: pos ? 'fill:var(--work);fill-opacity:.28' : 'fill:url(#hatchNeg);fill-opacity:.9' }, dyn);
+      var w = workSeg(a, b, ff); Lsum += w;
+      if (ff > 0.25) el('text', { x: ax.X((x0 + x1) / 2), y: ax.Y(a[1] / 2) + 5, 'text-anchor': 'middle',
+        style: 'font-size:15px;font-weight:600;fill:' + (pos ? 'var(--work)' : 'var(--muted)') + ';paint-order:stroke;stroke:#fff;stroke-width:4' }, dyn, (w > 0 ? '+' : '−') + fmt(Math.abs(w), 0) + ' J');
+    }
+    if (s >= 1) {
+      el('rect', { x: ax.X(2), y: ax.Y(300), width: ax.X(6) - ax.X(2), height: ax.Y(100) - ax.Y(300), style: 'fill:none;stroke:var(--work);stroke-width:4' }, dyn);
+      el('text', { x: ax.X(4), y: ax.Y(200) + 6, 'text-anchor': 'middle', style: 'font-size:18px;font-weight:600;fill:var(--work);paint-order:stroke;stroke:#fff;stroke-width:5' }, dyn, 'L ciclo = ' + (dir === 1 ? '+' : '−') + '800 J');
+    }
+    var a2 = P[order[seg]], b2 = P[order[(seg + 1) % 4]];
+    dot.setAttribute('cx', ax.X(a2[0] + (b2[0] - a2[0]) * f)); dot.setAttribute('cy', ax.Y(a2[1] + (b2[1] - a2[1]) * f));
+    tot.innerHTML = '<span class="pill">' + tex('L_{\\text{finora}} = ' + (Lsum < 0 ? '-' : '+') + fmt(Math.abs(Lsum), 0) + '\\ \\text{J}') + '</span><span class="pill">' +
+      (dir === 1 ? 'senso orario → macchina termica' : 'senso antiorario → frigorifero') + '</span>';
+    if (running) requestAnimationFrame(frame);
+  }
+  document.querySelectorAll('#cycleLab [data-dir]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      dir = +b.dataset.dir; t0 = performance.now();
+      document.querySelectorAll('#cycleLab [data-dir]').forEach(function (c) { c.classList.toggle('on', c === b); });
+      draw(); if (!running) frame(performance.now());
+    });
+  });
+  draw();
+  new IntersectionObserver(function (e) {
+    if (e[0].isIntersecting && !running) { running = true; requestAnimationFrame(frame); } else if (!e[0].isIntersecting) running = false;
+  }).observe(svg);
+  frame(performance.now());
+})();
+
+/* ---------- schema dei flussi di energia ---------- */
+function drawFlow(svg, o) {
+  clear(svg);
+  var max = Math.max(o.Qc, o.Qf, o.L), W = function (q) { return Math.max(3, 50 * q / max); };
+  el('rect', { x: 30, y: 8, width: 300, height: 52, rx: 8, style: 'fill:var(--hot-soft);stroke:var(--hot);stroke-width:2' }, svg);
+  label(svg, 180, 31, 'Sorgente calda', '', '', 'var(--hot)', 'middle', 15);
+  el('text', { x: 180, y: 50, 'text-anchor': 'middle', style: 'font-size:13px;fill:var(--hot)' }, svg, o.tc || 'Tc');
+  el('rect', { x: 30, y: 240, width: 300, height: 52, rx: 8, style: 'fill:var(--cold-soft);stroke:var(--cold);stroke-width:2' }, svg);
+  label(svg, 180, 263, 'Sorgente fredda', '', '', 'var(--cold)', 'middle', 15);
+  el('text', { x: 180, y: 282, 'text-anchor': 'middle', style: 'font-size:13px;fill:var(--cold)' }, svg, o.tf || 'Tf');
+  if (o.mode === 'engine') {
+    arrow(svg, 150, 60, 150, 116, W(o.Qc), 'var(--hot)', true);
+    arrow(svg, 150, 184, 150, 240, W(o.Qf), 'var(--cold)', true);
+    arrow(svg, 186, 150, 334, 150, W(o.L), 'var(--work)', true);
+    label(svg, 150 + W(o.Qc) / 2 + 12, 94, 'Q', 'ass', ' = ' + fmt(o.Qc, 0) + ' J', 'var(--hot)', 'start', 14);
+    label(svg, 150 + W(o.Qf) / 2 + 12, 218, '|Q', 'ced', '| = ' + fmt(o.Qf, 0) + ' J', 'var(--cold)', 'start', 14);
+    label(svg, 262, 150 - W(o.L) / 2 - 9, 'L = ' + fmt(o.L, 0) + ' J', '', '', 'var(--work)', 'middle', 14);
+  } else {
+    arrow(svg, 150, 240, 150, 184, W(o.Qf), 'var(--cold)', true);
+    arrow(svg, 150, 116, 150, 60, W(o.Qc), 'var(--hot)', true);
+    arrow(svg, 334, 150, 186, 150, W(o.L), 'var(--work)', true);
+    label(svg, 150 + W(o.Qc) / 2 + 12, 94, '|Q', 'c', '| = ' + fmt(o.Qc, 0) + ' J', 'var(--hot)', 'start', 14);
+    label(svg, 150 + W(o.Qf) / 2 + 12, 218, 'Q', 'f', ' = ' + fmt(o.Qf, 0) + ' J', 'var(--cold)', 'start', 14);
+    label(svg, 262, 150 - W(o.L) / 2 - 9, '|L| = ' + fmt(o.L, 0) + ' J', '', '', 'var(--work)', 'middle', 14);
+  }
+  el('circle', { cx: 150, cy: 150, r: 36, style: 'fill:#fff;stroke:var(--ink);stroke-width:2.5' }, svg);
+  el('text', { x: 150, y: 155, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600' }, svg, o.mode === 'engine' ? 'macchina' : 'frigo');
+}
+
+/* ---------- 2. il mulino ---------- */
+(function () {
+  var s = document.getElementById('waterfall');
+  var d = el('defs', {}, s), m = el('marker', { id: 'mh', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, d);
+  el('path', { d: 'M0,0 L10,5 L0,10 z', style: 'fill:var(--muted)' }, m);
+  el('rect', { x: 10, y: 30, width: 120, height: 40, rx: 6, style: 'fill:var(--hot-soft);stroke:var(--hot);stroke-width:2' }, s);
+  el('text', { x: 70, y: 22, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600;fill:var(--hot)' }, s, 'in alto (caldo)');
+  el('path', { d: 'M130,45 C160,45 165,60 168,110', style: 'fill:none;stroke:var(--cold);stroke-width:14;stroke-linecap:round;opacity:.75' }, s);
+  el('path', { d: 'M130,45 C160,45 165,60 168,110', 'class': 'flowline' }, s);
+  el('path', { d: 'M182,170 C185,200 190,215 200,222', style: 'fill:none;stroke:var(--cold);stroke-width:10;stroke-linecap:round;opacity:.75' }, s);
+  el('path', { d: 'M182,170 C185,200 190,215 200,222', 'class': 'flowline' }, s);
+  el('rect', { x: 160, y: 222, width: 130, height: 30, rx: 6, style: 'fill:var(--cold-soft);stroke:var(--cold);stroke-width:2' }, s);
+  el('text', { x: 225, y: 270, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600;fill:var(--cold)' }, s, 'in basso (freddo)');
+  var cx = 178, cy = 140, wheel = el('g', {}, s);
+  el('circle', { cx: cx, cy: cy, r: 36, style: 'fill:none;stroke:var(--ink);stroke-width:3' }, wheel);
+  for (var i = 0; i < 8; i++) {
+    var a = i * Math.PI / 4;
+    el('line', { x1: cx, y1: cy, x2: cx + 36 * Math.cos(a), y2: cy + 36 * Math.sin(a), style: 'stroke:var(--ink);stroke-width:2' }, wheel);
+    el('rect', { x: cx + 36 * Math.cos(a) - 5, y: cy + 36 * Math.sin(a) - 5, width: 10, height: 10, style: 'fill:var(--ink)', transform: 'rotate(' + (a * 180 / Math.PI) + ' ' + (cx + 36 * Math.cos(a)) + ' ' + (cy + 36 * Math.sin(a)) + ')' }, wheel);
+  }
+  el('circle', { cx: cx, cy: cy, r: 5, style: 'fill:var(--ink)' }, s);
+  arrow(s, 222, 140, 290, 140, 10, 'var(--work)', true);
+  el('text', { x: 256, y: 124, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600;fill:var(--work)' }, s, 'lavoro');
+  el('text', { x: 38, y: 145, style: 'font-size:13px;fill:var(--muted)' }, s, 'dislivello');
+  el('line', { x1: 28, y1: 76, x2: 28, y2: 225, style: 'stroke:var(--muted);stroke-width:1.5', 'marker-end': 'url(#mh)', 'marker-start': 'url(#mh)' }, s);
+  var ang = 0, last = 0, on = false;
+  function spin(now) { if (last) ang = (ang + (now - last) * 0.06) % 360; last = now; wheel.setAttribute('transform', 'rotate(' + ang + ' ' + cx + ' ' + cy + ')'); if (on) requestAnimationFrame(spin); }
+  new IntersectionObserver(function (e) { on = e[0].isIntersecting; if (on) { last = 0; requestAnimationFrame(spin); } }).observe(s);
+})();
+
+/* ---------- 2. slider del rendimento ---------- */
+(function () {
+  var sl = document.getElementById('etaSlider'), out = document.getElementById('etaOut'), svg = document.getElementById('etaFlow');
+  function up() { var e = sl.value / 100; out.textContent = sl.value + '%'; drawFlow(svg, { mode: 'engine', Qc: 1000, L: 1000 * e, Qf: 1000 * (1 - e), tc: 'Tc', tf: 'Tf' }); }
+  sl.addEventListener('input', up); up();
+})();
+
+/* ---------- 3 e 5. dimostrazioni a passi ---------- */
+function drawCombo(svg, devices, links) {
+  clear(svg);
+  el('rect', { x: 10, y: 8, width: 460, height: 46, rx: 8, style: 'fill:var(--hot-soft);stroke:var(--hot);stroke-width:2' }, svg);
+  el('text', { x: 240, y: 37, 'text-anchor': 'middle', style: 'font-size:15px;font-weight:600;fill:var(--hot)' }, svg, 'Sorgente calda Tc');
+  el('rect', { x: 10, y: 246, width: 460, height: 46, rx: 8, style: 'fill:var(--cold-soft);stroke:var(--cold);stroke-width:2' }, svg);
+  el('text', { x: 240, y: 275, 'text-anchor': 'middle', style: 'font-size:15px;font-weight:600;fill:var(--cold)' }, svg, 'Sorgente fredda Tf');
+  var W = function (q) { return Math.max(3, 34 * Math.abs(q) / 1000); };
+  devices.forEach(function (d) {
+    var x = d.x, y = 150, r = 32;
+    if (d.pipe) {
+      arrow(svg, x, 246, x, 54, W(d.qc), 'var(--trap)', true);
+      label(svg, x + W(d.qc) / 2 + 8, 155, fmt(Math.abs(d.qc), 0) + ' J', '', '', 'var(--trap)', 'start', 14);
+      el('text', { x: x + W(d.qc) / 2 + 8, y: 236, 'text-anchor': 'start', style: 'font-size:12px;font-weight:600;fill:var(--trap)' }, svg, d.name);
+      return;
+    }
+    if (d.qh) {
+      if (d.qh > 0) arrow(svg, x, 54, x, y - r, W(d.qh), 'var(--hot)', true); else arrow(svg, x, y - r, x, 54, W(d.qh), 'var(--hot)', true);
+      label(svg, x + W(d.qh) / 2 + 7, 92, fmt(Math.abs(d.qh), 0) + ' J', '', '', 'var(--hot)', 'start', 14);
+    }
+    if (d.qc) {
+      if (d.qc > 0) arrow(svg, x, y + r, x, 246, W(d.qc), 'var(--cold)', true); else arrow(svg, x, 246, x, y + r, W(d.qc), 'var(--cold)', true);
+      label(svg, x + W(d.qc) / 2 + 7, 222, fmt(Math.abs(d.qc), 0) + ' J', '', '', 'var(--cold)', 'start', 14);
+    }
+    if (d.w && d.wOut) {
+      arrow(svg, x + r, y, x + r + 74, y, W(d.w), 'var(--work)', true);
+      label(svg, x + r + 38, y - W(d.w) / 2 - 7, 'L = ' + fmt(d.w, 0) + ' J', '', '', 'var(--work)', 'middle', 14);
+    }
+    el('circle', { cx: x, cy: y, r: r, style: 'fill:#fff;stroke:' + (d.bad ? 'var(--trap)' : 'var(--ink)') + ';stroke-width:2.5' + (d.bad ? ';stroke-dasharray:5 3' : '') }, svg);
+    el('text', { x: x, y: y + 4, 'text-anchor': 'middle', style: 'font-size:' + (d.name.length > 8 ? 10.5 : 13) + 'px;font-weight:600' }, svg, d.name);
+  });
+  (links || []).forEach(function (l) {
+    arrow(svg, l.x1, 150, l.x2, 150, W(l.w), 'var(--work)', true);
+    label(svg, (l.x1 + l.x2) / 2, 150 - W(l.w) / 2 - 7, 'L = ' + fmt(l.w, 0) + ' J', '', '', 'var(--work)', 'middle', 14);
+  });
+}
+(function () {
+  var S = {
+    A: [
+      { d: [{ x: 150, name: 'macchina', qh: 1000, qc: 600, w: 400, wOut: true }], l: [],
+        c: 'Passo 1. Una macchina termica normale: prende 1000 J dal caldo, produce 400 J di lavoro e cede 600 J al freddo.' },
+      { d: [{ x: 150, name: 'macchina', qh: 1000, qc: 600, w: 400, wOut: true }, { x: 360, name: 'anti-Clausius', pipe: true, qc: -600 }], l: [],
+        c: 'Passo 2. Supponiamo che esista un dispositivo che viola Clausius: riporta su gratis i 600 J dal freddo al caldo.' },
+      { d: [{ x: 200, name: 'insieme', qh: 400, w: 400, wOut: true, bad: true }], l: [],
+        c: 'Passo 3. Insieme: la sorgente fredda riceve 600 J e ne perde 600 (bilancio zero). Dal caldo escono 1000 − 600 = 400 J, tutti trasformati in lavoro. Viola Kelvin-Planck!' }
+    ],
+    B: [
+      { d: [{ x: 150, name: 'anti-Kelvin', qh: 300, w: 300, wOut: true, bad: true }], l: [],
+        c: 'Passo 1. Supponiamo che esista una macchina che viola Kelvin-Planck: prende 300 J dal caldo e li trasforma tutti in lavoro.' },
+      { d: [{ x: 130, name: 'anti-Kelvin', qh: 300, w: 300, bad: true }, { x: 330, name: 'frigo', qh: -900, qc: -600 }], l: [{ x1: 162, x2: 298, w: 300 }],
+        c: 'Passo 2. Con quei 300 J azioniamo un frigorifero normale: prende 600 J dal freddo e cede 600 + 300 = 900 J al caldo.' },
+      { d: [{ x: 240, name: 'insieme', pipe: true, qc: -600 }], l: [],
+        c: 'Passo 3. Insieme: il caldo riceve 900 − 300 = 600 J, il freddo ne perde 600, nessun lavoro dall\'esterno. Calore salito da solo: viola Clausius!' }
+    ],
+    C: [
+      { d: [{ x: 150, name: 'X (60%)', qh: 1000, qc: 400, w: 600, wOut: true, bad: true }], l: [],
+        c: 'Passo 1. La macchina X, che renderebbe il 60%: prende 1000 J dal caldo, produce 600 J di lavoro, cede 400 J al freddo.' },
+      { d: [{ x: 130, name: 'X (60%)', qh: 1000, qc: 400, w: 600, bad: true }, { x: 330, name: 'Carnot ↺', qh: -1200, qc: -600 }], l: [{ x1: 162, x2: 298, w: 600 }],
+        c: 'Passo 2. Carnot è reversibile e si può far girare al contrario. Con i 600 J di X, Carnot al rovescio (50%) prende 600 J dal freddo e porta 1200 J al caldo.' },
+      { d: [{ x: 240, name: 'insieme', pipe: true, qc: -200 }], l: [],
+        c: 'Passo 3. Insieme: il caldo guadagna 1200 − 1000 = 200 J, il freddo ne perde 600 − 400 = 200, il lavoro netto è zero. Calore salito da solo: viola Clausius. Quindi X non può esistere.' }
+    ]
+  };
+  document.querySelectorAll('.stepper').forEach(function (st) {
+    var k = st.dataset.combo, steps = S[k], svg = document.getElementById('combo' + k), cap = document.getElementById('combo' + k + 'cap'), i = 0;
+    var prev = st.querySelector('[data-step="-1"]'), next = st.querySelector('[data-step="1"]'), count = st.querySelector('.count');
+    function draw() {
+      drawCombo(svg, steps[i].d, steps[i].l); cap.textContent = steps[i].c;
+      count.textContent = 'passo ' + (i + 1) + ' di ' + steps.length; prev.disabled = i === 0; next.disabled = i === steps.length - 1;
+    }
+    prev.addEventListener('click', function () { if (i > 0) { i--; draw(); } });
+    next.addEventListener('click', function () { if (i < steps.length - 1) { i++; draw(); } });
+    draw();
+  });
+})();
+
+/* ---------- 4. espansione libera ---------- */
+(function () {
+  var cv = document.getElementById('gasCanvas'), ctx = cv.getContext('2d'), info = document.getElementById('gasCount');
+  var N = 60, W = 680, H = 300, r = 6, parts, open, raf = 0;
+  function seed(i) { var x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+  function reset() {
+    parts = []; open = false;
+    for (var i = 0; i < N; i++) {
+      var a = seed(i) * Math.PI * 2, s = 1.6 + seed(i + 100) * 1.6;
+      parts.push({ x: r + seed(i + 200) * (W / 2 - 2 * r - 3), y: r + seed(i + 300) * (H - 2 * r), vx: Math.cos(a) * s, vy: Math.sin(a) * s });
+    }
+    document.getElementById('gasOpen').disabled = false; draw();
+  }
+  function step() {
+    parts.forEach(function (p) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < r) { p.y = 2 * r - p.y; p.vy *= -1; } if (p.y > H - r) { p.y = 2 * (H - r) - p.y; p.vy *= -1; }
+      if (p.x < r) { p.x = 2 * r - p.x; p.vx *= -1; }
+      var right = open ? W - r : W / 2 - 3 - r;
+      if (p.x > right) { p.x = 2 * right - p.x; p.vx *= -1; }
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    if (!open) { ctx.fillStyle = '#18202e'; ctx.fillRect(W / 2 - 3, 0, 6, H); }
+    else { ctx.strokeStyle = '#b9c2d0'; ctx.setLineDash([6, 8]); ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke(); ctx.setLineDash([]); }
+    var left = 0;
+    ctx.fillStyle = '#2563c9';
+    parts.forEach(function (p) { if (p.x < W / 2) left++; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill(); });
+    info.textContent = 'A sinistra: ' + left + '   ·   a destra: ' + (N - left);
+  }
+  function loop() { step(); draw(); raf = requestAnimationFrame(loop); }
+  document.getElementById('gasOpen').onclick = function () { open = true; this.disabled = true; };
+  document.getElementById('gasReverse').onclick = function () { parts.forEach(function (p) { p.vx *= -1; p.vy *= -1; }); };
+  document.getElementById('gasReset').onclick = reset;
+  reset();
+  new IntersectionObserver(function (e) { if (e[0].isIntersecting) { if (!raf) loop(); } else { cancelAnimationFrame(raf); raf = 0; } }).observe(cv);
+})();
+
+/* ---------- 5. il cilindro di Carnot ---------- */
+function mixColor(T, Tf, Tc, alpha) {
+  var f = Math.max(0, Math.min(1, (T - Tf) / Math.max(1, Tc - Tf))), a = [110, 160, 230], b = [235, 110, 90];
+  return 'rgba(' + a.map(function (v, i) { return Math.round(v + (b[i] - v) * f); }).join(',') + ',' + alpha + ')';
+}
+function flame(svg, x, y, s) {
+  el('path', { d: 'M' + x + ',' + y + ' c' + (-7 * s) + ',' + (-6 * s) + ' ' + (-5 * s) + ',' + (-14 * s) + ' 0,' + (-22 * s) + ' c' + (5 * s) + ',' + (8 * s) + ' ' + (7 * s) + ',' + (16 * s) + ' 0,' + (22 * s) + 'z', style: 'fill:#f08a24' }, svg);
+  el('path', { d: 'M' + x + ',' + y + ' c' + (-3.5 * s) + ',' + (-3 * s) + ' ' + (-2.5 * s) + ',' + (-8 * s) + ' 0,' + (-12 * s) + ' c' + (2.5 * s) + ',' + (4 * s) + ' ' + (3.5 * s) + ',' + (9 * s) + ' 0,' + (12 * s) + 'z', style: 'fill:#ffd166' }, svg);
+}
+function drawCylinder(svg, o) {
+  clear(svg);
+  var hid = 'hatchIns' + (svg.id || Math.random().toString(36).slice(2));
+  hatch(svg, hid, '#c7ccd6');
+  var x0 = 40, w = 140, yb = 250, ytop = 26, hmax = yb - ytop - 76; // spazio sopra per asta e freccia del lavoro
+  var gy = yb - 22 - o.frac * hmax;
+  el('rect', { x: x0, y: gy, width: w, height: yb - gy, style: 'fill:' + mixColor(o.T, o.Tf, o.Tc, 0.45) }, svg);
+  if (o.particles) o.particles.forEach(function (p) {
+    el('circle', { cx: x0 + 6 + p.x * (w - 12), cy: gy + 6 + p.y * (yb - gy - 12), r: 3.2, style: 'fill:' + mixColor(o.T, o.Tf, o.Tc, 1) }, svg);
+  });
+  el('path', { d: 'M' + x0 + ',' + ytop + ' V' + yb + ' H' + (x0 + w) + ' V' + ytop, style: 'fill:none;stroke:var(--ink);stroke-width:5;stroke-linejoin:round' }, svg);
+  el('rect', { x: x0 + 3, y: gy - 16, width: w - 6, height: 16, rx: 2, style: 'fill:#7b8494' }, svg);
+  var rodTop = Math.max(2, gy - 64);
+  el('rect', { x: x0 + w / 2 - 5, y: rodTop, width: 10, height: gy - 16 - rodTop, style: 'fill:#7b8494' }, svg);
+  var by = yb + 6;
+  if (o.base === 'hot') {
+    el('rect', { x: 14, y: by + 26, width: 192, height: 30, rx: 6, style: 'fill:var(--hot)' }, svg);
+    for (var i = 0; i < 6; i++) flame(svg, 34 + i * 30, by + 26, o.small ? 1.1 : 1);
+    el('text', { x: 110, y: by + 46, 'text-anchor': 'middle', style: 'font-size:' + (o.small ? 20 : 14) + 'px;font-weight:600;fill:#fff' }, svg, o.small ? 'Tc' : 'sorgente calda · ' + o.Tc + ' K');
+  } else if (o.base === 'cold') {
+    for (i = 0; i < 5; i++) el('rect', { x: 20 + i * 37, y: by + 2, width: 32, height: 22, rx: 5, style: 'fill:#d6e6fb;stroke:#9cc0ef;stroke-width:1.5' }, svg);
+    el('rect', { x: 14, y: by + 26, width: 192, height: 30, rx: 6, style: 'fill:var(--cold)' }, svg);
+    el('text', { x: 110, y: by + 46, 'text-anchor': 'middle', style: 'font-size:' + (o.small ? 20 : 14) + 'px;font-weight:600;fill:#fff' }, svg, o.small ? 'Tf' : 'sorgente fredda · ' + o.Tf + ' K');
+  } else {
+    el('rect', { x: 14, y: by + 6, width: 192, height: 50, rx: 6, style: 'fill:url(#' + hid + ');stroke:#9aa3b2;stroke-width:1.5' }, svg);
+    el('text', { x: 110, y: by + 37, 'text-anchor': 'middle', style: 'font-size:' + (o.small ? 18 : 14) + 'px;font-weight:600;fill:var(--muted);paint-order:stroke;stroke:#fff;stroke-width:4' }, svg, 'isolante');
+  }
+  if (!o.small) el('text', { x: x0 + w / 2, y: yb - 8, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:4' }, svg, 'T = ' + Math.round(o.T) + ' K');
+  if (o.heat === 'in') arrow(svg, 22, yb + 20, 22, yb - 70, 10, 'var(--hot)', true);
+  if (o.heat === 'out') arrow(svg, 22, yb - 70, 22, yb + 20, 10, 'var(--cold)', true);
+  if (o.work === 'up') arrow(svg, x0 + w + 20, gy + 18, x0 + w + 20, gy - 44, 10, 'var(--work)', true);
+  if (o.work === 'down') arrow(svg, x0 + w + 20, gy - 44, x0 + w + 20, gy + 18, 10, 'var(--work)', true);
+  if (o.heat) el('text', { x: 6, y: yb - 80, style: 'font-size:13px;font-weight:600;fill:' + (o.heat === 'in' ? 'var(--hot)' : 'var(--cold)') }, svg, o.heat === 'in' ? 'Q entra' : 'Q esce');
+  if (o.work) el('text', { x: 216, y: gy - 52, 'text-anchor': 'end', style: 'font-size:13px;font-weight:600;fill:var(--work)' }, svg, o.work === 'up' ? 'L > 0' : 'L < 0');
+}
+
+/* ---------- 5. laboratorio di Carnot ---------- */
+(function () {
+  var pv = document.getElementById('carnotPV'), pis = document.getElementById('carnotPiston'), desc = document.getElementById('phaseDesc');
+  var tcS = document.getElementById('tcSlider'), tfS = document.getElementById('tfSlider'), playBtn = document.getElementById('carnotPlay');
+  var st = { Tc: 600, Tf: 300, g: 5 / 3, ph: 0, s: 0.5, playing: false }, V1 = 10, V2 = 20, cyc, ax, dot;
+  var parts = [];
+  function rnd(i) { var x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+  for (var i = 0; i < 28; i++) { var a = rnd(i + 50) * 6.2832; parts.push({ x: rnd(i), y: rnd(i + 100), vx: Math.cos(a), vy: Math.sin(a) }); }
+  var PH = [
+    { name: '1 → 2 · Espansione isoterma a Tc', base: 'hot', heat: 'in', work: 'up', col: 'var(--hot)',
+      txt: function (c) { return 'Il cilindro è sul <span class="hot">fornello</span>. Il gas si espande lentamente a temperatura costante: assorbe ' + tex('Q_{\\text{ass}} = ' + fmt(c.Qc, 0) + '\\ \\text{J}') + ' e lo trasforma tutto in lavoro, perché ' + tex('\\Delta U = 0') + '.'; } },
+    { name: '2 → 3 · Espansione adiabatica', base: 'ins', heat: null, work: 'up', col: 'var(--adia)',
+      txt: function (c) { return 'Base isolante: ' + tex('Q = 0') + '. Il gas continua a spingere e compie ' + tex('L = ' + fmt(c.Lad, 0) + '\\ \\text{J}') + ' a spese della sua energia interna: si raffredda da ' + st.Tc + ' K a ' + st.Tf + ' K. Guarda le molecole rallentare.'; } },
+    { name: '3 → 4 · Compressione isoterma a Tf', base: 'cold', heat: 'out', work: 'down', col: 'var(--cold)',
+      txt: function (c) { return 'Il cilindro è sul <span class="cold">ghiaccio</span>. Comprimiamo il gas lentamente: riceve lavoro e, per restare a ' + st.Tf + ' K, cede ' + tex('|Q_{\\text{ced}}| = ' + fmt(c.Qf, 0) + '\\ \\text{J}') + '.'; } },
+    { name: '4 → 1 · Compressione adiabatica', base: 'ins', heat: null, work: 'down', col: 'var(--adia)',
+      txt: function (c) { return 'Di nuovo isolato: ' + tex('Q = 0') + '. Il lavoro fatto sul gas (' + fmt(c.Lad, 0) + ' J) aumenta la sua energia interna: si scalda fino a ' + st.Tc + ' K e torna allo stato 1.'; } }
+  ];
+  function compute() {
+    var r = Math.pow(st.Tc / st.Tf, 1 / (st.g - 1)), cv = R / (st.g - 1);
+    return { V: [V1, V2, V2 * r, V1 * r], Qc: R * st.Tc * Math.log(V2 / V1), Qf: R * st.Tf * Math.log(V2 / V1), Lad: cv * (st.Tc - st.Tf) };
+  }
+  function p(V, T) { return R * T / V; } // kPa con V in litri
+  function stateAt(ph, s) {
+    var V = cyc.V, a = V[ph], b = V[(ph + 1) % 4], v = a * Math.pow(b / a, s), T;
+    if (ph === 0) T = st.Tc; else if (ph === 2) T = st.Tf;
+    else if (ph === 1) T = st.Tc * Math.pow(V[1] / v, st.g - 1);
+    else T = st.Tf * Math.pow(V[3] / v, st.g - 1);
+    return { V: v, T: T, p: p(v, T) };
+  }
+  function drawPV() {
+    clear(pv);
+    ax = axes(pv, { W: 420, H: 320, left: 52, right: 16, top: 32, bottom: 36, xmin: 0, xmax: cyc.V[2] * 1.08, ymin: 0, ymax: p(cyc.V[0], st.Tc) * 1.12, xt: 6, yt: 5, xlabel: 'V (L)', ylabel: 'p (kPa)' });
+    var all = '';
+    for (var ph = 0; ph < 4; ph++) {
+      var d = '';
+      for (var i = 0; i <= 60; i++) { var q = stateAt(ph, i / 60); d += (d ? 'L' : 'M') + ax.X(q.V).toFixed(1) + ',' + ax.Y(q.p).toFixed(1); }
+      all += ph ? d.replace('M', 'L') : d; PH[ph].d = d;
+    }
+    el('path', { d: all + 'Z', style: 'fill:var(--work);fill-opacity:.12' }, pv);
+    for (ph = 0; ph < 4; ph++) {
+      var on = ph === st.ph;
+      el('path', { d: PH[ph].d, style: 'fill:none;stroke:' + PH[ph].col + ';stroke-width:' + (on ? 5.5 : 2) + ';opacity:' + (on ? 1 : .45) + ';stroke-linecap:round' }, pv);
+    }
+    cyc.V.forEach(function (v, i) {
+      var T = i < 2 ? st.Tc : st.Tf;
+      el('circle', { cx: ax.X(v), cy: ax.Y(p(v, T)), r: 4, style: 'fill:var(--ink)' }, pv);
+      el('text', { x: ax.X(v) + 7, y: ax.Y(p(v, T)) - 9, style: 'font-size:15px;font-weight:600' }, pv, i + 1);
+    });
+    var m = stateAt(0, 0.5), n = stateAt(2, 0.5);
+    el('text', { x: ax.X(m.V) + 10, y: ax.Y(m.p) - 6, style: 'font-size:13px;font-weight:600;fill:var(--hot)' }, pv, 'Tc = ' + st.Tc + ' K');
+    el('text', { x: ax.X(n.V) + 4, y: ax.Y(n.p) + 20, style: 'font-size:13px;font-weight:600;fill:var(--cold)' }, pv, 'Tf = ' + st.Tf + ' K');
+    dot = el('circle', { r: 8, style: 'fill:#fff;stroke:var(--ink);stroke-width:3' }, pv);
+  }
+  function drawState(dt) {
+    var q = stateAt(st.ph, st.s), P = PH[st.ph], speed = 0.35 * Math.sqrt(q.T / 600) * (dt || 0);
+    parts.forEach(function (pt) {
+      pt.x += pt.vx * speed; pt.y += pt.vy * speed;
+      if (pt.x < 0) { pt.x = -pt.x; pt.vx *= -1; } if (pt.x > 1) { pt.x = 2 - pt.x; pt.vx *= -1; }
+      if (pt.y < 0) { pt.y = -pt.y; pt.vy *= -1; } if (pt.y > 1) { pt.y = 2 - pt.y; pt.vy *= -1; }
+    });
+    dot.setAttribute('cx', ax.X(q.V)); dot.setAttribute('cy', ax.Y(q.p));
+    drawCylinder(pis, { frac: q.V / cyc.V[2], T: q.T, Tf: st.Tf, Tc: st.Tc, base: P.base, heat: P.heat, work: P.work, particles: parts });
+  }
+  function drawText() {
+    desc.innerHTML = '<b>' + PH[st.ph].name + '</b><br>' + PH[st.ph].txt(cyc);
+    document.querySelectorAll('#phaseBtns .btn').forEach(function (b, i) { b.classList.toggle('on', i === st.ph); });
+  }
+  function drawNumbers() {
+    var L = cyc.Qc - cyc.Qf, eta = 1 - st.Tf / st.Tc;
+    document.getElementById('tcOut').textContent = st.Tc + ' K (' + (st.Tc - 273) + ' °C)';
+    document.getElementById('tfOut').textContent = st.Tf + ' K (' + (st.Tf - 273) + ' °C)';
+    document.getElementById('carnotReadout').innerHTML =
+      '<span class="pill">' + tex('Q_{\\text{ass}} = ' + fmt(cyc.Qc, 0) + '\\ \\text{J}') + '</span>' +
+      '<span class="pill">' + tex('|Q_{\\text{ced}}| = ' + fmt(cyc.Qf, 0) + '\\ \\text{J}') + '</span>' +
+      '<span class="pill">' + tex('L = ' + fmt(L, 0) + '\\ \\text{J}') + '</span>';
+    document.getElementById('carnotEta').innerHTML = tex('\\eta = 1 - \\dfrac{' + st.Tf + '}{' + st.Tc + '} = ' + fmt(eta * 100, 1) + '\\%');
+    drawFlow(document.getElementById('carnotFlow'), { mode: 'engine', Qc: cyc.Qc, Qf: cyc.Qf, L: L, tc: 'Tc = ' + st.Tc + ' K', tf: 'Tf = ' + st.Tf + ' K' });
+  }
+  function full() { cyc = compute(); drawPV(); drawState(0); drawText(); drawNumbers(); }
+  function onSlider(e) {
+    var tc = +tcS.value, tf = +tfS.value;
+    if (tf > tc - 50) { if (e && e.target === tcS) { tf = tc - 50; tfS.value = tf; } else { tc = tf + 50; tcS.value = tc; } }
+    st.Tc = tc; st.Tf = tf; full();
+  }
+  tcS.addEventListener('input', onSlider); tfS.addEventListener('input', onSlider);
+  document.querySelectorAll('#phaseBtns .btn').forEach(function (b) {
+    b.addEventListener('click', function () { st.ph = +b.dataset.ph; st.s = 0.5; stop(); drawPV(); drawState(0); drawText(); });
+  });
+  document.querySelectorAll('#gammaBtns .btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      st.g = b.dataset.g === 'mono' ? 5 / 3 : 7 / 5;
+      document.querySelectorAll('#gammaBtns .btn').forEach(function (c) { c.classList.toggle('on', c === b); });
+      full();
+    });
+  });
+  var last = 0, raf = 0;
+  function tick(now) {
+    var dt = last ? Math.min(0.05, (now - last) / 1000) : 0; last = now;
+    if (st.playing) {
+      st.s += dt / 3;
+      if (st.s >= 1) { st.s = 0; st.ph = (st.ph + 1) % 4; drawPV(); drawText(); }
+    }
+    drawState(dt); raf = requestAnimationFrame(tick);
+  }
+  function stop() { st.playing = false; playBtn.textContent = '▶ Anima'; playBtn.classList.remove('on'); }
+  playBtn.addEventListener('click', function () {
+    if (st.playing) { stop(); return; }
+    st.playing = true; if (st.s >= 0.99) st.s = 0; playBtn.textContent = '❚❚ Pausa'; playBtn.classList.add('on');
+  });
+  full();
+  new IntersectionObserver(function (e) { if (e[0].isIntersecting) { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } } else { cancelAnimationFrame(raf); raf = 0; } }).observe(pis);
+})();
+
+/* ---------- 6. disegno del frigorifero ---------- */
+(function () {
+  var s = document.getElementById('fridgeDraw');
+  el('rect', { x: 60, y: 20, width: 130, height: 250, rx: 12, style: 'fill:#fff;stroke:var(--ink);stroke-width:3' }, s);
+  el('rect', { x: 72, y: 34, width: 106, height: 220, rx: 6, style: 'fill:var(--cold-soft);stroke:var(--cold);stroke-width:1.5' }, s);
+  el('text', { x: 125, y: 118, 'text-anchor': 'middle', style: 'font-size:14px;font-weight:600;fill:var(--cold)' }, s, 'interno 4 °C');
+  el('text', { x: 125, y: 136, 'text-anchor': 'middle', style: 'font-size:12px;fill:var(--cold)' }, s, '(sorgente fredda)');
+  var d = 'M200,40';
+  for (var i = 0; i < 7; i++) d += ' H232 V' + (52 + i * 28) + ' H200 V' + (66 + i * 28);
+  el('path', { d: d, style: 'fill:none;stroke:var(--hot);stroke-width:3' }, s);
+  el('text', { x: 216, y: 252, 'text-anchor': 'middle', style: 'font-size:12px;fill:var(--hot)' }, s, 'serpentina');
+  el('circle', { cx: 215, cy: 278, r: 12, style: 'fill:var(--work-soft);stroke:var(--work);stroke-width:2' }, s);
+  el('text', { x: 215, y: 282, 'text-anchor': 'middle', style: 'font-size:11px;font-weight:600;fill:var(--work)' }, s, 'M');
+  el('text', { x: 196, y: 298, 'text-anchor': 'end', style: 'font-size:12px;fill:var(--work)' }, s, 'compressore');
+  arrow(s, 150, 180, 200, 180, 8, 'var(--cold)', true);
+  el('text', { x: 140, y: 206, style: 'font-size:13px;font-weight:600;fill:var(--cold)' }, s, 'Qf');
+  arrow(s, 236, 120, 294, 120, 12, 'var(--hot)', true);
+  el('text', { x: 246, y: 104, style: 'font-size:13px;font-weight:600;fill:var(--hot)' }, s, '|Qc|');
+  el('text', { x: 248, y: 146, style: 'font-size:12px;fill:var(--hot)' }, s, 'in cucina');
+  arrow(s, 292, 278, 230, 278, 6, 'var(--work)', true);
+  el('text', { x: 262, y: 266, 'text-anchor': 'middle', style: 'font-size:12px;font-weight:600;fill:var(--work)' }, s, 'lavoro |L|');
+})();
+
+/* ---------- 6. rendimento contro COP ---------- */
+(function () {
+  var a = document.getElementById('copTc'), b = document.getElementById('copTf'), bars = document.getElementById('copBars');
+  function bar(lbl, v, max, col, txt) {
+    return '<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:10px;font-family:var(--f-label)"><span>' + lbl + '</span><b style="color:' + col + ';font-family:var(--f-mono)">' + txt + '</b></div>' +
+      '<div style="background:var(--soft);border-radius:4px;height:12px;margin-top:4px"><div style="width:' + Math.min(100, v / max * 100) + '%;height:12px;border-radius:4px;background:' + col + ';transition:width .25s"></div></div></div>';
+  }
+  function up(e) {
+    var tc = +a.value, tf = +b.value;
+    if (tf > tc - 5) { if (e && e.target === a) { tf = tc - 5; b.value = tf; } else { tc = tf + 5; a.value = tc; } }
+    var Tc = tc + 273.15, Tf = tf + 273.15, eta = 1 - Tf / Tc, cf = Tf / (Tc - Tf), cp = Tc / (Tc - Tf);
+    document.getElementById('copTcOut').textContent = tc + ' °C = ' + fmt(Tc, 2) + ' K';
+    document.getElementById('copTfOut').textContent = tf + ' °C = ' + fmt(Tf, 2) + ' K';
+    bars.innerHTML = bar('Rendimento della macchina', eta, 1, 'var(--work)', fmt(eta * 100, 1) + '%') +
+      bar('COP del frigorifero', cf, 60, 'var(--cold)', fmt(cf, 1)) + bar('COP della pompa di calore', cp, 60, 'var(--hot)', fmt(cp, 1)) +
+      '<p class="caption">Barre dei COP in scala fino a 60. Controllo: ' + tex('\\text{COP}_{\\text{pdc}} = 1/\\eta = ' + fmt(1 / eta, 1)) + '.</p>';
+    drawFlow(document.getElementById('copFlow'), { mode: 'fridge', L: 100, Qf: 100 * cf, Qc: 100 * cp, tc: tc + ' °C', tf: tf + ' °C' });
+  }
+  a.addEventListener('input', up); b.addEventListener('input', up); up();
+})();
+
+/* ---------- 7. grafico dell'entropia ---------- */
+(function () {
+  var svg = document.getElementById('entropySvg'), rS = document.getElementById('sRatio'), nS = document.getElementById('sMol');
+  function up() {
+    var r = +rS.value, n = +nS.value, dS = n * R * Math.log(r);
+    document.getElementById('sRatioOut').textContent = fmt(r, 2);
+    document.getElementById('sMolOut').textContent = fmt(n, 1) + ' mol';
+    clear(svg);
+    var ax = axes(svg, { W: 460, H: 300, left: 50, right: 16, top: 32, bottom: 36, xmin: 0, xmax: 5, ymin: -60, ymax: 45, xt: 5, yt: 6, xlabel: 'Vf / Vi', ylabel: 'ΔS (J/K)' });
+    el('rect', { x: ax.X(1), y: ax.Y(45), width: ax.X(5) - ax.X(1), height: ax.Y(0) - ax.Y(45), style: 'fill:var(--hot-soft);opacity:.6' }, svg);
+    el('rect', { x: ax.X(0), y: ax.Y(0), width: ax.X(1) - ax.X(0), height: ax.Y(-60) - ax.Y(0), style: 'fill:var(--cold-soft);opacity:.6' }, svg);
+    el('line', { x1: ax.X(0), x2: ax.X(5), y1: ax.Y(0), y2: ax.Y(0), style: 'stroke:var(--ink);stroke-width:1.2' }, svg);
+    var d = '';
+    for (var x = 0.1; x <= 5.0001; x += 0.025) { var y = n * R * Math.log(x); if (y < -60) continue; d += (d ? 'L' : 'M') + ax.X(x).toFixed(1) + ',' + ax.Y(y).toFixed(1); }
+    el('path', { d: d, style: 'fill:none;stroke:var(--fey);stroke-width:3.5;stroke-linecap:round' }, svg);
+    el('text', { x: ax.X(4.9), y: ax.Y(38), 'text-anchor': 'end', style: 'font-size:13px;font-weight:600;fill:var(--hot)' }, svg, 'espansione: ΔS > 0');
+    el('text', { x: ax.X(0.1), y: ax.Y(-52), style: 'font-size:13px;font-weight:600;fill:var(--cold)' }, svg, 'compressione: ΔS < 0');
+    el('line', { x1: ax.X(r), x2: ax.X(r), y1: ax.Y(0), y2: ax.Y(Math.max(-60, dS)), style: 'stroke:var(--fey);stroke-width:1.5;stroke-dasharray:3 3' }, svg);
+    el('circle', { cx: ax.X(r), cy: ax.Y(Math.max(-60, dS)), r: 7, style: 'fill:var(--fey);stroke:#fff;stroke-width:2.5' }, svg);
+    document.getElementById('entropyReadout').innerHTML = '<span class="pill">' + tex('\\Delta S = ' + fmt(n, 1) + '\\cdot 8{,}314\\cdot\\ln(' + fmt(r, 2) + ') = ' + fmt(dS, 2) + '\\ \\text{J/K}') + '</span>';
+  }
+  rS.addEventListener('input', up); nS.addEventListener('input', up); up();
+})();
+});
+</script>
+<script>
+/* Modalità libro: la dispensa è divisa in colonne alte quanto lo schermo (le pagine); si sfoglia spostando la vista di una o due colonne. */
+(function () {
+  const main = document.querySelector('.sheet main');
+  document.getElementById('railSlot').appendChild(document.getElementById('prog'));
+  const num = document.getElementById('pgNum'), prev = document.getElementById('bPrev'), next = document.getElementById('bNext');
+  const flipBtn = document.getElementById('bFlip');
+  const KEY = 'secondo-principio-libro';   // ← cambiare per ogni dispensa
+  let st = { fs: 16, flip: 2, frac: 0 };
+  try { Object.assign(st, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let count = 2, gap = 72, step = 1, total = 1, idx = 0;
+
+  function measure() {
+    count = innerWidth >= 900 ? 2 : 1;
+    gap = count === 2 ? 72 : 40;
+    document.documentElement.style.setProperty('--fs', st.fs + 'px');
+    main.style.columnCount = count;
+    main.style.columnGap = gap + 'px';
+    const pw = (main.clientWidth - gap * (count - 1)) / count, ph = main.clientHeight;
+    document.querySelectorAll('.lab canvas').forEach(c => {
+      c.style.width = Math.max(160, Math.min(pw - 30, ph * 0.5 * c.width / c.height)) + 'px';
+    });
+    step = pw + gap;
+    total = Math.max(1, Math.round((main.scrollWidth + gap) / step));
+  }
+  const maxIdx = () => Math.max(0, total - count);
+  const align = () => { if (count === 2 && st.flip === 2) idx -= idx % 2; };
+  function show(anim) {
+    idx = Math.min(Math.max(0, idx), maxIdx());
+    const before = main.scrollLeft;
+    main.scrollLeft = Math.round(idx * step);
+    // effetto "pagina che gira": breve scivolata nella direzione in cui si sfoglia
+    if (anim && !reduce && main.animate && main.scrollLeft !== before) {
+      const dir = main.scrollLeft > before ? 1 : -1;
+      main.animate([{ opacity: 0.2, transform: 'translateX(' + (dir * 28) + 'px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 220, easing: 'ease-out' });
+    }
+    const a = idx + 1, b = Math.min(total, idx + count);
+    num.textContent = 'pag. ' + (a === b ? a : a + '–' + b) + ' di ' + total;
+    prev.disabled = idx <= 0;
+    next.disabled = idx >= maxIdx();
+    flipBtn.hidden = count !== 2;
+    flipBtn.textContent = st.flip === 2 ? 'sfoglia di 2' : 'sfoglia di 1';
+    { const ps=[...document.querySelectorAll('.part')]; let c=null; ps.forEach(p=>{ if (pageOf(p) <= idx + count - 1) c=p; }); const w=document.getElementById('pgWhere'); if (w) w.textContent = c ? c.dataset.part : 'Inizio'; const r=document.getElementById('pgRead'); if (r) r.style.width=(maxIdx()?idx/maxIdx()*100:0)+'%'; }
+    st.frac = total > 1 ? idx / (total - 1) : 0;
+    save();
+  }
+  function layout() { measure(); idx = Math.round(st.frac * (total - 1)); align(); show(false); }
+  function relayout() { measure(); show(false); }
+  function turn(dir) { idx += dir * (count === 2 ? st.flip : 1); show(true); }
+  function pageOf(el) {
+    const r = el.getBoundingClientRect(), m = main.getBoundingClientRect();
+    return Math.floor((r.left - m.left + main.scrollLeft + 2) / step);
+  }
+
+  prev.addEventListener('click', () => turn(-1));
+  next.addEventListener('click', () => turn(1));
+  flipBtn.addEventListener('click', () => { st.flip = 3 - st.flip; align(); show(false); });
+  document.getElementById('bSmall').addEventListener('click', () => { st.fs = Math.max(13, st.fs - 1); layout(); });
+  document.getElementById('bBig').addEventListener('click', () => { st.fs = Math.min(24, st.fs + 1); layout(); });
+  document.getElementById('bIdx').addEventListener('click', () => { idx = pageOf(document.querySelector('nav')); align(); show(true); });
+
+  // link interni (indice, rimandi): vai alla pagina giusta invece di scorrere
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const t = document.querySelector(a.getAttribute('href'));
+    if (!t) return;
+    e.preventDefault();
+    idx = pageOf(t); align(); show(true);
+  });
+  // tastiera
+  addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select')) return;
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); turn(1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); turn(-1); }
+  });
+  // swipe con il dito (iPad) o con il mouse trascinando
+  let sx = null, sy = 0;
+  main.addEventListener('pointerdown', e => {
+    sx = e.target.closest('canvas, input, button, summary, a, .lab') ? null : e.clientX; sy = e.clientY;
+  });
+  main.addEventListener('pointerup', e => {
+    if (sx === null) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) turn(dx < 0 ? 1 : -1);
+    sx = null;
+  });
+  // trackpad e rotella: un gesto = una pagina
+  let acc = 0, lastTurn = 0, accTimer = 0;
+  main.addEventListener('wheel', e => {
+    if (e.target.closest('mjx-container') && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    acc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    clearTimeout(accTimer); accTimer = setTimeout(() => { acc = 0; }, 200);
+    const now = Date.now();
+    if (Math.abs(acc) > 60 && now - lastTurn > 500) { turn(acc > 0 ? 1 : -1); acc = 0; lastTurn = now; }
+  }, { passive: false });
+  // se il browser sposta la vista da solo (es. passando con Tab), riallinea alla pagina
+  let scTimer = 0;
+  main.addEventListener('scroll', () => {
+    clearTimeout(scTimer);
+    scTimer = setTimeout(() => {
+      if (Math.abs(main.scrollLeft - idx * step) > 4) { idx = Math.round(main.scrollLeft / step); align(); show(false); }
+    }, 200);
+  });
+  // aprire o chiudere una risposta cambia il numero di pagine
+  document.addEventListener('toggle', relayout, true);
+  addEventListener('resize', layout);
+
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  addEventListener('load', () => {
+    const mj = window.MathJax;
+    setTimeout(layout,300); if (mj && mj.startup && mj.startup.promise) mj.startup.promise.then(layout); else layout();
+  });
+})();
+</script>
+</body>
+</html>
