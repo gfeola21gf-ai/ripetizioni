@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disequazioni di grado superiore</title>
+<meta name="materiale:studente" content="Nico, Diego">
+<meta name="materiale:tipo" content="teoria">
+<meta name="materiale:materia" content="Matematica">
+<meta name="materiale:argomento" content="Disequazioni di grado superiore">
+<meta name="materiale:descrizione" content="Ripasso delle fratte, verifica iniziale, lezione con immagini e metodo, verifica finale e confronto prima/dopo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --sole: #f5a90f;          /* cornice: giallo caldo */
+    --sole-scuro: #e08e00;
+    --inchiostro: #3b2a10;    /* testo e titoli */
+    --ambra: #c96f00;         /* accento */
+    --nero: #1d160b;
+    --grigio: #7a6a55;
+    --tenue: #fbf3e3;
+    --giallo: #f5b400;
+    --giallo-chiaro: #fde3a0;
+    --crema: #fff6dc;
+    --rosso: #e0453a;
+    --rosso-chiaro: #fde2df;
+    --verde: #1f9d55;
+    --verde-chiaro: #dcf3e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: radial-gradient(circle at 20% 0%, #ffc43d, var(--sole) 45%, var(--sole-scuro)); font-family: 'Inter', system-ui, sans-serif; color: var(--nero); overflow: hidden; }
+  .pagina { position: fixed; inset: 0; display: grid; grid-template-rows: 1fr auto; padding: 2.2vh 2.2vw 0; }
+
+  /* ---------- lavagna ---------- */
+  .lavagna { position: relative; min-height: 0; overflow: hidden; background: #fff; border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(90, 50, 0, .35), inset 0 0 0 1px rgba(0,0,0,.04); }
+  .barra { position: absolute; top: 0; left: 0; height: 6px; background: var(--ambra); border-radius: 0 6px 6px 0; transition: width .4s ease; z-index: 2; }
+  .schermata { position: absolute; inset: 0; padding: 4.5vh 4.5vw; overflow-y: auto;
+    display: flex; flex-direction: column; justify-content: safe center; gap: 2.6vh;
+    opacity: 0; visibility: hidden; transform: translateX(30px);
+    transition: opacity .45s, transform .45s, visibility .45s; }
+  .schermata.attiva { opacity: 1; visibility: visible; transform: none; }
+  .schermata.prima { transform: translateX(-30px); }
+
+  .etichetta { font: 800 clamp(11px, 1.2vw, 17px) 'Inter'; letter-spacing: .14em; text-transform: uppercase; color: var(--ambra); }
+  h1, h2 { font-family: 'Bebas Neue', Impact, sans-serif; font-weight: 400; line-height: .95; letter-spacing: .01em; }
+  h1 { font-size: clamp(48px, 8.5vw, 140px); color: var(--inchiostro); }
+  h1 span { color: var(--ambra); }
+  h2 { font-size: clamp(34px, 4.3vw, 72px); color: var(--inchiostro); }
+  h3 { font-size: clamp(16px, 1.8vw, 28px); color: var(--inchiostro); font-weight: 800; }
+  p, li { font-size: clamp(15px, 1.8vw, 29px); line-height: 1.35; }
+  .piccolo { font-size: clamp(13px, 1.35vw, 21px); }
+  .tenue { color: var(--grigio); }
+  .evid { background: linear-gradient(transparent 58%, var(--giallo-chiaro) 58%); padding: 0 .1em; }
+  .piu { color: var(--verde); font-weight: 800; } .meno { color: var(--rosso); font-weight: 800; }
+  .centro { text-align: center; align-items: center; }
+  .due-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; align-items: center; min-height: 0; }
+  .due-col.larga { grid-template-columns: 1.4fr 1fr; }
+  svg { display: block; }
+  .ico { width: 1em; height: 1em; flex: none; }
+
+  .passo { opacity: 0; transform: translateY(14px); transition: opacity .4s, transform .4s; }
+  .passo.visto { opacity: 1; transform: none; }
+  tr.passo { transform: none; }
+
+  .box { background: var(--tenue); border-radius: 16px; padding: 1.8vh 1.6vw; display: flex; flex-direction: column; gap: 1vh; }
+  .box.giallo { background: var(--crema); box-shadow: inset 0 0 0 3px var(--giallo); }
+  .box.rosso { background: var(--rosso-chiaro); }
+  .box.verde { background: var(--verde-chiaro); }
+  .frase { font-family: 'Bebas Neue'; font-size: clamp(30px, 3.8vw, 64px); line-height: 1; color: var(--inchiostro); }
+  .frase em { font-style: normal; color: var(--ambra); }
+
+  /* copertina */
+  .copertina { align-items: flex-start; }
+  .sottotitolo { font-size: clamp(18px, 2.4vw, 38px); color: var(--grigio); font-weight: 500; }
+  .tappe { display: flex; gap: 1.2vw; flex-wrap: wrap; margin-top: 1vh; }
+  .tappa { display: flex; align-items: center; gap: .6em; font: 700 clamp(14px, 1.6vw, 24px) 'Inter';
+    background: var(--tenue); color: var(--inchiostro); padding: .55em 1em; border-radius: 999px; }
+  .tappa b { display: grid; place-items: center; min-width: 2.2em; height: 1.7em; padding: 0 .4em; border-radius: 999px; background: var(--ambra); color: #fff; font-size: .8em; }
+
+  .domanda-grossa { font-family: 'Bebas Neue'; font-size: clamp(40px, 6vw, 100px); color: var(--ambra); line-height: 1; }
+
+  /* termometro */
+  .termometro { display: flex; gap: .55vw; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .termometro > span { font: 800 clamp(13px, 1.4vw, 20px) 'Inter'; color: var(--inchiostro); min-width: 4.5em; text-align: right; margin-right: .6vw; }
+  .termometro button { width: clamp(30px, 3.5vw, 58px); height: clamp(30px, 3.5vw, 58px); border: 0; border-radius: 12px; cursor: pointer;
+    font: 400 clamp(20px, 2.4vw, 38px) 'Bebas Neue'; color: var(--inchiostro); background: var(--tenue); transition: transform .15s, background .15s; }
+  .termometro button:hover { transform: translateY(-3px); }
+  .termometro button.scelto { background: var(--giallo); color: var(--nero); }
+  .confronto { display: flex; align-items: center; gap: 2vw; justify-content: center; }
+  .voto { text-align: center; }
+  .voto b { display: block; font: 400 clamp(54px, 7vw, 120px) 'Bebas Neue'; line-height: .9; color: var(--grigio); }
+  .voto.dopo b { color: var(--ambra); }
+  .voto span { font: 800 clamp(11px, 1.2vw, 17px) 'Inter'; letter-spacing: .12em; text-transform: uppercase; color: var(--grigio); }
+  .freccia-grande { font: 400 clamp(40px, 5vw, 90px) 'Bebas Neue'; color: var(--giallo); }
+
+  /* carte che si girano */
+  .carte { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4vw; }
+  .carta.passo { opacity: 1; transform: none; perspective: 1200px; height: clamp(150px, 30vh, 300px); }
+  .carta .interno { position: relative; width: 100%; height: 100%; transition: transform .7s cubic-bezier(.3,1.3,.5,1); transform-style: preserve-3d; }
+  .carta.visto .interno { transform: rotateY(180deg); }
+  .carta .fronte, .carta .retro { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 16px; display: flex; flex-direction: column; justify-content: center; padding: 1.6vh 1.2vw; }
+  .carta .fronte { background: var(--inchiostro); color: #fff; align-items: center; text-align: center; gap: 1vh; }
+  .carta .fronte b { font: 400 clamp(26px, 3vw, 50px) 'Bebas Neue'; letter-spacing: .02em; }
+  .carta .fronte svg { width: clamp(40px, 4.5vw, 72px); height: auto; }
+  .carta .retro { background: var(--crema); box-shadow: inset 0 0 0 3px var(--giallo); transform: rotateY(180deg); gap: .8vh; }
+  .carta .retro > b { font: 400 clamp(20px, 2vw, 32px) 'Bebas Neue'; color: var(--ambra); }
+  .carta .retro p { font-size: clamp(12px, 1.35vw, 21px); line-height: 1.3; }
+
+  /* domande */
+  .domande { display: grid; gap: 1.3vh; }
+  .dom { display: grid; grid-template-columns: auto 1.1fr 1fr; gap: 1.2vw; align-items: center; background: var(--tenue); border-radius: 14px; padding: 1.3vh 1.2vw; }
+  .dom .n { font: 400 clamp(22px, 2.4vw, 40px) 'Bebas Neue'; color: var(--ambra); width: 1.4em; text-align: center; }
+  .dom .q { font: 700 clamp(14px, 1.6vw, 26px) 'Inter'; color: var(--inchiostro); }
+  .dom .r { font-size: clamp(13px, 1.45vw, 23px); color: var(--inchiostro); border-left: 3px solid var(--giallo); padding-left: 1vw; }
+  .dom.sbaglio .q { color: var(--rosso); }
+
+  /* disegni */
+  .disegno svg { width: 100%; height: auto; max-height: 50vh; }
+  .grandi { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; }
+  .fumetto { background: var(--tenue); border-radius: 16px; padding: 1.4vh 1.2vw; font-size: clamp(14px, 1.6vw, 24px); line-height: 1.35; transition: background .3s; }
+  .fumetto.pos { background: var(--verde-chiaro); } .fumetto.neg { background: var(--rosso-chiaro); } .fumetto.zero { background: var(--giallo-chiaro); }
+  .lettura { font: 400 clamp(28px, 3.2vw, 54px) 'Bebas Neue'; color: var(--ambra); line-height: 1; }
+  input[type=range] { width: 100%; accent-color: var(--ambra); height: 28px; cursor: pointer; }
+
+  /* interruttori */
+  .lampade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; }
+  .lampada { border-radius: 16px; padding: 1.4vh 1vw; text-align: center; background: var(--tenue); transition: background .3s, box-shadow .3s; display: flex; flex-direction: column; align-items: center; gap: .4vh; }
+  .lampada svg { width: clamp(44px, 5vw, 84px); height: auto; }
+  .lampada .bulbo { fill: #e7dfcf; transition: fill .3s; }
+  .lampada.pos { background: var(--verde-chiaro); box-shadow: inset 0 0 0 3px var(--verde); } .lampada.pos .bulbo { fill: #8fe0ac; }
+  .lampada.neg { background: var(--rosso-chiaro); box-shadow: inset 0 0 0 3px var(--rosso); } .lampada.neg .bulbo { fill: #6b5c5a; }
+  .lampada.zero { box-shadow: inset 0 0 0 3px var(--grigio); }
+  .lampada .seg { font: 400 clamp(30px, 3.4vw, 56px) 'Bebas Neue'; line-height: 1; }
+  .lampada.pos .seg { color: var(--verde); } .lampada.neg .seg { color: var(--rosso); }
+  .lampada .nome { font: 700 clamp(12px, 1.3vw, 20px) 'Inter'; color: var(--inchiostro); }
+  .lampada small { font-size: clamp(11px, 1.1vw, 16px); color: var(--grigio); }
+
+  /* tabella dei segni */
+  .tab { border-collapse: separate; border-spacing: 0; font-size: clamp(14px, 1.6vw, 26px); }
+  .tab td { padding: .55vh .5vw; text-align: center; min-width: 2.6em; }
+  .tab td.nome { text-align: left; padding-right: 1.2vw; font-weight: 700; color: var(--inchiostro); white-space: nowrap; }
+  .tab td.pt { min-width: 1.4em; color: var(--grigio); font-weight: 800; border-left: 2px dashed #e2d6bd; }
+  .tab tr.testa td { font-weight: 800; color: var(--ambra); border-bottom: 3px solid var(--inchiostro); }
+  .tab tr.testa td.pt { border-left: none; color: var(--ambra); }
+  .tab tr.riga td:not(.nome) { background: var(--tenue); }
+  .tab tr.riga td { border-bottom: 4px solid #fff; }
+  .tab tr.fin td { font-size: 1.15em; font-weight: 800; border-top: 3px solid var(--inchiostro); }
+  .tab tr.fin td.nome { color: var(--ambra); }
+  .tab td.sel { background: var(--giallo-chiaro) !important; box-shadow: inset 0 -5px 0 var(--giallo); }
+  .tab .s { font-weight: 800; }
+
+  /* scheletro a frecce */
+  .scheletro { display: flex; align-items: stretch; gap: .6vw; }
+  .osso { flex: 1; background: var(--tenue); border-radius: 16px; padding: 2vh .9vw; text-align: center; display: flex; flex-direction: column; gap: 1vh; align-items: center; justify-content: flex-start; }
+  .osso .num { display: grid; place-items: center; width: 1.8em; height: 1.8em; border-radius: 50%; background: var(--ambra); color: #fff; font: 800 clamp(14px, 1.5vw, 22px) 'Inter'; }
+  .osso b { font: 400 clamp(22px, 2.5vw, 42px) 'Bebas Neue'; color: var(--inchiostro); line-height: 1; }
+  .osso p { font-size: clamp(12px, 1.3vw, 20px); color: var(--grigio); line-height: 1.3; }
+  .osso.nuovo { background: var(--crema); box-shadow: inset 0 0 0 3px var(--giallo); }
+  .tra { align-self: center; font: 400 clamp(26px, 3vw, 50px) 'Bebas Neue'; color: var(--giallo); }
+
+  /* attrezzi */
+  .attrezzi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; }
+  .attrezzo { background: var(--tenue); border-radius: 16px; padding: 1.8vh 1.3vw; display: flex; flex-direction: column; gap: .8vh; }
+  .attrezzo h3 { font-size: clamp(14px, 1.55vw, 24px); }
+  .attrezzo p { font-size: clamp(14px, 1.6vw, 25px); }
+  .attrezzo .tenue { font-size: clamp(12px, 1.25vw, 19px); }
+  .attrezzo.giallo { background: var(--crema); box-shadow: inset 0 0 0 3px var(--giallo); }
+
+  /* passaggi */
+  .passaggi { display: grid; gap: 1vh; }
+  .pass { display: grid; grid-template-columns: clamp(120px, 13vw, 230px) 1fr; gap: 1.4vw; align-items: center; }
+  .pass .k { font: 400 clamp(17px, 1.9vw, 32px) 'Bebas Neue'; letter-spacing: .03em; color: #fff; background: var(--inchiostro); border-radius: 10px; padding: .25em .6em; text-align: center; }
+  .pass .k.fine { background: var(--giallo); color: var(--nero); }
+  .pass .f { font-size: clamp(14px, 1.75vw, 28px); }
+
+  /* esercizi */
+  .esercizio { display: flex; flex-direction: column; gap: 1.8vh; }
+  .testo-es { font-size: clamp(20px, 2.8vw, 46px); }
+  .bottoni { display: flex; gap: .8vw; flex-wrap: wrap; align-items: center; }
+  .btn { font: 700 clamp(13px, 1.35vw, 20px) 'Inter'; color: #fff; background: var(--inchiostro); border: 0; border-radius: 999px; padding: .65em 1.2em; cursor: pointer;
+    box-shadow: 0 4px 0 rgba(60,35,0,.25); transition: transform .12s, background .12s, color .12s; }
+  .btn:hover, .btn.attivo { background: var(--giallo-chiaro); color: var(--inchiostro); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(60,35,0,.25); }
+  .btn.chiaro { background: var(--tenue); color: var(--inchiostro); }
+  .pannelli { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.4vw; align-items: start; }
+  .pannello { display: none; border-radius: 16px; padding: 1.6vh 1.3vw; font-size: clamp(14px, 1.6vw, 25px); line-height: 1.45; }
+  .pannello.aperto { display: block; animation: entra .35s ease-out; }
+  .pannello.aiuto { background: var(--tenue); grid-column: 1; }
+  .pannello.sol { background: var(--crema); box-shadow: inset 0 0 0 3px var(--giallo); grid-column: 2; }
+  .pannello h3 { margin-bottom: .6vh; }
+  @keyframes entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* verifiche */
+  .testata { display: flex; align-items: center; gap: 2vw; flex-wrap: wrap; }
+  .timer { display: inline-flex; align-items: center; gap: .6vw; margin-left: auto; background: var(--tenue); border-radius: 999px; padding: .3em .5em .3em 1.2em; }
+  .timer .tempo { font: 400 clamp(30px, 3.4vw, 58px) 'Bebas Neue'; color: var(--inchiostro); min-width: 2.6em; text-align: right; }
+  .timer.finito { background: var(--rosso-chiaro); }
+  .timer.finito .tempo { color: var(--rosso); animation: pulsa 1s infinite; }
+  .timer.gigante { margin: 0 auto; padding: .4em .8em .4em 1.6em; }
+  .timer.gigante .tempo { font-size: clamp(70px, 11vw, 190px); }
+  @keyframes pulsa { 50% { opacity: .35; } }
+  .verifica { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: 1.4vw; flex: 1; max-height: 62vh; }
+  .ves { background: var(--tenue); border-radius: 18px; padding: 2vh 1.4vw; display: flex; flex-direction: column; gap: 1.2vh; justify-content: center; }
+  .ves .nn { font: 400 clamp(26px, 2.8vw, 48px) 'Bebas Neue'; color: var(--ambra); line-height: 1; }
+  .ves .tx { font-size: clamp(18px, 2.3vw, 38px); }
+  .ves .tipo { font: 800 clamp(10px, 1.05vw, 15px) 'Inter'; letter-spacing: .12em; text-transform: uppercase; color: var(--grigio); }
+  .ves .so { display: none; font-size: clamp(13px, 1.4vw, 22px); line-height: 1.45; border-top: 2px solid var(--giallo); padding-top: .8vh; }
+  .ves .so.aperto { display: block; animation: entra .35s ease-out; }
+  .ves.chiusa { justify-content: flex-start; }
+  .soluzioni .verifica { max-height: none; grid-auto-rows: auto; flex: none; }
+  .soluzioni .ves { padding: 1.4vh 1.2vw; gap: .8vh; }
+  .soluzioni .ves .tx { font-size: clamp(16px, 1.9vw, 30px); }
+  .soluzioni .btn { align-self: flex-start; }
+
+  /* immagini */
+  .immagine-box { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 3vw; align-items: center; }
+  .immagine-box svg { width: 100%; height: auto; max-height: 46vh; }
+  @keyframes rimbalza { 0%,100% { transform: translateY(-120px); } 50% { transform: translateY(0); } }
+  .palla { animation: rimbalza 1.4s cubic-bezier(.5,0,.5,1) infinite; transform-origin: center; }
+  @keyframes fluttua { 50% { transform: translateY(-10px); } }
+  .fluttua { animation: fluttua 2.6s ease-in-out infinite; }
+  @keyframes gira { 0%,35% { transform: rotate(0); } 50%,85% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+  .gira { animation: gira 4s ease-in-out infinite; transform-origin: 100px 70px; transform-box: view-box; }
+
+  /* parole chiave */
+  .icone8 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4vw; }
+  .icona8 { background: var(--tenue); border-radius: 18px; padding: 2vh 1vw; display: flex; flex-direction: column; align-items: center; gap: 1vh; text-align: center; }
+  .icona8 svg { width: clamp(46px, 5.2vw, 90px); height: auto; }
+  .icona8 b { font: 400 clamp(22px, 2.4vw, 40px) 'Bebas Neue'; color: var(--inchiostro); line-height: 1; }
+  .icona8 small { font-size: clamp(11px, 1.15vw, 17px); color: var(--grigio); }
+
+  /* prima e dopo */
+  .pd { border-collapse: separate; border-spacing: 0 .5vh; width: 100%; }
+  .pd th { font: 800 clamp(10px, 1.1vw, 16px) 'Inter'; letter-spacing: .1em; text-transform: uppercase; color: var(--grigio); padding: 0 .5vw; }
+  .pd td { background: var(--tenue); padding: .5vh .6vw; text-align: center; font-size: clamp(13px, 1.45vw, 22px); }
+  .pd td:first-child { border-radius: 12px 0 0 12px; text-align: left; font-weight: 800; color: var(--inchiostro); }
+  .pd td:last-child { border-radius: 0 12px 12px 0; }
+  .pd tr.tot td { background: var(--crema); font-weight: 800; }
+  .pd button { width: clamp(34px, 3.2vw, 52px); height: clamp(30px, 2.8vw, 44px); border: 0; border-radius: 10px; background: #fff; cursor: pointer; font: 800 clamp(16px, 1.6vw, 24px) 'Inter'; }
+  .pd button.ok { background: var(--verde-chiaro); color: var(--verde); }
+  .pd button.meta { background: var(--giallo-chiaro); color: var(--ambra); }
+  .pd button.no { background: var(--rosso-chiaro); color: var(--rosso); }
+
+  /* piede */
+  .piede { position: relative; display: flex; justify-content: center; align-items: center; padding: 1.6vh 0 2vh; min-height: 64px; }
+  .firma { font: 400 clamp(22px, 2.6vw, 40px) 'Bebas Neue'; color: var(--inchiostro); letter-spacing: .04em; }
+  .firma span { color: #fff; }
+  .nav { position: absolute; right: 0; display: flex; gap: 8px; align-items: center; }
+  .nav .conta { font: 700 14px 'Inter'; color: var(--inchiostro); margin-right: 6px; }
+  .nav button, .menu-btn { font: 700 18px 'Inter'; color: var(--inchiostro); background: rgba(255,255,255,.35);
+    border: 0; border-radius: 999px; width: 48px; height: 48px; cursor: pointer; transition: background .15s; }
+  .nav button:hover, .menu-btn:hover { background: #fff; }
+  .menu-btn { position: absolute; left: 0; }
+
+  /* indice */
+  .indice { position: fixed; inset: 0; z-index: 20; background: rgba(59, 42, 16, .55); display: none; place-items: center; }
+  .indice.aperto { display: grid; }
+  .indice .foglio { background: #fff; border-radius: 18px; padding: 2.4vh 2.4vw; width: min(1100px, 92vw); max-height: 86vh; overflow: auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1vh 3vw; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+  .indice h3 { font: 400 clamp(24px, 2.4vw, 38px) 'Bebas Neue'; color: var(--ambra); margin: .6vh 0 .3vh; }
+  .indice ol { list-style: none; display: grid; gap: 2px; }
+  .indice li button { all: unset; cursor: pointer; display: flex; gap: .8em; width: 100%; padding: .2em .6em; border-radius: 8px; font: 500 clamp(12px, 1.1vw, 16px) 'Inter'; }
+  .indice li button:hover { background: var(--tenue); }
+  .indice li button.qui { background: var(--giallo-chiaro); font-weight: 700; }
+  .indice li button span { color: var(--grigio); min-width: 1.6em; text-align: right; }
+
+  /* telefono: si scorre in verticale */
+  @media (max-width: 760px), (max-height: 480px) {
+    .pagina { padding: 8px 8px 0; }
+    .schermata { justify-content: flex-start; padding: 26px 18px 30px; gap: 16px; }
+    .due-col, .due-col.larga, .grandi, .immagine-box, .pannelli, .carte, .attrezzi, .verifica, .icone8, .lampade { grid-template-columns: 1fr; }
+    .verifica { max-height: none; }
+    .pannello.aiuto, .pannello.sol { grid-column: 1; }
+    .carta.passo { height: 150px; }
+    .dom { grid-template-columns: auto 1fr; } .dom .r { grid-column: 1 / -1; }
+    .scheletro { flex-direction: column; } .tra { transform: rotate(90deg); }
+    .pass { grid-template-columns: 1fr; gap: 4px; }
+    .tab { font-size: 13px; } .tab td { min-width: 1.8em; padding: 4px 2px; }
+    .scorre { overflow-x: auto; }
+    .firma { display: none; }
+    .indice .foglio { grid-template-columns: 1fr; }
+    .timer { margin-left: 0; flex-wrap: wrap; }
+    .timer.gigante .tempo { font-size: 64px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ICONE ===== -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-calzini" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 6 H24 V34 L30 42 C33 46 30 54 24 54 H14 C8 54 6 48 10 44 L12 40 Z" fill="#fde3a0"/>
+      <path d="M34 10 H46 V38 L52 46 C55 50 52 58 46 58 H36 C30 58 28 52 32 48 L34 44 Z" fill="#fde3a0"/>
+      <path d="M12 12 H24 M34 16 H46" stroke="#c96f00"/>
+    </symbol>
+    <symbol id="i-lampadina" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 40 C14 34 12 26 14 20 C17 10 26 6 32 6 C38 6 47 10 50 20 C52 26 50 34 42 40 V46 H22 Z" fill="#fde3a0"/>
+      <path d="M24 52 H40 M27 58 H37"/>
+    </symbol>
+    <symbol id="i-meteo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="22" cy="22" r="10" fill="#f5b400" stroke="#c96f00"/>
+      <path d="M22 4 V8 M4 22 H8 M9 9 L12 12" stroke="#c96f00"/>
+      <path d="M22 50 C14 50 14 38 22 38 C24 30 38 28 42 36 C52 34 56 50 46 50 Z" fill="#fff"/>
+      <path d="M26 56 L24 60 M36 56 L34 60 M46 56 L44 60" stroke="#2f7fb8"/>
+    </symbol>
+    <symbol id="i-mattoncini" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round">
+      <rect x="4" y="30" width="28" height="22" rx="3" fill="#f5b400"/><rect x="32" y="30" width="28" height="22" rx="3" fill="#e0453a"/>
+      <rect x="18" y="12" width="28" height="18" rx="3" fill="#1f9d55"/>
+      <circle cx="12" cy="27" r="3" fill="#fff"/><circle cx="24" cy="27" r="3" fill="#fff"/><circle cx="26" cy="9" r="3" fill="#fff"/><circle cx="38" cy="9" r="3" fill="#fff"/><circle cx="52" cy="27" r="3" fill="#fff"/>
+    </symbol>
+    <symbol id="i-fantasma" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round">
+      <path d="M12 58 V28 a20 20 0 0 1 40 0 V58 l-7 -6 l-6 6 l-7 -6 l-6 6 l-7 -6 z" fill="#fff"/>
+      <circle cx="25" cy="28" r="3.5" fill="currentColor"/><circle cx="39" cy="28" r="3.5" fill="currentColor"/>
+      <path d="M32 38 V48 M27 43 H37" stroke="#1f9d55" stroke-width="4"/>
+    </symbol>
+    <symbol id="i-palla" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+      <path d="M6 10 Q32 70 58 10" stroke-dasharray="4 5" stroke="#c96f00"/>
+      <line x1="4" y1="56" x2="60" y2="56"/>
+      <circle cx="32" cy="44" r="9" fill="#f5b400"/>
+    </symbol>
+    <symbol id="i-specchio" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+      <line x1="32" y1="4" x2="32" y2="60" stroke="#2f7fb8" stroke-width="5"/>
+      <path d="M8 36 L20 24 L20 48 Z" fill="#fde3a0"/><path d="M56 36 L44 24 L44 48 Z" fill="#fde3a0"/>
+    </symbol>
+    <symbol id="i-riga" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+      <rect x="4" y="8" width="56" height="48" rx="6" fill="#fff"/>
+      <path d="M4 22 H60 M4 36 H60 M24 8 V56 M42 8 V56"/>
+      <rect x="4" y="40" width="56" height="16" fill="#fde3a0" stroke="none"/>
+      <path d="M4 40 H60" stroke-width="4"/>
+      <text x="14" y="53" text-anchor="middle" font-size="14" font-weight="800" fill="#1f9d55" stroke="none">+</text>
+      <text x="33" y="53" text-anchor="middle" font-size="14" font-weight="800" fill="#e0453a" stroke="none">−</text>
+      <text x="51" y="53" text-anchor="middle" font-size="14" font-weight="800" fill="#1f9d55" stroke="none">+</text>
+    </symbol>
+    <symbol id="i-cartello" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round">
+      <rect x="6" y="18" width="52" height="24" rx="5" fill="#2f7fb8" stroke="#2f7fb8"/>
+      <path d="M14 30 H44 M36 24 L46 30 L36 36" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <line x1="32" y1="42" x2="32" y2="60"/>
+    </symbol>
+    <symbol id="i-buttafuori" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="32" cy="16" r="9" fill="#fde3a0"/>
+      <path d="M14 60 V42 C14 32 50 32 50 42 V60" fill="#3b2a10"/>
+      <path d="M24 16 H40" stroke-width="4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="pagina">
+  <div class="lavagna" id="lavagna">
+    <div class="barra" id="barra"></div>
+
+<!-- =============================== INIZIO =============================== -->
+
+    <section class="schermata copertina" data-titolo="Copertina" data-parte="1">
+      <div class="etichetta">Matematica · ripetizioni</div>
+      <h1>Disequazioni<br><span>di grado superiore</span></h1>
+      <p class="sottotitolo">Prima chiudiamo le fratte. Poi scopriamo che sono la stessa cosa.</p>
+      <div class="tappe">
+        <div class="tappa"><b>15'</b>Le fratte</div>
+        <div class="tappa"><b>25'</b>Verifica iniziale</div>
+        <div class="tappa"><b>10'</b>Pausa</div>
+        <div class="tappa"><b>40'</b>Errori e metodo</div>
+        <div class="tappa"><b>20'</b>Verifica finale</div>
+      </div>
+    </section>
+
+    <section class="schermata centro" data-titolo="Il termometro">
+      <div class="domanda-grossa">Perché la tabella?</div>
+      <p class="tenue passo">Nelle fratte facciamo sempre la tabella dei segni. <b>Perché?</b> A cosa serve?</p>
+      <div class="box passo" style="max-width:62vw"><p>Scrivete <b>una riga</b> sul foglio: «La tabella serve a…»</p></div>
+      <div class="passo" style="display:grid;gap:1.4vh">
+        <div class="termometro" data-chiave="nico-prima"><span>Nico</span><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>10</button></div>
+        <div class="termometro" data-chiave="diego-prima"><span>Diego</span><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>10</button></div>
+      </div>
+      <p class="piccolo tenue passo">Quanto vi è chiaro, da 1 a 10? Lo rifacciamo alla fine.</p>
+    </section>
+
+<!-- =============================== PARTE 1 · FRATTE =============================== -->
+
+    <section class="schermata" data-titolo="Quattro domande" data-parte="2">
+      <div class="etichetta">Parte 1 · Le fratte</div>
+      <h2>Cosa so già?</h2>
+      <div class="domande">
+        <div class="dom passo"><div class="n">1</div><div class="q">Quanto fa $(-3)\cdot(-2)$?</div><div class="r passo">$+6$. Meno per meno fa più.</div></div>
+        <div class="dom passo"><div class="n">2</div><div class="q">E $(-6):(-2)$?</div><div class="r passo">$+3$. Per la divisione vale la stessa regola.</div></div>
+        <div class="dom passo"><div class="n">3</div><div class="q">Sopra è negativo, sotto è positivo. La frazione?</div><div class="r passo">Negativa. Mi bastano i segni, non i numeri.</div></div>
+        <div class="dom passo"><div class="n">4</div><div class="q">In $\dfrac{x-3}{x+2}\ge 0$ posso moltiplicare per $x+2$?</div><div class="r passo">No. Non so se $x+2$ è positivo o negativo.</div></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Storia: la doppia negazione">
+      <div class="etichetta">Perché meno per meno fa più</div>
+      <h2>Due storie</h2>
+      <div class="grandi">
+        <div class="box giallo passo">
+          <h3>La doppia negazione</h3>
+          <p>La mamma chiede: «Hai fame?»</p>
+          <p>Tu rispondi: «<b>Non</b> è vero che <b>non</b> ho fame».</p>
+          <p>Due "no" si cancellano: vuol dire <b>ho fame</b>.</p>
+          <p class="frase"><span class="meno">−</span> · <span class="meno">−</span> = <span class="piu">+</span></p>
+        </div>
+        <div class="box passo">
+          <h3>I calzini</h3>
+          <svg viewBox="0 0 330 90" style="width:100%;max-height:16vh">
+            <g fill="#fde3a0" stroke="#3b2a10" stroke-width="3" stroke-linejoin="round">
+              <path d="M20 8 h22 v40 l10 12 c5 7 0 16 -9 16 h-18 c-9 0 -12 -10 -5 -16 z"/><path d="M58 8 h22 v40 l10 12 c5 7 0 16 -9 16 h-18 c-9 0 -12 -10 -5 -16 z"/>
+              <path d="M130 8 h22 v40 l10 12 c5 7 0 16 -9 16 h-18 c-9 0 -12 -10 -5 -16 z"/><path d="M168 8 h22 v40 l10 12 c5 7 0 16 -9 16 h-18 c-9 0 -12 -10 -5 -16 z"/>
+              <path d="M262 8 h22 v40 l10 12 c5 7 0 16 -9 16 h-18 c-9 0 -12 -10 -5 -16 z" fill="#fde2df" stroke="#e0453a"/>
+            </g>
+            <g font-family="Inter" font-weight="800" font-size="22" text-anchor="middle"><text x="31" y="38" fill="#e0453a">−</text><text x="69" y="38" fill="#e0453a">−</text><text x="141" y="38" fill="#e0453a">−</text><text x="179" y="38" fill="#e0453a">−</text><text x="273" y="38" fill="#e0453a">−</text></g>
+            <text x="235" y="50" font-family="Bebas Neue" font-size="30" fill="#c96f00" text-anchor="middle">+</text>
+          </svg>
+          <p>Ogni meno è un calzino. Si mettono <b>a coppie</b>: ogni coppia diventa un più.</p>
+          <p>Se resta un calzino <b class="meno">spaiato</b>, il risultato è negativo.</p>
+          <p><b>Conto i meno:</b> pari → <span class="piu">+</span>, dispari → <span class="meno">−</span>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Le parole che servono">
+      <div class="etichetta">Termini bussola</div>
+      <h2>Le parole che servono</h2>
+      <p class="piccolo tenue">Prima di girare la carta: cosa vuol dire, secondo voi?</p>
+      <div class="carte">
+        <div class="carta passo"><div class="interno">
+          <div class="fronte"><svg viewBox="0 0 64 64" style="color:#fff"><use href="#i-mattoncini"/></svg><b>Fattore</b></div>
+          <div class="retro"><b>Fattore</b><p>Un pezzo <b>moltiplicato</b> (o diviso) per gli altri.</p><p>In $\dfrac{x-3}{x+2}$: $x-3$ e $x+2$.</p></div>
+        </div></div>
+        <div class="carta passo"><div class="interno">
+          <div class="fronte"><svg viewBox="0 0 64 64" style="color:#fff"><use href="#i-lampadina"/></svg><b>Segno</b></div>
+          <div class="retro"><b>Segno</b><p>Una sola domanda: è <span class="piu">+</span>, <span class="meno">−</span> o 0?</p><p>Quanto vale non mi interessa.</p></div>
+        </div></div>
+        <div class="carta passo"><div class="interno">
+          <div class="fronte"><svg viewBox="0 0 64 64" style="color:#fff"><use href="#i-cartello"/></svg><b>Zero</b></div>
+          <div class="retro"><b>Zero di un fattore</b><p>Il numero che lo fa diventare 0.</p><p>$x-3$ fa 0 in $x=3$: lì <b>cambia segno</b>.</p></div>
+        </div></div>
+        <div class="carta passo"><div class="interno">
+          <div class="fronte"><svg viewBox="0 0 64 64" style="color:#fff"><use href="#i-riga"/></svg><b>Riga finale</b></div>
+          <div class="retro"><b>Riga finale</b><p>L'ultima riga della tabella: il segno di <b>tutta</b> la frazione.</p><p>La soluzione si legge <b>solo</b> lì.</p></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Perché non moltiplico per il sotto">
+      <div class="etichetta">Domanda 4</div>
+      <h2>Perché non moltiplico per il sotto?</h2>
+      <div class="due-col larga">
+        <div style="display:grid;gap:1.6vh">
+          <div class="box giallo passo"><p><b>La regola:</b> se moltiplico per un numero <b>negativo</b>, giro il verso. &nbsp;$2&lt;5$ ma $-2>-5$.</p></div>
+          <div class="pass passo"><div class="k">Con $x=0$</div><div class="f">sotto $=2$: positivo → il verso <b>resta</b></div></div>
+          <div class="pass passo"><div class="k">Con $x=-5$</div><div class="f">sotto $=-3$: negativo → il verso <b>si gira</b></div></div>
+          <p class="passo"><b>Il sotto cambia segno</b> mentre $x$ si muove. Allora non moltiplico: <span class="evid">studio i segni</span> di sopra e sotto e li metto insieme.</p>
+        </div>
+        <div class="box passo centro">
+          <svg viewBox="0 0 200 150" style="width:100%;max-height:36vh">
+            <line x1="100" y1="80" x2="100" y2="148" stroke="#3b2a10" stroke-width="6"/>
+            <g class="gira"><rect x="30" y="50" width="140" height="40" rx="8" fill="#2f7fb8"/><path d="M50 70 H140 M126 58 L144 70 L126 82" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </svg>
+          <h3>Immagine: il cartello che si gira</h3>
+          <p class="piccolo">Una strada dove la freccia del senso unico si gira da sola a metà. Se non so dove si gira, sbaglio direzione.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Gli interruttori (interattivo)">
+      <div class="etichetta">Immagine · gli interruttori</div>
+      <h2>Ogni fattore è un interruttore</h2>
+      <div class="due-col larga" style="align-items:start">
+        <div style="display:grid;gap:1.6vh">
+          <div class="lampade" id="lampade"></div>
+          <div class="fumetto" id="esito"></div>
+          <div class="scorre"><svg id="retta" viewBox="0 0 640 74" style="width:100%"></svg></div>
+        </div>
+        <div style="display:grid;gap:1.6vh">
+          <p style="font-size:clamp(20px,2.6vw,42px);text-align:center">$\dfrac{(x+2)(x-1)}{x-3}$</p>
+          <div class="lettura" id="ix">x = 0</div>
+          <input type="range" id="cursore" min="-6" max="6" step="0.5" value="0">
+          <p class="piccolo tenue">Sposta $x$. Ogni interruttore scatta quando $x$ passa sul suo zero.</p>
+          <button class="btn" id="foto">Scatta la foto di tutta la retta</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="La tabella è il meteo">
+      <div class="etichetta">Immagine · il meteo</div>
+      <h2>La tabella è il meteo dei segni</h2>
+      <div class="due-col">
+        <div style="display:grid;gap:1.6vh">
+          <div class="box passo" style="flex-direction:row;align-items:center;gap:1.2vw"><svg viewBox="0 0 64 64" style="width:clamp(56px,6vw,100px);color:#3b2a10;flex:none"><use href="#i-meteo"/></svg><p class="piccolo">Il meteo divide l'Italia in <b>zone</b>. In ogni zona il tempo è uguale.</p></div>
+          <p class="passo">Gli <b>zeri</b> dividono la retta in zone. In ogni zona <b>ogni segno resta uguale</b>.</p>
+          <p class="passo">Esempio: $\dfrac{x-3}{x+2}\ge 0$ &nbsp;→ zeri $3$ (sopra) e $-2$ (sotto).</p>
+          <p class="passo piccolo">Il <span class="meno">×</span> vuol dire: lì sotto c'è 0, la frazione <b>non esiste</b>.</p>
+        </div>
+        <div style="display:grid;gap:1.6vh">
+          <div class="scorre"><div class="segni" data-passi data-t='{"p":["-2","3"],"r":[["$x-3$","--+",".0"],["$x+2$","-++","0."]],"f":["+-+","x0"],"sel":"10011"}'></div></div>
+          <p class="passo">Voglio $\ge 0$: zone <span class="piu">+</span> e il punto dove fa 0.<br><b>$x&lt;-2 \;\vee\; x\ge 3$</b></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Attenzione: sistema e fratta">
+      <div class="etichetta">Attenzione · non confondiamoli</div>
+      <h2>Sistema ≠ fratta</h2>
+      <div class="grandi">
+        <div class="box passo">
+          <div style="display:flex;gap:1vw;align-items:center"><svg viewBox="0 0 64 64" style="width:clamp(44px,4.5vw,72px);color:#3b2a10;flex:none"><use href="#i-buttafuori"/></svg><h3>Sistema: il buttafuori</h3></div>
+          <p class="piccolo">Entri in discoteca solo se hai <b>tutti</b> i requisiti: maggiorenne <b>e</b> in lista.</p>
+          <svg viewBox="0 0 300 92" style="width:100%"><line x1="10" y1="22" x2="290" y2="22" stroke="#ddd" stroke-dasharray="6" stroke-width="3"/><line x1="90" y1="22" x2="290" y2="22" stroke="#3b2a10" stroke-width="6"/><line x1="10" y1="48" x2="290" y2="48" stroke="#ddd" stroke-dasharray="6" stroke-width="3"/><line x1="10" y1="48" x2="200" y2="48" stroke="#3b2a10" stroke-width="6"/><rect x="90" y="62" width="110" height="24" rx="6" fill="#f5b400"/><text x="145" y="79" text-anchor="middle" font-family="Inter" font-size="14" fill="#1d160b" font-weight="800">tutte vere</text></svg>
+          <p class="piccolo">Cerco dove le linee continue <b>si sovrappongono</b>.</p>
+        </div>
+        <div class="box giallo passo">
+          <div style="display:flex;gap:1vw;align-items:center"><svg viewBox="0 0 64 64" style="width:clamp(44px,4.5vw,72px);color:#3b2a10;flex:none"><use href="#i-calzini"/></svg><h3>Fratta: i calzini</h3></div>
+          <p class="piccolo">Non chiedo «è vero?». Chiedo «che <b>segno</b> ha?». In ogni colonna conto i meno.</p>
+          <svg viewBox="0 0 300 92" style="width:100%"><g font-family="Inter" font-size="22" font-weight="800" text-anchor="middle"><text x="60" y="22" fill="#e0453a">−</text><text x="150" y="22" fill="#e0453a">−</text><text x="240" y="22" fill="#1f9d55">+</text><text x="60" y="48" fill="#e0453a">−</text><text x="150" y="48" fill="#1f9d55">+</text><text x="240" y="48" fill="#1f9d55">+</text><line x1="10" y1="58" x2="290" y2="58" stroke="#3b2a10" stroke-width="3"/><text x="60" y="84" fill="#1f9d55">+</text><text x="150" y="84" fill="#e0453a">−</text><text x="240" y="84" fill="#1f9d55">+</text></g></svg>
+          <p class="piccolo">Nella prima colonna due meno fanno <span class="piu">+</span>: quella zona <b>va presa</b>.</p>
+        </div>
+      </div>
+      <div class="box rosso passo"><p class="piccolo"><b>Errore tipico:</b> nella fratta prendere solo dove sopra e sotto sono entrambi <span class="piu">+</span>. Così si perde la zona dove sono entrambi <span class="meno">−</span>.</p></div>
+    </section>
+
+    <section class="schermata" data-titolo="Il metodo delle fratte">
+      <div class="etichetta">Lo scheletro · vale per ogni fratta</div>
+      <h2>Il metodo delle fratte</h2>
+      <div class="scheletro">
+        <div class="osso passo"><div class="num">1</div><b>Zero a destra</b><p>Porto tutto a sinistra.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">2</div><b>Sopra e sotto &gt; 0</b><p><b>Sempre</b> &gt; 0, anche se l'esercizio chiede &lt; 0.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">3</div><b>La tabella</b><p>Una riga per fattore, zeri in ordine.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">4</div><b>Conto i meno</b><p>Riga finale, colonna per colonna.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">5</div><b>Scelgo</b><p>Il segno richiesto. Zero del sotto mai incluso.</p></div>
+      </div>
+    </section>
+
+    <section class="schermata esercizio" data-titolo="Ora voi: una fratta">
+      <div class="etichetta">Ora voi</div>
+      <div class="testata"><h2>Una fratta</h2><div class="timer" data-secondi="240"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <p class="testo-es">$\dfrac{2x-4}{x+1} &lt; 0$</p>
+      <div class="bottoni"><button class="btn chiaro" data-apri="aiuto">Aiuto</button><button class="btn" data-apri="sol">Soluzione</button></div>
+      <div class="pannelli">
+        <div class="pannello aiuto"><h3>Aiuto</h3>Studio sopra $>0$ e sotto $>0$, anche se c'è $&lt;0$.</div>
+        <div class="pannello sol"><h3>Soluzione</h3>$2x-4>0\Rightarrow x>2$ &nbsp; $x+1>0\Rightarrow x>-1$
+          <div class="scorre"><div class="segni" data-t='{"p":["-1","2"],"r":[["$2x-4$","--+",".0"],["$x+1$","-++","0."]],"f":["+-+","x0"],"sel":"00100"}'></div></div>
+          Zona <span class="meno">−</span>, senza estremi: <b>$-1&lt;x&lt;2$</b></div>
+      </div>
+    </section>
+
+<!-- =============================== PARTE 2 · VERIFICA INIZIALE =============================== -->
+
+    <section class="schermata" data-titolo="Verifica iniziale (25')" data-parte="3">
+      <div class="testata"><div><div class="etichetta">Parte 2 · Verifica iniziale</div><h2>Dove siamo adesso?</h2></div>
+        <div class="timer" data-secondi="1500"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <div class="verifica">
+        <div class="ves"><div class="nn">1</div><div class="tx">$x^3-4x>0$</div></div>
+        <div class="ves"><div class="nn">2</div><div class="tx">$x^3-7x-6\le 0$</div></div>
+        <div class="ves"><div class="nn">3</div><div class="tx">$x^4\ge 16$</div></div>
+        <div class="ves"><div class="nn">4</div><div class="tx">$x^4-5x^2+4&lt;0$</div></div>
+        <div class="ves"><div class="nn">5</div><div class="tx">$x^3-3x^2+x-3\ge 0$</div></div>
+        <div class="ves"><div class="nn">6</div><div class="tx">$(x^2-2x+1)(x+2)>0$</div></div>
+      </div>
+      <p class="piccolo tenue">Scrivete tutti i passaggi sul foglio.</p>
+    </section>
+
+    <section class="schermata centro" data-titolo="Pausa">
+      <div class="etichetta">Pausa</div>
+      <div class="timer gigante" data-secondi="600"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div>
+      <p class="sottotitolo">Alzatevi, bevete un bicchiere d'acqua, guardate lontano.</p>
+    </section>
+
+    <section class="schermata soluzioni" data-titolo="Soluzioni verifica iniziale">
+      <div class="etichetta">Verifica iniziale</div>
+      <h2>Le soluzioni</h2>
+      <div class="verifica">
+        <div class="ves chiusa"><div class="tipo">1 · raccolgo</div><div class="tx">$x^3-4x>0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$x(x-2)(x+2)>0$<br><b>$-2&lt;x&lt;0 \;\vee\; x>2$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">2 · Ruffini</div><div class="tx">$x^3-7x-6\le 0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">Ruffini con $x=-1$: $(x+1)(x^2-x-6)$<br>$=(x+1)(x+2)(x-3)\le0$<br><b>$x\le-2 \;\vee\; -1\le x\le 3$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">3 · specchio</div><div class="tx">$x^4\ge 16$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$(x^2-4)(x^2+4)\ge 0$, e $x^2+4$ è un fantasma<br><b>$x\le-2 \;\vee\; x\ge 2$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">4 · $t=x^2$</div><div class="tx">$x^4-5x^2+4&lt;0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$t^2-5t+4=(t-1)(t-4)$<br>$(x^2-1)(x^2-4)&lt;0$<br><b>$-2&lt;x&lt;-1 \;\vee\; 1&lt;x&lt;2$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">5 · fantasma</div><div class="tx">$x^3-3x^2+x-3\ge 0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$x^2(x-3)+(x-3)=(x-3)(x^2+1)\ge0$<br><b>$x\ge 3$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">6 · rimbalzo</div><div class="tx">$(x^2-2x+1)(x+2)>0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$(x-1)^2(x+2)>0$. In $x=1$ fa 0: lo tolgo.<br><b>$x>-2 \;\text{e}\; x\ne 1$</b></div></div>
+      </div>
+    </section>
+
+<!-- =============================== PARTE 3 · ERRORI E METODO =============================== -->
+
+    <section class="schermata" data-titolo="Cosa è andato storto?" data-parte="4">
+      <div class="etichetta">Parte 3 · Si parte dagli errori</div>
+      <h2>Cosa è andato storto?</h2>
+      <div class="domande">
+        <div class="dom sbaglio passo"><div class="n">1</div><div class="q">$x^3>4x$ → divido per $x$ → $x^2>4$</div><div class="r passo">Non so il segno di $x$: è il cartello che si gira. Perdo $-2&lt;x&lt;0$. <b>Non divido: raccolgo.</b></div></div>
+        <div class="dom sbaglio passo"><div class="n">2</div><div class="q">$x^4\ge 16$ → $x\ge 2$</div><div class="r passo">Manca lo specchio: anche $(-2)^4=16$. <b>$x\le-2 \vee x\ge 2$</b></div></div>
+        <div class="dom sbaglio passo"><div class="n">3</div><div class="q">$x^2+1>0$ «impossibile» → nessuna soluzione</div><div class="r passo">$x^2+1=0$ è impossibile. Ma $x^2+1>0$ è <b>sempre vera</b>.</div></div>
+        <div class="dom sbaglio passo"><div class="n">4</div><div class="q">$(x-1)^2(x+2)>0$ → $x>-2$</div><div class="r passo">In $x=1$ fa 0, e $0>0$ è falso. Il rimbalzo va tolto: <b>$x\ne1$</b>.</div></div>
+        <div class="dom sbaglio passo"><div class="n">5</div><div class="q">Prendo solo dove tutte le righe sono +</div><div class="r passo">Quello è il buttafuori del sistema. Qui <b>conto i calzini</b>.</div></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="L'idea chiave: la fratta travestita">
+      <div class="etichetta">L'idea chiave</div>
+      <p class="frase passo">Una disequazione di grado superiore<br>è una <em>fratta travestita</em>.</p>
+      <div class="due-col">
+        <div class="box passo centro">
+          <svg viewBox="0 0 300 130" style="width:100%;max-height:30vh">
+            <g stroke="#3b2a10" stroke-width="3" stroke-linejoin="round">
+              <rect x="20" y="70" width="80" height="44" rx="6" fill="#f5b400"/><rect x="110" y="70" width="80" height="44" rx="6" fill="#1f9d55"/><rect x="200" y="70" width="80" height="44" rx="6" fill="#e0453a"/>
+            </g>
+            <g fill="#fff" stroke="#3b2a10" stroke-width="3"><circle cx="45" cy="64" r="7"/><circle cx="75" cy="64" r="7"/><circle cx="135" cy="64" r="7"/><circle cx="165" cy="64" r="7"/><circle cx="225" cy="64" r="7"/><circle cx="255" cy="64" r="7"/></g>
+            <g font-family="Inter" font-weight="800" font-size="18" fill="#fff" text-anchor="middle"><text x="60" y="99">x</text><text x="150" y="99">x − 2</text><text x="240" y="99">x + 2</text></g>
+            <text x="150" y="30" text-anchor="middle" font-family="Inter" font-weight="800" font-size="20" fill="#3b2a10">x³ − 4x</text>
+            <path d="M150 38 V50" stroke="#c96f00" stroke-width="3"/><path d="M143 44 L150 52 L157 44" fill="none" stroke="#c96f00" stroke-width="3"/>
+          </svg>
+          <h3>Immagine: i mattoncini</h3>
+        </div>
+        <div style="display:grid;gap:1.6vh">
+          <p class="passo">Una costruzione Lego intera non si capisce. La <b>smonto nei mattoncini</b> e guardo un pezzo alla volta.</p>
+          <p class="passo">Ogni mattoncino è un interruttore. Poi faccio <b>esattamente</b> come nelle fratte.</p>
+          <div class="box giallo passo"><p>L'unico lavoro nuovo è il primo: <b>smontare</b>.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="La cassetta degli attrezzi">
+      <div class="etichetta">Per smontare</div>
+      <h2>La cassetta degli attrezzi</h2>
+      <p class="piccolo tenue">Le scomposizioni che conoscete già. Le provo in quest'ordine.</p>
+      <div class="attrezzi">
+        <div class="attrezzo passo"><h3>1 · Raccolgo</h3><p>$x^3-4x = x(x^2-4)$</p><span class="tenue">C'è una $x$ in ogni pezzo?</span></div>
+        <div class="attrezzo passo"><h3>2 · Prodotti notevoli</h3><p>$x^2-4=(x-2)(x+2)$</p><span class="tenue">Quadrato meno quadrato.</span></div>
+        <div class="attrezzo passo"><h3>3 · A coppie</h3><p>$x^2(x-3)+1(x-3)$</p><span class="tenue">Quattro pezzi? Li raccolgo a due a due.</span></div>
+        <div class="attrezzo passo"><h3>4 · Ruffini</h3><p>$x^3-7x-6$: provo $x=-1$</p><span class="tenue">Cerco tra i divisori del termine noto.</span></div>
+        <div class="attrezzo passo"><h3>5 · $t=x^2$</h3><p>$x^4-5x^2+4 \to t^2-5t+4$</p><span class="tenue">Solo $x^4$, $x^2$ e numero.</span></div>
+        <div class="attrezzo giallo passo"><h3>Trinomio con $\Delta&lt;0$</h3><p>$x^2+2x+4$</p><span class="tenue">Non si scompone: è un fantasma.</span></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Il metodo in 5 passi">
+      <div class="etichetta">Lo scheletro · vale per ogni esercizio</div>
+      <h2>Il metodo del grado superiore</h2>
+      <div class="scheletro">
+        <div class="osso passo"><div class="num">1</div><b>Zero a destra</b><p>Porto tutto a sinistra.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso nuovo passo"><div class="num">2</div><b>Smonto</b><p>Cassetta degli attrezzi. <b>Mai dividere per $x$.</b></p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">3</div><b>Interruttori</b><p>Ogni mattoncino $>0$. Fantasmi e rimbalzi.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">4</div><b>Conto i meno</b><p>Tabella e riga finale.</p></div>
+        <div class="tra passo">→</div>
+        <div class="osso passo"><div class="num">5</div><b>Scelgo</b><p>Con $\ge$ o $\le$ prendo anche gli zeri.</p></div>
+      </div>
+      <p class="frase passo" style="font-size:clamp(24px,2.8vw,46px)">È il metodo delle fratte con <em>un passo in più</em>.</p>
+    </section>
+
+    <section class="schermata" data-titolo="Esercizio guidato">
+      <div class="etichetta">Esercizio guidato</div>
+      <div class="due-col" style="align-items:start">
+        <div style="display:grid;gap:1.4vh">
+          <p class="testo-es">$x^3-x^2-4x+4>0$</p>
+          <div class="passaggi">
+            <div class="pass passo"><div class="k">1 · Zero</div><div class="f">A destra c'è già 0.</div></div>
+            <div class="pass passo"><div class="k">2 · Smonto</div><div class="f">A coppie: $x^2(x-1)-4(x-1)$<br>$=(x-1)(x-2)(x+2)$</div></div>
+            <div class="pass passo"><div class="k">3 · Interruttori</div><div class="f">$x>-2$, &nbsp;$x>1$, &nbsp;$x>2$</div></div>
+          </div>
+        </div>
+        <div style="display:grid;gap:1.4vh">
+          <div class="pass passo"><div class="k">4 · Conto</div><div class="f">tabella e riga finale</div></div>
+          <div class="scorre"><div class="segni" data-passi data-t='{"p":["-2","1","2"],"r":[["$x+2$","-+++","0.."],["$x-1$","--++",".0."],["$x-2$","---+","..0"]],"f":["-+-+","000"],"sel":"0010001"}'></div></div>
+          <div class="pass passo"><div class="k fine">5 · Scelgo</div><div class="f">zone <span class="piu">+</span>, senza zeri: <b>$-2&lt;x&lt;1 \;\vee\; x>2$</b></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Immagine: il fantasma">
+      <div class="etichetta">Immagine · il fantasma</div>
+      <h2>Il fantasma che non vota</h2>
+      <div class="immagine-box">
+        <div class="box centro passo">
+          <svg viewBox="0 0 64 64" class="fluttua" style="width:clamp(110px,14vw,220px);color:#3b2a10"><use href="#i-fantasma"/></svg>
+          <p class="piccolo">C'è, ma non cambia mai il risultato.</p>
+        </div>
+        <div style="display:grid;gap:1.4vh">
+          <p class="passo">Alcuni mattoncini <b>non fanno mai zero</b>: $x^2+1$, $x^2+4$, $x^2+2x+4$ ($\Delta&lt;0$).</p>
+          <p class="passo">Sono un fantasma in classe durante una votazione: c'è, ma <b>non vota</b>. È sempre <span class="piu">+</span>.</p>
+          <p class="passo">Esempio: $x^4-3x^2-4>0 \to (x^2-4)(x^2+1)>0$</p>
+          <div class="scorre"><div class="segni" data-passi data-t='{"p":["-2","2"],"r":[["$x^2-4$","+-+","00"],["$x^2+1$","+++",".."]],"f":["+-+","00"],"sel":"10001"}'></div></div>
+          <p class="passo"><b>$x&lt;-2 \;\vee\; x>2$</b> &nbsp;<span class="piccolo tenue">Non è "impossibile": è <b>sempre vero</b>.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Immagine: il rimbalzo">
+      <div class="etichetta">Immagine · il rimbalzo</div>
+      <h2>La palla che rimbalza</h2>
+      <div class="immagine-box">
+        <div class="box centro passo">
+          <svg viewBox="0 0 220 180" style="width:100%;max-height:34vh">
+            <path d="M20 10 Q110 330 200 10" fill="none" stroke="#c96f00" stroke-width="3" stroke-dasharray="7 6"/>
+            <line x1="10" y1="168" x2="210" y2="168" stroke="#3b2a10" stroke-width="4"/>
+            <text x="110" y="160" text-anchor="middle" font-family="Inter" font-weight="800" font-size="14" fill="#3b2a10">0</text>
+            <g class="palla"><circle cx="110" cy="146" r="14" fill="#f5b400" stroke="#3b2a10" stroke-width="3"/></g>
+          </svg>
+          <p class="piccolo">Tocca terra, ma non va mai sotto.</p>
+        </div>
+        <div style="display:grid;gap:1.4vh">
+          <p class="passo">Un mattoncino <b>al quadrato</b>, come $(x-2)^2$: è sempre <span class="piu">+</span>, tranne in un punto dove fa <b>0</b>.</p>
+          <div class="box giallo passo"><p class="piccolo">Con $>$ o $&lt;$: il punto del rimbalzo <b>va tolto</b>.<br>Con $\ge$ o $\le$: il punto del rimbalzo <b>va preso</b>.</p></div>
+          <p class="passo">Esempio: $(x-2)^2(x+1)&lt;0$</p>
+          <div class="scorre"><div class="segni" data-passi data-t='{"p":["-1","2"],"r":[["$x+1$","-++","0."],["$(x-2)^2$","+++",".0"]],"f":["-++","00"],"sel":"10000"}'></div></div>
+          <p class="passo"><b>$x&lt;-1$</b> <span class="piccolo tenue">(in $x=2$ fa 0, e $0&lt;0$ è falso)</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Immagine: lo specchio">
+      <div class="etichetta">Immagine · lo specchio</div>
+      <h2>Pari o dispari?</h2>
+      <div class="grandi">
+        <div class="box passo">
+          <div style="display:flex;gap:1vw;align-items:center"><svg viewBox="0 0 64 64" style="width:clamp(44px,4.5vw,72px);color:#3b2a10;flex:none"><use href="#i-specchio"/></svg><h3>Potenza pari: lo specchio</h3></div>
+          <p>$(-2)^4=16$ e $2^4=16$. Il negativo allo specchio è uguale al positivo.</p>
+          <p>$x^4\ge16 \;\to\; x\le-2 \;\vee\; x\ge2$</p>
+          <p>$x^4&lt;81 \;\to\; -3&lt;x&lt;3$</p>
+        </div>
+        <div class="box passo">
+          <div style="display:flex;gap:1vw;align-items:center"><svg viewBox="0 0 64 64" style="width:clamp(44px,4.5vw,72px);color:#3b2a10;flex:none"><use href="#i-cartello"/></svg><h3>Potenza dispari: senso unico</h3></div>
+          <p>$(-2)^3=-8$ ma $2^3=8$. Il segno resta: <b>una sola</b> strada.</p>
+          <p>$x^3\ge 8 \;\to\; x\ge 2$</p>
+          <p>$x^3&lt;-27 \;\to\; x&lt;-3$</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="schermata esercizio" data-titolo="Esercizio A · raccolgo">
+      <div class="etichetta">Esercizi a pezzi · A</div>
+      <div class="testata"><h2>Raccolgo</h2><div class="timer" data-secondi="240"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <p class="testo-es">$x^3-x\ge 0$</p>
+      <div class="bottoni"><button class="btn chiaro" data-apri="aiuto">Aiuto</button><button class="btn" data-apri="sol">Soluzione</button></div>
+      <div class="pannelli">
+        <div class="pannello aiuto"><h3>Aiuto</h3>Raccolgo $x$. Poi: quadrato meno quadrato.</div>
+        <div class="pannello sol"><h3>Soluzione</h3>$x(x-1)(x+1)\ge0$
+          <div class="scorre"><div class="segni" data-t='{"p":["-1","0","1"],"r":[["$x+1$","-+++","0.."],["$x$","--++",".0."],["$x-1$","---+","..0"]],"f":["-+-+","000"],"sel":"0111011"}'></div></div>
+          <b>$-1\le x\le 0 \;\vee\; x\ge1$</b></div>
+      </div>
+    </section>
+
+    <section class="schermata esercizio" data-titolo="Esercizio B · fantasma">
+      <div class="etichetta">Esercizi a pezzi · B</div>
+      <div class="testata"><h2>Il fantasma</h2><div class="timer" data-secondi="240"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <p class="testo-es">$x^4-x^2-12&lt;0$</p>
+      <div class="bottoni"><button class="btn chiaro" data-apri="aiuto">Aiuto</button><button class="btn" data-apri="sol">Soluzione</button></div>
+      <div class="pannelli">
+        <div class="pannello aiuto"><h3>Aiuto</h3>Metto $t=x^2$ e scompongo $t^2-t-12$.</div>
+        <div class="pannello sol"><h3>Soluzione</h3>$(t-4)(t+3) \to (x^2-4)(x^2+3)&lt;0$<br>$x^2+3$ è un fantasma: conta solo $x^2-4&lt;0$.<br><b>$-2&lt;x&lt;2$</b></div>
+      </div>
+    </section>
+
+    <section class="schermata esercizio" data-titolo="Esercizio C · rimbalzo">
+      <div class="etichetta">Esercizi a pezzi · C</div>
+      <div class="testata"><h2>Il rimbalzo</h2><div class="timer" data-secondi="240"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <p class="testo-es">$(x^2+4x+4)(x-1)\le 0$</p>
+      <div class="bottoni"><button class="btn chiaro" data-apri="aiuto">Aiuto</button><button class="btn" data-apri="sol">Soluzione</button></div>
+      <div class="pannelli">
+        <div class="pannello aiuto"><h3>Aiuto</h3>$x^2+4x+4$ è un quadrato. Di chi?</div>
+        <div class="pannello sol"><h3>Soluzione</h3>$(x+2)^2(x-1)\le0$
+          <div class="scorre"><div class="segni" data-t='{"p":["-2","1"],"r":[["$(x+2)^2$","+++","0."],["$x-1$","--+",".0"]],"f":["--+","00"],"sel":"11110"}'></div></div>
+          Con $\le$ prendo anche gli zeri: <b>$x\le 1$</b></div>
+      </div>
+    </section>
+
+    <section class="schermata esercizio" data-titolo="Il boss">
+      <div class="etichetta">Il boss · fratta e grado superiore insieme</div>
+      <div class="testata"><h2>Il boss</h2><div class="timer" data-secondi="480"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <p class="testo-es">$\dfrac{x^3-8}{x^2-9}\ge 0$</p>
+      <div class="bottoni"><button class="btn chiaro" data-apri="aiuto">Aiuto</button><button class="btn" data-apri="sol">Soluzione</button></div>
+      <div class="pannelli">
+        <div class="pannello aiuto"><h3>Aiuto</h3>$x^3-8$ è un cubo meno un cubo. Uno dei pezzi è un fantasma.</div>
+        <div class="pannello sol"><h3>Soluzione</h3>Sopra: $(x-2)(x^2+2x+4)$, il secondo è un fantasma. Sotto: $(x-3)(x+3)$.
+          <div class="scorre"><div class="segni" data-t='{"p":["-3","2","3"],"r":[["$x-2$","--++",".0."],["$x^2+2x+4$","++++","..."],["$x+3$","-+++","0.."],["$x-3$","---+","..0"]],"f":["-+-+","x0x"],"sel":"0011001"}'></div></div>
+          <b>$-3&lt;x\le 2 \;\vee\; x>3$</b></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Parole chiave">
+      <div class="etichetta">Da mettere nella mappa</div>
+      <h2>Le parole chiave</h2>
+      <div class="icone8">
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-calzini"/></svg><b>Calzini</b><small>conto i meno</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-cartello"/></svg><b>Cartello</b><small>non moltiplico per il sotto</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-lampadina"/></svg><b>Interruttori</b><small>ogni fattore scatta sul suo zero</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-meteo"/></svg><b>Meteo</b><small>la tabella, zona per zona</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-mattoncini"/></svg><b>Mattoncini</b><small>prima smonto</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-fantasma"/></svg><b>Fantasma</b><small>sempre +, non vota</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-palla"/></svg><b>Rimbalzo</b><small>fa 0 ma non cambia segno</small></div>
+        <div class="icona8 passo"><svg viewBox="0 0 64 64" style="color:#3b2a10"><use href="#i-specchio"/></svg><b>Specchio</b><small>potenza pari: due strade</small></div>
+      </div>
+    </section>
+
+<!-- =============================== PARTE 4 · VERIFICA FINALE =============================== -->
+
+    <section class="schermata" data-titolo="Verifica finale (20')" data-parte="5">
+      <div class="testata"><div><div class="etichetta">Parte 4 · Verifica finale</div><h2>E adesso?</h2></div>
+        <div class="timer" data-secondi="1200"><span class="tempo"></span><button class="btn avvia">▶ Avvia</button><button class="btn chiaro azzera">↺</button></div></div>
+      <div class="verifica">
+        <div class="ves"><div class="nn">1</div><div class="tx">$x^3-9x&lt;0$</div></div>
+        <div class="ves"><div class="nn">2</div><div class="tx">$x^3-7x+6>0$</div></div>
+        <div class="ves"><div class="nn">3</div><div class="tx">$x^4&lt;81$</div></div>
+        <div class="ves"><div class="nn">4</div><div class="tx">$x^4-10x^2+9\ge 0$</div></div>
+        <div class="ves"><div class="nn">5</div><div class="tx">$x^3+2x^2+4x+8&lt;0$</div></div>
+        <div class="ves"><div class="nn">6</div><div class="tx">$(x^2+4x+4)(x-3)>0$</div></div>
+      </div>
+      <p class="piccolo tenue">Gli stessi tipi di prima, con numeri diversi.</p>
+    </section>
+
+    <section class="schermata soluzioni" data-titolo="Soluzioni verifica finale">
+      <div class="etichetta">Verifica finale</div>
+      <h2>Le soluzioni</h2>
+      <div class="verifica">
+        <div class="ves chiusa"><div class="tipo">1 · raccolgo</div><div class="tx">$x^3-9x&lt;0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$x(x-3)(x+3)&lt;0$<br><b>$x&lt;-3 \;\vee\; 0&lt;x&lt;3$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">2 · Ruffini</div><div class="tx">$x^3-7x+6>0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">Ruffini con $x=1$: $(x-1)(x^2+x-6)$<br>$=(x-1)(x+3)(x-2)>0$<br><b>$-3&lt;x&lt;1 \;\vee\; x>2$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">3 · specchio</div><div class="tx">$x^4&lt;81$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$(x^2-9)(x^2+9)&lt;0$<br><b>$-3&lt;x&lt;3$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">4 · $t=x^2$</div><div class="tx">$x^4-10x^2+9\ge 0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$(x^2-1)(x^2-9)\ge0$<br><b>$x\le-3 \;\vee\; -1\le x\le1 \;\vee\; x\ge3$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">5 · fantasma</div><div class="tx">$x^3+2x^2+4x+8&lt;0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$x^2(x+2)+4(x+2)=(x+2)(x^2+4)&lt;0$<br><b>$x&lt;-2$</b></div></div>
+        <div class="ves chiusa"><div class="tipo">6 · rimbalzo</div><div class="tx">$(x^2+4x+4)(x-3)>0$</div><button class="btn chiaro mostra-so">Soluzione</button><div class="so">$(x+2)^2(x-3)>0$. Il rimbalzo in $-2$ è già fuori.<br><b>$x>3$</b></div></div>
+      </div>
+    </section>
+
+    <section class="schermata" data-titolo="Prima e dopo">
+      <div class="etichetta">Il confronto</div>
+      <h2>Prima e dopo</h2>
+      <div class="due-col larga" style="align-items:start">
+        <div class="scorre"><table class="pd" id="pd"></table><p class="piccolo tenue" style="margin-top:.6vh">Tocca le caselle: ✓ giusto · ½ a metà · ✗ sbagliato.</p></div>
+        <div style="display:grid;gap:2vh">
+          <h3>Termometro finale</h3>
+          <div class="termometro" data-chiave="nico-dopo"><span>Nico</span><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>10</button></div>
+          <div class="termometro" data-chiave="diego-dopo"><span>Diego</span><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>10</button></div>
+          <div class="confronto"><div class="voto"><b data-mostra="nico-prima">?</b><span>Nico prima</span></div><div class="freccia-grande">→</div><div class="voto dopo"><b data-mostra="nico-dopo">?</b><span>dopo</span></div></div>
+          <div class="confronto"><div class="voto"><b data-mostra="diego-prima">?</b><span>Diego prima</span></div><div class="freccia-grande">→</div><div class="voto dopo"><b data-mostra="diego-dopo">?</b><span>dopo</span></div></div>
+          <button class="btn chiaro" id="azzera" style="justify-self:start">Azzera tutto</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="piede">
+    <button class="menu-btn" id="apriIndice" title="Indice (I)">☰</button>
+    <div class="firma">Ripetizioni <span>di matematica</span></div>
+    <div class="nav">
+      <span class="conta" id="conta"></span>
+      <button id="indietro" title="Indietro (←)">←</button>
+      <button id="avanti" title="Avanti (→ o spazio)">→</button>
+    </div>
+  </div>
+</div>
+
+<div class="indice" id="indice"><div class="foglio">
+  <div><h3>Inizio</h3><ol id="indice1"></ol><h3>1 · Le fratte</h3><ol id="indice2"></ol><h3>2 · Verifica iniziale</h3><ol id="indice3"></ol></div>
+  <div><h3>3 · Errori e metodo</h3><ol id="indice4"></ol><h3>4 · Verifica finale</h3><ol id="indice5"></ol></div>
+</div></div>
+
+<script>
+// =================== TABELLE DEI SEGNI (prima delle formule) ===================
+const segnoHTML = c => c === '+' ? '<span class="s piu">+</span>' : '<span class="s meno">−</span>';
+const markHTML = c => c === '0' ? '0' : c === 'x' ? '<span class="meno">×</span>' : '';
+document.querySelectorAll('.segni').forEach(d => {
+  const t = JSON.parse(d.dataset.t), n = t.p.length, cl = d.hasAttribute('data-passi') ? ' passo' : '';
+  let h = '<table class="tab"><tr class="testa' + cl + '"><td class="nome">$x$</td>';
+  for (let i = 0; i <= n; i++) { h += '<td></td>'; if (i < n) h += '<td class="pt">$' + t.p[i] + '$</td>'; }
+  h += '</tr>';
+  t.r.forEach(r => { h += '<tr class="riga' + cl + '"><td class="nome">' + r[0] + '</td>'; for (let i = 0; i <= n; i++) { h += '<td>' + segnoHTML(r[1][i]) + '</td>'; if (i < n) h += '<td class="pt">' + markHTML(r[2][i]) + '</td>'; } h += '</tr>'; });
+  h += '<tr class="fin' + cl + '"><td class="nome">finale</td>';
+  for (let i = 0; i <= n; i++) { h += '<td class="' + (t.sel[2*i] === '1' ? 'sel' : '') + '">' + segnoHTML(t.f[0][i]) + '</td>'; if (i < n) h += '<td class="pt ' + (t.sel[2*i+1] === '1' ? 'sel' : '') + '">' + markHTML(t.f[1][i]) + '</td>'; }
+  d.innerHTML = h + '</tr></table>';
+});
+
+// =================== FORMULE ===================
+renderMathInElement(document.body, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });
+
+// =================== AVANTI / INDIETRO ===================
+const schermate = [...document.querySelectorAll('.schermata')];
+let corrente = 0;
+function mostra(i, tuttiVisti = false) {
+  corrente = Math.max(0, Math.min(schermate.length - 1, i));
+  schermate.forEach((s, k) => { s.classList.toggle('attiva', k === corrente); s.classList.toggle('prima', k < corrente); });
+  const s = schermate[corrente];
+  s.querySelectorAll('.passo').forEach(p => p.classList.toggle('visto', tuttiVisti));
+  s.scrollTop = 0;
+  document.getElementById('barra').style.width = ((corrente + 1) / schermate.length * 100) + '%';
+  document.getElementById('conta').textContent = (corrente + 1) + ' / ' + schermate.length;
+  history.replaceState(null, '', '#' + (corrente + 1));
+  mostraVoti();
+}
+function avanti() {
+  const prossimo = schermate[corrente].querySelector('.passo:not(.visto)');
+  if (prossimo) { prossimo.classList.add('visto'); if (prossimo.getBoundingClientRect().bottom > innerHeight - 80) prossimo.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  else if (corrente < schermate.length - 1) mostra(corrente + 1);
+}
+function indietro() { if (corrente > 0) mostra(corrente - 1, true); }
+document.getElementById('avanti').onclick = avanti;
+document.getElementById('indietro').onclick = indietro;
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const aperto = document.getElementById('indice').classList.contains('aperto');
+  if (e.key === 'Escape') { chiudiIndice(); return; }
+  if (e.key === 'i' || e.key === 'I') { aperto ? chiudiIndice() : apriIndice(); return; }
+  if (e.key === 'f' || e.key === 'F') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); return; }
+  if (aperto) return;
+  if (e.target.tagName === 'INPUT' && e.key.startsWith('Arrow')) return;
+  if (['ArrowRight', ' ', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); avanti(); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); indietro(); }
+});
+document.addEventListener('click', e => { const b = e.target.closest('button'); if (b) b.blur(); });
+
+// =================== INDICE ===================
+let parte = 1;
+schermate.forEach((s, k) => {
+  if (s.dataset.parte) parte = +s.dataset.parte;
+  const li = document.createElement('li');
+  li.innerHTML = '<button><span>' + (k + 1) + '</span>' + s.dataset.titolo + '</button>';
+  li.querySelector('button').onclick = () => { mostra(k, true); chiudiIndice(); };
+  document.getElementById('indice' + parte).appendChild(li);
+});
+function apriIndice() {
+  document.querySelectorAll('#indice li button').forEach((b, k) => b.classList.toggle('qui', k === corrente));
+  document.getElementById('indice').classList.add('aperto');
+}
+function chiudiIndice() { document.getElementById('indice').classList.remove('aperto'); }
+document.getElementById('apriIndice').onclick = apriIndice;
+document.getElementById('indice').addEventListener('click', e => { if (e.target.id === 'indice') chiudiIndice(); });
+
+// =================== VOTI E PRIMA/DOPO (restano salvati) ===================
+const CHIAVE = 'lezione-diseq-grado-sup';
+let voti = {};
+try { voti = JSON.parse(localStorage.getItem(CHIAVE) || '{}'); } catch (e) {}
+const salva = () => { try { localStorage.setItem(CHIAVE, JSON.stringify(voti)); } catch (e) {} };
+function mostraVoti() {
+  document.querySelectorAll('.termometro').forEach(t => t.querySelectorAll('button').forEach(b => b.classList.toggle('scelto', voti[t.dataset.chiave] === +b.textContent)));
+  document.querySelectorAll('[data-mostra]').forEach(el => el.textContent = voti[el.dataset.mostra] ?? '?');
+}
+document.querySelectorAll('.termometro').forEach(t => t.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  voti[t.dataset.chiave] = +b.textContent; salva(); mostraVoti();
+}));
+const tipi = ['Raccolgo', 'Ruffini', 'Specchio', '$t=x^2$', 'Fantasma', 'Rimbalzo'];
+const colonne = [['nico-p', 'Nico prima'], ['nico-d', 'Nico dopo'], ['diego-p', 'Diego prima'], ['diego-d', 'Diego dopo']];
+const stati = ['', '✓', '½', '✗'], classi = { '✓': 'ok', '½': 'meta', '✗': 'no' }, punti = { '✓': 1, '½': .5 };
+function disegnaPD() {
+  let h = '<tr><th></th>' + colonne.map(c => '<th>' + c[1] + '</th>').join('') + '</tr>';
+  tipi.forEach((t, r) => { h += '<tr><td>' + (r + 1) + ' · ' + t + '</td>' + colonne.map(c => { const v = voti['pd-' + c[0] + r] || ''; return '<td><button data-k="pd-' + c[0] + r + '" class="' + (classi[v] || '') + '">' + v + '</button></td>'; }).join('') + '</tr>'; });
+  h += '<tr class="tot"><td>Punti</td>' + colonne.map(c => { let s = 0; tipi.forEach((t, r) => s += punti[voti['pd-' + c[0] + r]] || 0); return '<td>' + String(s).replace('.', ',') + ' / 6</td>'; }).join('') + '</tr>';
+  const tb = document.getElementById('pd'); tb.innerHTML = h;
+  renderMathInElement(tb, { delimiters: [{ left: '$', right: '$', display: false }] });
+  tb.querySelectorAll('button').forEach(b => b.onclick = () => { const k = b.dataset.k; voti[k] = stati[(stati.indexOf(voti[k] || '') + 1) % 4]; salva(); disegnaPD(); });
+}
+disegnaPD();
+document.getElementById('azzera').onclick = () => { if (confirm('Cancello voti e caselle?')) { voti = {}; salva(); mostraVoti(); disegnaPD(); } };
+
+// =================== TIMER ===================
+document.querySelectorAll('.timer').forEach(t => {
+  const tot = +t.dataset.secondi; let resto = tot, giro = null;
+  const tempo = t.querySelector('.tempo'), avvia = t.querySelector('.avvia');
+  const scrivi = () => { tempo.textContent = Math.floor(resto / 60) + ':' + String(resto % 60).padStart(2, '0'); };
+  const ferma = () => { clearInterval(giro); giro = null; avvia.textContent = '▶ Avvia'; };
+  avvia.onclick = () => {
+    if (giro) return ferma();
+    if (resto === 0) { resto = tot; t.classList.remove('finito'); }
+    avvia.textContent = '⏸ Pausa';
+    giro = setInterval(() => { resto--; scrivi(); if (resto <= 0) { ferma(); t.classList.add('finito'); } }, 1000);
+  };
+  t.querySelector('.azzera').onclick = () => { ferma(); resto = tot; t.classList.remove('finito'); scrivi(); };
+  scrivi();
+});
+
+// =================== AIUTO / SOLUZIONE ===================
+document.querySelectorAll('[data-apri]').forEach(b => b.addEventListener('click', () => {
+  const p = b.closest('.esercizio').querySelector('.pannello.' + b.dataset.apri);
+  b.classList.toggle('attivo', p.classList.toggle('aperto'));
+}));
+document.querySelectorAll('.mostra-so').forEach(b => b.addEventListener('click', () => {
+  b.classList.toggle('attivo', b.nextElementSibling.classList.toggle('aperto'));
+}));
+
+// =================== INTERRUTTORI ===================
+const fattori = [{ n: 'x + 2', z: -2, sotto: false }, { n: 'x − 1', z: 1, sotto: false }, { n: 'x − 3', z: 3, sotto: true }];
+const cursore = document.getElementById('cursore'), lampade = document.getElementById('lampade'), esito = document.getElementById('esito');
+const virgola = v => String(v).replace('.', ',').replace('-', '−');
+lampade.innerHTML = fattori.map(f => '<div class="lampada"><span class="nome">' + (f.sotto ? 'sotto' : 'sopra') + ': ' + f.n + '</span><svg viewBox="0 0 64 64"><path class="bulbo" d="M22 40 C14 34 12 26 14 20 C17 10 26 6 32 6 C38 6 47 10 50 20 C52 26 50 34 42 40 V46 H22 Z" stroke="#3b2a10" stroke-width="3.5"/><path d="M24 52 H40 M27 58 H37" stroke="#3b2a10" stroke-width="3.5" stroke-linecap="round"/></svg><span class="seg"></span><small></small></div>').join('');
+function aggiorna() {
+  const x = +cursore.value; document.getElementById('ix').textContent = 'x = ' + virgola(x);
+  let meni = 0, zero = false, noex = false;
+  fattori.forEach((f, k) => {
+    const v = x - f.z, el = lampade.children[k];
+    el.className = 'lampada ' + (v === 0 ? 'zero' : v > 0 ? 'pos' : 'neg');
+    el.querySelector('.seg').textContent = v === 0 ? '0' : v > 0 ? '+' : '−';
+    el.querySelector('small').textContent = 'vale ' + virgola(v);
+    if (v === 0) { if (f.sotto) noex = true; else zero = true; } else if (v < 0) meni++;
+  });
+  if (noex) { esito.className = 'fumetto neg'; esito.innerHTML = 'Il sotto fa 0: la frazione <b>non esiste</b> (×).'; }
+  else if (zero) { esito.className = 'fumetto zero'; esito.innerHTML = 'Il sopra fa 0: la frazione vale <b>0</b>.'; }
+  else { const d = meni % 2; esito.className = 'fumetto ' + (d ? 'neg' : 'pos'); esito.innerHTML = 'Calzini: <b>' + meni + '</b> meno ' + (d ? '→ uno resta spaiato → frazione <b class="meno">−</b>' : '→ tutti in coppia → frazione <b class="piu">+</b>'); }
+}
+cursore.oninput = aggiorna; aggiorna();
+document.getElementById('foto').onclick = () => {
+  const X = v => 320 + v * 50; let h = '';
+  [[-6.3, -2, '-'], [-2, 1, '+'], [1, 3, '-'], [3, 6.3, '+']].forEach((z, k) => {
+    h += '<g style="opacity:0;animation:entra .4s ' + (k * .25) + 's forwards"><rect x="' + X(z[0]) + '" y="20" width="' + (X(z[1]) - X(z[0])) + '" height="24" rx="4" fill="' + (z[2] === '+' ? '#1f9d55' : '#e0453a') + '"/><text x="' + (X(z[0]) + X(z[1])) / 2 + '" y="38" text-anchor="middle" fill="#fff" font-family="Inter" font-size="18" font-weight="800">' + (z[2] === '+' ? '+' : '−') + '</text></g>';
+  });
+  [-2, 1].forEach(z => h += '<circle cx="' + X(z) + '" cy="32" r="6" fill="#fff" stroke="#3b2a10" stroke-width="2"/><text x="' + X(z) + '" y="14" text-anchor="middle" font-family="Inter" font-size="12" font-weight="800">0</text><text x="' + X(z) + '" y="66" text-anchor="middle" font-family="Inter" font-size="15" font-weight="800">' + virgola(z) + '</text>');
+  h += '<text x="' + X(3) + '" y="15" text-anchor="middle" font-family="Inter" font-size="15" fill="#e0453a" font-weight="800">×</text><text x="' + X(3) + '" y="66" text-anchor="middle" font-family="Inter" font-size="15" font-weight="800">3</text>';
+  document.getElementById('retta').innerHTML = h;
+};
+
+mostra((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>

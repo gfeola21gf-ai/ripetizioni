@@ -1,0 +1,1492 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piano cartesiano e retta</title>
+<meta name="materiale:studente" content="Nico, Diego">
+<meta name="materiale:tipo" content="teoria">
+<meta name="materiale:materia" content="Matematica">
+<meta name="materiale:argomento" content="Il piano cartesiano e la retta">
+<meta name="materiale:descrizione" content="Piano cartesiano, distanza e punto medio, equazione della retta, coefficiente angolare, rette parallele e perpendicolari, fasci, distanza punto-retta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sfondo: #fdfaf3;
+    --carta: #ffffff;
+    --testo: #1f2430;
+    --tenue: #6b7180;
+    --blu: #2563eb;
+    --arancio: #ea7a12;
+    --viola: #8b3fd9;
+    --verde: #15925a;
+    --rosso: #d23b3b;
+    --bordo: #e6e0d2;
+    --giallo: #fff1c2;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--sfondo); color: var(--testo);
+    font-family: "Nunito", system-ui, sans-serif; font-size: 28px; line-height: 1.4;
+  }
+  .schermata {
+    display: none; min-height: 100vh; padding: 40px 64px 120px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .schermata.attiva { display: block; }
+  .etichetta {
+    display: inline-block; font-weight: 900; font-size: 19px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--arancio); margin-bottom: 6px;
+  }
+  h1 { font-size: 68px; margin: 0 0 28px; line-height: 1.1; }
+  h2 { font-size: 46px; margin: 0 0 24px; line-height: 1.15; }
+  h3 { font-size: 30px; margin: 0 0 12px; }
+  p { margin: 0 0 14px; }
+  .grande { font-size: 34px; font-weight: 700; }
+  .tenue { color: var(--tenue); }
+  .card {
+    background: var(--carta); border: 2px solid var(--bordo); border-radius: 20px;
+    padding: 24px 30px; margin-bottom: 18px;
+  }
+  .card.regola { border-color: var(--arancio); background: #fff8ef; }
+  .card.ok { border-color: var(--verde); background: #f0faf4; }
+  .passo { opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .35s; }
+  .passo.visto { opacity: 1; transform: none; }
+  .formula {
+    font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 38px;
+    white-space: nowrap;
+  }
+  .formula.piccola { font-size: 30px; }
+  .fr { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; }
+  .fr > span { padding: 0 6px; line-height: 1.15; }
+  .fr > span:first-child { border-bottom: 3px solid currentColor; }
+  .sistema { display: inline-flex; align-items: stretch; gap: 10px; margin: 6px 0; }
+  .graffa { width: 26px; display: block; color: var(--tenue); }
+  .graffa svg { width: 100%; height: 100%; display: block; }
+  .righe { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 4px 0; }
+  .blu { color: var(--blu); } .arancio { color: var(--arancio); } .viola { color: var(--viola); }
+  .verde { color: var(--verde); } .rosso { color: var(--rosso); }
+  .evidenzia { background: var(--giallo); padding: 0 8px; border-radius: 6px; }
+  .due { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  .tre { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .passi { counter-reset: n; list-style: none; padding: 0; margin: 0; }
+  .passi > li { counter-increment: n; position: relative; padding-left: 58px; margin: 16px 0; }
+  .passi > li::before {
+    content: counter(n); position: absolute; left: 0; top: 0;
+    width: 42px; height: 42px; border-radius: 50%; background: var(--blu); color: #fff;
+    font-size: 24px; font-weight: 900; display: grid; place-items: center;
+  }
+  .freccia { color: var(--tenue); margin: 0 10px; }
+  .riga-calc { margin: 8px 0; }
+  .pill {
+    display: inline-block; font-weight: 900; font-size: 22px; padding: 2px 14px; border-radius: 999px;
+    background: var(--giallo); margin-right: 8px;
+  }
+  svg text { font-family: "Nunito", sans-serif; }
+  .graf { width: 100%; height: auto; display: block; }
+  .graf.par { max-height: 300px; margin: 0 auto; }
+
+  /* indice */
+  .indice { columns: 2; column-gap: 40px; padding: 0; list-style: none; margin: 0; }
+  .indice li { break-inside: avoid; margin: 0 0 10px; }
+  .indice button {
+    font: inherit; font-size: 26px; text-align: left; width: 100%; background: var(--carta);
+    border: 2px solid var(--bordo); border-radius: 14px; padding: 10px 18px; cursor: pointer; color: var(--testo);
+  }
+  .indice button:hover { border-color: var(--blu); }
+  .indice b { color: var(--blu); margin-right: 8px; }
+
+  /* quiz */
+  .quiz .scelte { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0; }
+  .quiz button, .tasti button {
+    font: inherit; font-size: 28px; font-weight: 700; background: var(--carta); color: var(--testo);
+    border: 3px solid var(--bordo); border-radius: 14px; padding: 8px 22px; cursor: pointer; min-width: 90px;
+  }
+  .quiz button:hover, .tasti button:hover { border-color: var(--blu); }
+  .quiz button.giusto { border-color: var(--verde); background: #e3f6eb; }
+  .quiz button.sbagliato { border-color: var(--rosso); background: #fde8e8; }
+  .quiz .esito { min-height: 40px; font-weight: 700; margin: 0; }
+  .tasti { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+  .tasti button.scelto { border-color: var(--verde); background: #e3f6eb; }
+
+  /* prova un numero */
+  .prova input[type=range] { width: 100%; accent-color: var(--verde); height: 36px; }
+  .prova .numero { font-size: 56px; font-weight: 900; text-align: center; margin: 0; }
+  .prova .esiti { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+  .prova .esiti div { font-size: 30px; font-weight: 700; }
+  .prova .verdetto { font-size: 32px; font-weight: 900; border-radius: 14px; padding: 10px 18px; text-align: center; }
+  .prova .verdetto.si { background: #e3f6eb; color: var(--verde); }
+  .prova .verdetto.no { background: #fde8e8; color: var(--rosso); }
+
+  .barra {
+    position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between;
+    align-items: center; gap: 12px; padding: 12px 24px; background: rgba(253,250,243,.96);
+    border-top: 2px solid var(--bordo); font-size: 20px; color: var(--tenue); z-index: 5;
+  }
+  .barra button {
+    font: inherit; font-weight: 700; background: var(--carta); border: 2px solid var(--bordo);
+    border-radius: 12px; padding: 8px 18px; cursor: pointer; color: var(--testo);
+  }
+  .barra .centro { display: flex; align-items: center; gap: 14px; }
+
+  @media (max-width: 860px) {
+    body { font-size: 19px; }
+    .schermata { padding: 20px 16px 100px; }
+    h1 { font-size: 38px; } h2 { font-size: 28px; } h3 { font-size: 22px; }
+    .formula { font-size: 24px; } .formula.piccola { font-size: 20px; }
+    .grande { font-size: 22px; }
+    .due, .tre { grid-template-columns: 1fr; }
+    .indice { columns: 1; }
+    .indice button, .quiz button, .tasti button { font-size: 19px; }
+    .prova .numero { font-size: 36px; } .prova .esiti div, .prova .verdetto { font-size: 20px; }
+    .card { padding: 16px; }
+    .barra { padding: 10px 12px; font-size: 16px; }
+  }
+  .due { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  @media (max-width: 860px) { .due { grid-template-columns: 1fr; } }
+  .graf.piano { max-height: 520px; margin: 0 auto; touch-action: none; }
+  table.tab { border-collapse: collapse; font-family: "Cambria Math", "Times New Roman", serif; font-size: 30px; }
+  table.tab th, table.tab td { border: 2px solid var(--bordo); padding: 6px 18px; text-align: center; }
+  table.tab th { background: var(--giallo); }
+  label.cursore { display: block; font-weight: 800; font-size: 30px; margin: 8px 0; }
+  label.cursore input { display: block; width: 100%; height: 36px; accent-color: var(--blu); }
+  @media (max-width: 860px) { table.tab { font-size: 20px; } table.tab th, table.tab td { padding: 4px 10px; } label.cursore { font-size: 20px; } }
+</style>
+</head>
+<body>
+
+<!-- ============ INIZIO ============ -->
+<section class="schermata" data-titolo="Inizio">
+  <span class="etichetta">Matematica</span>
+  <h1>Il piano cartesiano<br>e la retta</h1>
+  <div class="card" style="display:flex;align-items:center;gap:30px;flex-wrap:wrap">
+    <p class="formula piccola" style="margin:0">Trova la retta che passa per P(2; 3)<br>ed è perpendicolare a y = 2x − 1.</p>
+    <p class="grande" style="margin:0">Alla fine sapremo risolvere questo.</p>
+  </div>
+  <h3 style="margin-top:28px">Le parti della lezione</h3>
+  <ul class="indice" id="indice"></ul>
+</section>
+
+<!-- ============ PARTE 1: IL PIANO ============ -->
+<section class="schermata" data-titolo="Il piano cartesiano">
+  <span class="etichetta">Parte 1 · il piano</span>
+  <h2>Il piano cartesiano</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Prendo due rette dei numeri.</p>
+        <p style="margin:0">Le metto <b>incrociate</b>, ad angolo retto.</p>
+      </div>
+      <div class="card passo">
+        <p><b class="blu">Asse x</b>: quello orizzontale. Va da sinistra a destra.</p>
+        <p style="margin:0"><b class="arancio">Asse y</b>: quello verticale. Va dal basso in alto.</p>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Il punto dove si incrociano è l'<b>origine O</b>. Vale 0 su tutti e due gli assi.</p>
+      </div>
+    </div>
+    <div class="card" id="g-assi"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Le coordinate di un punto">
+  <span class="etichetta">Parte 1 · il piano</span>
+  <h2>Le coordinate di un punto</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Ogni punto ha <b>due numeri</b>: le sue <b>coordinate</b>.</p>
+        <p class="formula" style="margin:0">P(<span class="blu">3</span>; <span class="arancio">2</span>)</p>
+      </div>
+      <div class="card passo">
+        <p><b class="blu">Primo numero: x.</b> Quanto vado a destra (+) o a sinistra (−).</p>
+        <p style="margin:0"><b class="arancio">Secondo numero: y.</b> Quanto vado su (+) o giù (−).</p>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Parto sempre da O. <b>Prima</b> mi muovo in orizzontale, <b>poi</b> in verticale.</p>
+      </div>
+      <div class="card passo">
+        <p style="margin:0">Come a battaglia navale: prima la colonna, poi la riga.</p>
+      </div>
+    </div>
+    <div class="card" id="g-coord"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Gioco: trova il punto">
+  <span class="etichetta">Parte 1 · il piano</span>
+  <h2>Gioco: trova il punto</h2>
+  <div class="due">
+    <div class="card">
+      <p class="grande" id="clicca-domanda">&nbsp;</p>
+      <p id="clicca-esito" style="min-height:80px">Clicca sul piano, nel punto giusto.</p>
+      <p class="tenue" style="margin:0">Parti da O: prima x, poi y.</p>
+    </div>
+    <div class="card" id="w-clicca"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="I quattro quadranti">
+  <span class="etichetta">Parte 1 · il piano</span>
+  <h2>I quattro quadranti</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Gli assi dividono il piano in <b>4 parti</b>: i <b>quadranti</b>.</p>
+        <p style="margin:0">Si contano girando al contrario delle lancette.</p>
+      </div>
+      <div class="card passo">
+        <p>Il segno delle coordinate dice dove sta il punto.</p>
+        <p class="formula piccola" style="margin:0">I (+; +) &nbsp; II (−; +) &nbsp; III (−; −) &nbsp; IV (+; −)</p>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Se x = 0, il punto sta <b>sull'asse y</b>.<br>Se y = 0, il punto sta <b>sull'asse x</b>.</p>
+      </div>
+    </div>
+    <div class="card" id="g-quadranti"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Quiz: dove sta il punto?">
+  <span class="etichetta">Parte 1 · il piano</span>
+  <h2>Quiz: dove sta il punto?</h2>
+  <div class="card quiz" data-giusta="1" data-spiega="x è negativo (sinistra), y è positivo (su): secondo quadrante.">
+    <p class="formula">(−4; 1)</p>
+    <div class="scelte"><button>I</button><button>II</button><button>III</button><button>IV</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="3" data-spiega="x è positivo (destra), y è negativo (giù): quarto quadrante.">
+    <p class="formula">(3; −2)</p>
+    <div class="scelte"><button>I</button><button>II</button><button>III</button><button>IV</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="2" data-spiega="x = 0: non mi muovo né a destra né a sinistra. Il punto sta sull'asse y.">
+    <p class="formula">(0; −3)</p>
+    <div class="scelte"><button>III</button><button>Sull'asse x</button><button>Sull'asse y</button></div>
+    <p class="esito"></p>
+  </div>
+</section>
+
+<!-- ============ PARTE 2: DISTANZA E PUNTO MEDIO ============ -->
+<section class="schermata" data-titolo="Distanza: punti in fila">
+  <span class="etichetta">Parte 2 · distanza e punto medio</span>
+  <h2>Distanza tra due punti in fila</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p><b class="blu">Stessa y</b> (in orizzontale): sottraggo le x.</p>
+        <p class="formula piccola" style="margin:0">A(1; 3), B(5; 3) → d = 5 − 1 = <b>4</b></p>
+      </div>
+      <div class="card passo">
+        <p><b class="arancio">Stessa x</b> (in verticale): sottraggo le y.</p>
+        <p class="formula piccola" style="margin:0">C(−3; −2), D(−3; 2) → d = 2 − (−2) = <b>4</b></p>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Una distanza non è mai negativa. Faccio il numero <b>grande meno il piccolo</b>.</p>
+      </div>
+    </div>
+    <div class="card" id="g-fila"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Distanza: la formula">
+  <span class="etichetta">Parte 2 · distanza e punto medio</span>
+  <h2>Distanza tra due punti qualsiasi</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>A(1; 1) e B(4; 5) non sono in fila.</p>
+        <p style="margin:0">Disegno un <b>triangolo rettangolo</b>. AB è il lato lungo.</p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola riga-calc">Lato orizzontale: 4 − 1 = <b class="blu">3</b></p>
+        <p class="formula piccola riga-calc" style="margin:0">Lato verticale: 5 − 1 = <b class="arancio">4</b></p>
+      </div>
+      <div class="card passo">
+        <p>Uso il <b>teorema di Pitagora</b>:</p>
+        <p class="formula piccola" style="margin:0">d = √(3² + 4²) = √(9 + 16) = √25 = <b class="verde">5</b></p>
+      </div>
+    </div>
+    <div class="card" id="g-pitagora"></div>
+  </div>
+  <div class="card regola passo">
+    <p class="formula" style="margin:0">d = √( (x₂ − x₁)² + (y₂ − y₁)² )</p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Prova: sposta i punti">
+  <span class="etichetta">Parte 2 · distanza e punto medio</span>
+  <h2>Prova: sposta i punti</h2>
+  <div class="due">
+    <div class="card" id="w-dist-info"></div>
+    <div class="card" id="w-dist"></div>
+  </div>
+  <p class="tenue">Trascina A o B con il mouse o con il dito.</p>
+</section>
+
+<section class="schermata" data-titolo="Il punto medio">
+  <span class="etichetta">Parte 2 · distanza e punto medio</span>
+  <h2>Il punto medio</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Il <b>punto medio M</b> sta a metà strada tra A e B.</p>
+        <p style="margin:0">Le sue coordinate sono la <b>media</b>: sommo e divido per 2.</p>
+      </div>
+      <div class="card regola passo">
+        <p class="formula" style="margin:0">M( <span class="fr"><span>x₁ + x₂</span><span>2</span></span> ; <span class="fr"><span>y₁ + y₂</span><span>2</span></span> )</p>
+      </div>
+      <div class="card passo">
+        <p>A(2; 1) e B(6; 5)</p>
+        <p class="formula piccola" style="margin:0">M( <span class="fr"><span>2 + 6</span><span>2</span></span> ; <span class="fr"><span>1 + 5</span><span>2</span></span> ) = <b class="viola">M(4; 3)</b></p>
+      </div>
+    </div>
+    <div class="card" id="g-medio"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Attenzione: distanza e punto medio">
+  <span class="etichetta">Parte 2 · distanza e punto medio</span>
+  <h2>Attenzione: non confonderle</h2>
+  <div class="due">
+    <div class="card">
+      <h3>Distanza</h3>
+      <p>È un <b>numero</b>: quanto sono lontani.</p>
+      <p>Faccio la <b>differenza</b>, poi il quadrato, poi la radice.</p>
+      <p class="formula piccola" style="margin:0">(x₂ − x₁)²</p>
+    </div>
+    <div class="card passo">
+      <h3>Punto medio</h3>
+      <p>È un <b>punto</b>: ha due coordinate.</p>
+      <p>Faccio la <b>somma</b>, poi divido per 2.</p>
+      <p class="formula piccola" style="margin:0">(x₁ + x₂) : 2</p>
+    </div>
+  </div>
+  <div class="card regola passo">
+    <p style="margin:0">Il quadrato di un numero negativo è positivo: (−3)² = 9. La radice va fatta <b>alla fine</b>, su tutta la somma.</p>
+  </div>
+</section>
+
+<!-- ============ PARTE 3: L'EQUAZIONE DELLA RETTA ============ -->
+<section class="schermata" data-titolo="L'equazione della retta">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>L'equazione della retta</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Una retta è fatta di <b>infiniti punti</b>.</p>
+        <p style="margin:0">L'equazione è la <b>regola</b> che tutti i suoi punti rispettano.</p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola">y = 2x + 1</p>
+        <p style="margin:0">Regola: "y è il doppio di x, più 1".</p>
+      </div>
+      <div class="card passo">
+        <table class="tab">
+          <tr><th>x</th><td>−1</td><td>0</td><td>1</td><td>2</td></tr>
+          <tr><th>y</th><td>−1</td><td>1</td><td>3</td><td>5</td></tr>
+        </table>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Un punto sta sulla retta se, messo nell'equazione, la rende <b>vera</b>.</p>
+      </div>
+    </div>
+    <div class="card" id="g-tabella"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Come si disegna una retta">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Come si disegna una retta</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p class="formula piccola">y = −x + 3</p>
+        <ol class="passi">
+          <li class="passo">Scelgo due valori facili di x. Per esempio 0 e 3.</li>
+          <li class="passo">Calcolo y.<br><span class="formula piccola">x = 0 → y = 3 &nbsp;&nbsp; x = 3 → y = 0</span></li>
+          <li class="passo">Segno i due punti e li unisco con il righello.</li>
+        </ol>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">Per due punti passa <b>una sola</b> retta. Bastano due punti.</p>
+      </div>
+    </div>
+    <div class="card" id="g-disegno"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Quiz: sta sulla retta?">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Quiz: sta sulla retta?</h2>
+  <p class="formula">y = 2x + 1</p>
+  <div class="card quiz" data-giusta="0" data-spiega="Metto x = 2: y = 2 · 2 + 1 = 5. Viene proprio 5: il punto sta sulla retta.">
+    <p class="formula piccola">Il punto (2; 5)?</p>
+    <div class="scelte"><button>Sì</button><button>No</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="1" data-spiega="Metto x = 1: y = 2 · 1 + 1 = 3. Ma il punto ha y = 4. Non sta sulla retta.">
+    <p class="formula piccola">Il punto (1; 4)?</p>
+    <div class="scelte"><button>Sì</button><button>No</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="0" data-spiega="Metto x = −2: y = 2 · (−2) + 1 = −3. Viene −3: sta sulla retta.">
+    <p class="formula piccola">Il punto (−2; −3)?</p>
+    <div class="scelte"><button>Sì</button><button>No</button></div>
+    <p class="esito"></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="y = mx + q">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>I due numeri della retta: m e q</h2>
+  <div class="card">
+    <p class="formula" style="margin:0">y = <span class="blu">m</span>x + <span class="arancio">q</span></p>
+  </div>
+  <div class="due">
+    <div class="card passo">
+      <h3 class="arancio">q</h3>
+      <p>Dice <b>dove la retta taglia l'asse y</b>.</p>
+      <p class="tenue" style="margin:0">Perché? Sull'asse y x = 0, quindi y = m · 0 + q = q.</p>
+    </div>
+    <div class="card passo">
+      <h3 class="blu">m · coefficiente angolare</h3>
+      <p>Dice <b>quanto è ripida</b> la retta.</p>
+      <p class="tenue" style="margin:0">Se vado avanti di 1, salgo di m.</p>
+    </div>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola" style="margin:0">y = <span class="blu">3</span>x + <span class="arancio">2</span> → m = 3, q = 2 &nbsp;&nbsp;&nbsp; y = <span class="blu">−x</span> → m = −1, q = 0</p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Prova: muovi m e q">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Prova: muovi m e q</h2>
+  <div class="due">
+    <div class="card">
+      <p class="formula" id="mq-eq" style="margin-bottom:14px">&nbsp;</p>
+      <label class="cursore"><span class="blu">m</span> = <b id="mq-mv"></b><input type="range" id="mq-m" min="-3" max="3" step="0.5" value="1"></label>
+      <label class="cursore"><span class="arancio">q</span> = <b id="mq-qv"></b><input type="range" id="mq-q" min="-4" max="4" step="1" value="1"></label>
+      <p class="tenue" style="margin:10px 0 0">Il gradino tratteggiato: avanti 1, su di m.</p>
+    </div>
+    <div class="card" id="w-mq"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Il coefficiente angolare m">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Il segno di m</h2>
+  <div class="due">
+    <div>
+      <div class="card"><p style="margin:0"><b class="blu">m &gt; 0</b>: la retta <b>sale</b> (guardando da sinistra a destra).</p></div>
+      <div class="card passo"><p style="margin:0"><b class="arancio">m &lt; 0</b>: la retta <b>scende</b>.</p></div>
+      <div class="card passo"><p style="margin:0"><b class="viola">m = 0</b>: la retta è <b>orizzontale</b>.</p></div>
+      <div class="card regola passo"><p style="margin:0">Più m è grande (senza guardare il segno), più la retta è <b>ripida</b>.</p></div>
+    </div>
+    <div class="card" id="g-segni-m"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="m da due punti">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Calcolare m da due punti</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>A(1; 2) e B(3; 6)</p>
+        <p class="riga-calc passo">Vado avanti: 3 − 1 = <b class="blu">2</b></p>
+        <p class="riga-calc passo" style="margin:0">Salgo: 6 − 2 = <b class="arancio">4</b></p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola" style="margin:0">m = <span class="fr"><span>quanto salgo</span><span>quanto vado avanti</span></span> = <span class="fr"><span class="arancio">4</span><span class="blu">2</span></span> = <b class="verde">2</b></p>
+      </div>
+      <div class="card regola passo">
+        <p class="formula" style="margin:0">m = <span class="fr"><span>y₂ − y₁</span><span>x₂ − x₁</span></span></p>
+      </div>
+    </div>
+    <div class="card" id="g-m-punti"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Quiz: m e q">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Quiz veloce</h2>
+  <div class="card quiz" data-giusta="2" data-spiega="Sopra le y: 6 − 0 = 6. Sotto le x: 2 − 0 = 2. m = 6 : 2 = 3.">
+    <p>Quanto vale m tra (0; 0) e (2; 6)?</p>
+    <div class="scelte"><button>2</button><button>6</button><button>3</button><button>⅓</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="1" data-spiega="q è il numero da solo: −4. La retta taglia l'asse y in (0; −4).">
+    <p>Dove taglia l'asse y la retta <span class="formula piccola">y = 5x − 4</span>?</p>
+    <div class="scelte"><button>(0; 5)</button><button>(0; −4)</button><button>(−4; 0)</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="0" data-spiega="m = −2 è negativo: la retta scende.">
+    <p>La retta <span class="formula piccola">y = −2x + 7</span> sale o scende?</p>
+    <div class="scelte"><button>Scende</button><button>Sale</button><button>È orizzontale</button></div>
+    <p class="esito"></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Rette speciali">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Rette speciali</h2>
+  <div class="due">
+    <div>
+      <div class="card"><p style="margin:0"><b class="blu formula piccola">y = 3</b> · orizzontale. Tutti i punti hanno y = 3. Qui m = 0.</p></div>
+      <div class="card passo"><p style="margin:0"><b class="arancio formula piccola">x = −2</b> · verticale. Tutti i punti hanno x = −2.<br><b>Non ha m</b>: non si può scrivere come y = …</p></div>
+      <div class="card passo"><p style="margin:0"><b class="viola formula piccola">y = x</b> · q = 0: passa per l'origine.</p></div>
+      <div class="card regola passo"><p style="margin:0">Gli assi sono rette: l'asse x è <b>y = 0</b>, l'asse y è <b>x = 0</b>.</p></div>
+    </div>
+    <div class="card" id="g-speciali"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="La forma ax + by + c = 0">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>La retta scritta in un altro modo</h2>
+  <div class="card">
+    <p>A volte la retta è scritta così, tutta a sinistra:</p>
+    <p class="formula" style="margin:0">ax + by + c = 0</p>
+  </div>
+  <div class="card passo">
+    <p>Per trovare m e q, <b>lascio y da sola</b> a sinistra.</p>
+    <p class="formula piccola riga-calc">2x − y + 3 = 0</p>
+    <p class="formula piccola riga-calc passo">−y = −2x − 3</p>
+    <p class="formula piccola riga-calc passo" style="margin:0">y = 2x + 3 → <b class="verde">m = 2, q = 3</b> <span class="tenue">(cambio tutti i segni)</span></p>
+  </div>
+  <div class="card regola passo">
+    <p class="formula piccola" style="margin:0">Scorciatoia: m = − <span class="fr"><span>a</span><span>b</span></span> &nbsp;&nbsp; <span class="tenue" style="font-family:Nunito">Qui: a = 2, b = −1 → m = −(2 : −1) = 2</span></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Retta per un punto, con m">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Retta per un punto, con m dato</h2>
+  <div class="card regola">
+    <p class="formula" style="margin:0">y − y₀ = m(x − x₀)</p>
+  </div>
+  <div class="card passo">
+    <p>Perché? Per ogni punto (x; y) della retta, m è sempre lo stesso:</p>
+    <p class="formula piccola" style="margin:0">m = <span class="fr"><span>y − y₀</span><span>x − x₀</span></span> → moltiplico per (x − x₀)</p>
+  </div>
+  <div class="card passo">
+    <p>P(1; 2) e m = 3</p>
+    <p class="formula piccola riga-calc">y − 2 = 3(x − 1)</p>
+    <p class="formula piccola riga-calc passo">y − 2 = 3x − 3</p>
+    <p class="formula piccola riga-calc passo">y = 3x − 1</p>
+    <p class="tenue passo" style="margin:0">Controllo: x = 1 → y = 3 − 1 = 2. Passa per P.</p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Retta per due punti">
+  <span class="etichetta">Parte 3 · la retta</span>
+  <h2>Retta per due punti</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p style="margin-bottom:4px">A(1; 1) e B(3; 5)</p>
+        <ol class="passi">
+          <li class="passo">Calcolo m.<br><span class="formula piccola">m = <span class="fr"><span>5 − 1</span><span>3 − 1</span></span> = <span class="fr"><span>4</span><span>2</span></span> = 2</span></li>
+          <li class="passo">Uso un punto, per esempio A.<br><span class="formula piccola">y − 1 = 2(x − 1)</span></li>
+          <li class="passo">Faccio i conti.<br><span class="formula piccola">y = 2x − 1</span></li>
+          <li class="passo">Controllo con B: <span class="formula piccola">2 · 3 − 1 = 5</span>. Giusto.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="card" id="g-due-punti"></div>
+  </div>
+</section>
+
+<!-- ============ PARTE 4: PARALLELE E PERPENDICOLARI ============ -->
+<section class="schermata" data-titolo="Rette parallele">
+  <span class="etichetta">Parte 4 · parallele e perpendicolari</span>
+  <h2>Rette parallele</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Due rette sono <b>parallele</b> se non si incontrano mai.</p>
+        <p style="margin:0">Hanno la stessa pendenza.</p>
+      </div>
+      <div class="card regola passo">
+        <p class="grande" style="margin:0">Parallele → <b>stesso m</b></p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola" style="margin:0"><span class="blu">y = 2x + 1</span> &nbsp; e &nbsp; <span class="arancio">y = 2x − 3</span></p>
+        <p class="tenue" style="margin:6px 0 0">m è uguale (2). Cambia solo q.</p>
+      </div>
+    </div>
+    <div class="card" id="g-parallele"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Rette perpendicolari">
+  <span class="etichetta">Parte 4 · parallele e perpendicolari</span>
+  <h2>Rette perpendicolari</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p style="margin:0">Due rette sono <b>perpendicolari</b> se si incrociano ad <b>angolo retto</b>.</p>
+      </div>
+      <div class="card regola passo">
+        <p class="grande" style="margin-bottom:6px">m' = − <span class="fr"><span>1</span><span>m</span></span></p>
+        <p style="margin:0"><b>Capovolgo</b> m e <b>cambio il segno</b>.</p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola" style="margin:0">m = 2 → m' = −½<br>m = −3 → m' = ⅓<br>m = ¾ → m' = −<span class="fr"><span>4</span><span>3</span></span></p>
+      </div>
+      <div class="card passo">
+        <p style="margin:0">Perché? Giro il gradino di un quarto di giro. <span class="blu">"Avanti 1, su 2"</span> diventa <span class="arancio">"avanti 2, giù 1"</span>: m' = −½.</p>
+      </div>
+    </div>
+    <div class="card" id="g-perp-perche"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Prova: la perpendicolare">
+  <span class="etichetta">Parte 4 · parallele e perpendicolari</span>
+  <h2>Prova: scegli m</h2>
+  <div class="due">
+    <div class="card">
+      <p class="tenue" style="margin-bottom:4px">m della retta blu</p>
+      <div class="tasti" id="tasti-perp">
+        <button data-m="2">2</button><button data-m="1">1</button><button data-m="3">3</button>
+        <button data-m="-2">−2</button><button data-m="0.5">½</button><button data-m="-0.5">−½</button>
+      </div>
+      <p class="formula piccola" id="perp-testo" style="margin:0">&nbsp;</p>
+    </div>
+    <div class="card" id="w-perp"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Quiz: parallele o perpendicolari?">
+  <span class="etichetta">Parte 4 · parallele e perpendicolari</span>
+  <h2>Quiz: parallele o perpendicolari?</h2>
+  <div class="card quiz" data-giusta="0" data-spiega="m = 3 in tutte e due: parallele.">
+    <p class="formula piccola">y = 3x + 1 &nbsp; e &nbsp; y = 3x − 5</p>
+    <div class="scelte"><button>Parallele</button><button>Perpendicolari</button><button>Nessuna delle due</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="1" data-spiega="4 capovolto con il segno cambiato fa −¼: perpendicolari.">
+    <p class="formula piccola">y = 4x &nbsp; e &nbsp; y = −¼x + 2</p>
+    <div class="scelte"><button>Parallele</button><button>Perpendicolari</button><button>Nessuna delle due</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="2" data-spiega="Gli m sono 2 e −2. Non sono uguali. E −2 non è −½. Nessuna delle due.">
+    <p class="formula piccola">y = 2x &nbsp; e &nbsp; y = −2x + 1</p>
+    <div class="scelte"><button>Parallele</button><button>Perpendicolari</button><button>Nessuna delle due</button></div>
+    <p class="esito"></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Esempio: parallela e perpendicolare">
+  <span class="etichetta">Parte 4 · parallele e perpendicolari</span>
+  <h2>Esempio: per P(3; 1)</h2>
+  <p class="formula piccola">Retta data: y = 3x − 4</p>
+  <div class="due">
+    <div>
+      <div class="card passo">
+        <p><b class="blu">Parallela</b>: stesso m = 3.</p>
+        <p class="formula piccola riga-calc">y − 1 = 3(x − 3)</p>
+        <p class="formula piccola riga-calc" style="margin:0">y = 3x − 8</p>
+      </div>
+      <div class="card passo">
+        <p><b class="arancio">Perpendicolare</b>: m' = −⅓.</p>
+        <p class="formula piccola riga-calc">y − 1 = −⅓(x − 3)</p>
+        <p class="formula piccola riga-calc" style="margin:0">y = −⅓x + 1 + 1 → y = −⅓x + 2</p>
+      </div>
+    </div>
+    <div class="card" id="g-par-perp"></div>
+  </div>
+</section>
+
+<!-- ============ PARTE 5: FASCI DI RETTE ============ -->
+<section class="schermata" data-titolo="Fascio proprio">
+  <span class="etichetta">Parte 5 · fasci di rette</span>
+  <h2>Il fascio di rette per un punto</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Un <b>fascio</b> è un gruppo di rette.</p>
+        <p style="margin:0">Il <b>fascio proprio</b>: tutte le rette che passano per lo stesso punto, il <b>centro</b>.</p>
+      </div>
+      <div class="card regola passo">
+        <p class="formula piccola" style="margin:0">y − y₀ = m(x − x₀) &nbsp; <span class="tenue" style="font-family:Nunito">con m che cambia</span></p>
+      </div>
+      <div class="card passo">
+        <label class="cursore"><span class="blu">m</span> = <b id="fa-mv"></b><input type="range" id="fa-m" min="-3" max="3" step="0.5" value="1"></label>
+        <p class="formula piccola" id="fa-eq" style="margin:6px 0 0">&nbsp;</p>
+      </div>
+      <p class="tenue passo">Manca solo la retta verticale x = x₀: lei non ha m.</p>
+    </div>
+    <div class="card" id="w-fascio"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Fascio improprio">
+  <span class="etichetta">Parte 5 · fasci di rette</span>
+  <h2>Il fascio di rette parallele</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Il <b>fascio improprio</b>: tutte le rette parallele tra loro.</p>
+        <p style="margin:0">Hanno tutte lo <b>stesso m</b>.</p>
+      </div>
+      <div class="card regola passo">
+        <p class="formula piccola" style="margin:0">y = 2x + q &nbsp; <span class="tenue" style="font-family:Nunito">con q che cambia</span></p>
+      </div>
+      <div class="card passo">
+        <h3>Fascio proprio o improprio?</h3>
+        <p style="margin:0">Cambia <b>m</b> → ruotano attorno a un punto: <b>proprio</b>.<br>Cambia <b>q</b> → scivolano parallele: <b>improprio</b>.</p>
+      </div>
+    </div>
+    <div class="card" id="g-improprio"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Esempio sul fascio">
+  <span class="etichetta">Parte 5 · fasci di rette</span>
+  <h2>Esempio sul fascio</h2>
+  <div class="card">
+    <p class="formula piccola" style="margin-bottom:6px">y − 2 = m(x − 1)</p>
+    <p style="margin:0">Quale retta del fascio passa per il punto (3; 6)?</p>
+  </div>
+  <div class="due">
+    <div class="card">
+      <p class="riga-calc passo">Metto x = 3 e y = 6:</p>
+      <p class="formula piccola riga-calc passo">6 − 2 = m(3 − 1)</p>
+      <p class="formula piccola riga-calc passo">4 = 2m → <b>m = 2</b></p>
+      <p class="formula piccola riga-calc passo">y − 2 = 2(x − 1) → <b class="verde">y = 2x</b></p>
+    </div>
+    <div class="card passo" id="g-fascio-es"></div>
+  </div>
+</section>
+
+<!-- ============ PARTE 6: DISTANZA PUNTO-RETTA ============ -->
+<section class="schermata" data-titolo="Distanza punto-retta: l'idea">
+  <span class="etichetta">Parte 6 · distanza punto-retta</span>
+  <h2>Distanza di un punto da una retta</h2>
+  <div class="due">
+    <div>
+      <div class="card">
+        <p>Da P alla retta ci sono tante strade.</p>
+        <p style="margin:0">La distanza è la strada <b>più corta</b>.</p>
+      </div>
+      <div class="card regola passo">
+        <p style="margin:0">La strada più corta è quella <b>perpendicolare</b> alla retta.</p>
+      </div>
+      <div class="card passo">
+        <p style="margin:0">Come quando attraversi la strada: la via più breve è dritta, non in diagonale.</p>
+      </div>
+    </div>
+    <div class="card" id="g-dpr-idea"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Distanza punto-retta: la formula">
+  <span class="etichetta">Parte 6 · distanza punto-retta</span>
+  <h2>La formula</h2>
+  <div class="card regola">
+    <p class="formula" style="margin:0">d = <span class="fr"><span>| a x₀ + b y₀ + c |</span><span>√(a² + b²)</span></span></p>
+  </div>
+  <div class="card passo">
+    <ol class="passi">
+      <li>Scrivo la retta come <b>ax + by + c = 0</b>.</li>
+      <li class="passo">Leggo a, b, c.</li>
+      <li class="passo">Sopra: metto le coordinate di P nella retta. Tengo il numero <b>senza segno</b> (valore assoluto).</li>
+      <li class="passo">Sotto: la radice di a² + b².</li>
+    </ol>
+  </div>
+  <div class="card passo">
+    <p>P(1; 2), retta 3x + 4y − 1 = 0 → a = 3, b = 4, c = −1</p>
+    <p class="formula piccola" style="margin:0">d = <span class="fr"><span>|3 · 1 + 4 · 2 − 1|</span><span>√(9 + 16)</span></span> = <span class="fr"><span>10</span><span>5</span></span> = <b class="verde">2</b></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Prova: sposta il punto">
+  <span class="etichetta">Parte 6 · distanza punto-retta</span>
+  <h2>Prova: sposta il punto</h2>
+  <div class="due">
+    <div class="card" id="w-dpr-info"></div>
+    <div class="card" id="w-dpr"></div>
+  </div>
+  <p class="tenue">Trascina P. Se P sta sulla retta, la distanza è 0.</p>
+</section>
+
+<section class="schermata" data-titolo="Errori da evitare">
+  <span class="etichetta">Riepilogo</span>
+  <h2>Errori da evitare</h2>
+  <div class="card">
+    <ol class="passi">
+      <li>Coordinate: <b>prima x, poi y</b>. (2; 5) e (5; 2) sono punti diversi.</li>
+      <li class="passo">Distanza: (−3)² = <b>9</b>, non −9. La radice si fa alla fine.</li>
+      <li class="passo">Punto medio: <b>sommo</b> e divido per 2. Non sottraggo.</li>
+      <li class="passo">m: sopra le y, sotto le x, <b>nello stesso ordine</b>.</li>
+      <li class="passo">Perpendicolare: <b>capovolgo e cambio segno</b>. Solo capovolgere non basta.</li>
+      <li class="passo">Distanza punto-retta: prima scrivo la retta come <b>ax + by + c = 0</b>.</li>
+      <li class="passo">La retta verticale x = k <b>non ha m</b>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ ESERCIZI SVOLTI ============ -->
+<section class="schermata" data-titolo="Esercizio 1: distanza e punto medio">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 1</h2>
+  <div class="card"><p class="formula piccola" style="margin:0">A(−1; 2) e B(3; 5): trova la distanza AB e il punto medio M.</p></div>
+  <div class="due">
+    <div>
+      <div class="card passo">
+        <p class="formula piccola riga-calc">d = √( (3 − (−1))² + (5 − 2)² )</p>
+        <p class="formula piccola riga-calc passo" style="margin:0">= √(16 + 9) = √25 = <b class="verde">5</b></p>
+      </div>
+      <div class="card passo">
+        <p class="formula piccola" style="margin:0">M( <span class="fr"><span>−1 + 3</span><span>2</span></span> ; <span class="fr"><span>2 + 5</span><span>2</span></span> ) = <b class="viola">M(1; <span class="fr"><span>7</span><span>2</span></span>)</b></p>
+      </div>
+    </div>
+    <div class="card passo" id="g-es1"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 2: retta per due punti">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 2</h2>
+  <div class="card"><p class="formula piccola" style="margin:0">Trova la retta che passa per A(1; −1) e B(3; 3).</p></div>
+  <div class="due">
+    <div class="card">
+      <p class="formula piccola riga-calc passo">m = <span class="fr"><span>3 − (−1)</span><span>3 − 1</span></span> = <span class="fr"><span>4</span><span>2</span></span> = 2</p>
+      <p class="formula piccola riga-calc passo">y − (−1) = 2(x − 1)</p>
+      <p class="formula piccola riga-calc passo">y + 1 = 2x − 2 → <b class="verde">y = 2x − 3</b></p>
+      <p class="tenue passo" style="margin:0">Controllo con B: 2 · 3 − 3 = 3. Giusto.</p>
+    </div>
+    <div class="card passo" id="g-es2"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 3: la perpendicolare">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 3</h2>
+  <div class="card"><p class="formula piccola" style="margin:0">Trova la retta che passa per P(2; 3) ed è perpendicolare a y = 2x − 1.</p></div>
+  <div class="due">
+    <div class="card">
+      <p class="formula piccola riga-calc passo">m = 2 → m' = −½</p>
+      <p class="formula piccola riga-calc passo">y − 3 = −½(x − 2)</p>
+      <p class="formula piccola riga-calc passo">y − 3 = −½x + 1 → <b class="verde">y = −½x + 4</b></p>
+      <p class="tenue passo" style="margin:0">Controllo con P: −½ · 2 + 4 = 3. Giusto.</p>
+    </div>
+    <div class="card passo" id="g-es3"></div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 4: distanza punto-retta">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 4</h2>
+  <div class="card"><p class="formula piccola" style="margin:0">Trova la distanza di P(2; 1) dalla retta 4x − 3y + 5 = 0.</p></div>
+  <div class="card">
+    <p class="formula piccola riga-calc passo">a = 4, b = −3, c = 5</p>
+    <p class="formula piccola riga-calc passo">Sopra: |4 · 2 − 3 · 1 + 5| = |10| = 10</p>
+    <p class="formula piccola riga-calc passo">Sotto: √(16 + 9) = √25 = 5</p>
+    <p class="formula piccola riga-calc passo" style="margin:0">d = <span class="fr"><span>10</span><span>5</span></span> = <b class="verde">2</b></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Ora tocca a voi">
+  <span class="etichetta">Esercizi</span>
+  <h2>Ora tocca a voi</h2>
+  <p class="tenue">Sul quaderno. Poi controlliamo insieme.</p>
+  <div class="due">
+    <div class="card">
+      <p class="pill">A</p>
+      <p class="formula piccola">Distanza e punto medio di A(2; 3) e B(8; 11).</p>
+      <p class="verde passo" style="margin:8px 0 0"><b>d = 10 · M(5; 7)</b></p>
+    </div>
+    <div class="card">
+      <p class="pill">B</p>
+      <p class="formula piccola">Trova m e q della retta 3x + y − 4 = 0.</p>
+      <p class="verde passo" style="margin:8px 0 0"><b>y = −3x + 4 · m = −3, q = 4</b></p>
+    </div>
+    <div class="card">
+      <p class="pill">C</p>
+      <p class="formula piccola">Retta per P(1; 4) parallela a y = −2x + 7.</p>
+      <p class="verde passo" style="margin:8px 0 0"><b>y = −2x + 6</b></p>
+    </div>
+    <div class="card">
+      <p class="pill">D</p>
+      <p class="formula piccola">Distanza di O(0; 0) dalla retta 6x + 8y − 20 = 0.</p>
+      <p class="verde passo" style="margin:8px 0 0"><b>d = 2</b></p>
+    </div>
+  </div>
+</section>
+
+<div class="barra">
+  <button id="indietro">←</button>
+  <div class="centro">
+    <button id="vai-indice">Indice</button>
+    <span id="contatore">1 / 1</span>
+  </div>
+  <button id="avanti">→</button>
+</div>
+
+
+<script>
+// ---------- colori ----------
+const C = { blu: '#2563eb', arancio: '#ea7a12', viola: '#8b3fd9', verde: '#15925a', rosso: '#d23b3b', testo: '#1f2430', tenue: '#9aa0ad' };
+
+// ---------- graffa disegnata (si allunga con le righe) ----------
+document.querySelectorAll('.graffa').forEach(g => {
+  g.innerHTML = '<svg viewBox="0 0 20 100" preserveAspectRatio="none"><path d="M18 2 Q9 2 9 14 L9 38 Q9 50 2 50 Q9 50 9 62 L9 86 Q9 98 18 98" fill="none" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>';
+});
+
+// ---------- posizioni sulla retta: punti in ordine, distanza uguale ----------
+// indice -1 = meno infinito (bordo sinistro), indice n = più infinito (bordo destro)
+function posizioni(n, x0, x1) {
+  return i => i < 0 ? x0 : i >= n ? x1 : x0 + (i + 1) * (x1 - x0) / (n + 1);
+}
+
+function asse(punti, X, y, x0, x1) {
+  let s = `<line x1="${x0 - 20}" y1="${y}" x2="${x1 + 10}" y2="${y}" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<polygon points="${x1 + 10},${y - 8} ${x1 + 26},${y} ${x1 + 10},${y + 8}" fill="${C.testo}"/>`;
+  punti.forEach((p, i) => s += `<text x="${X(i)}" y="${y + 38}" font-size="30" font-weight="800" text-anchor="middle" fill="${C.testo}">${p}</text>`);
+  return s;
+}
+
+// Grafico del sistema: una riga per disequazione, linea piena dove è vera
+// pezzi: [da, a, pienoDa, pienoA]
+function grafico(c) {
+  const n = c.punti.length, x0 = c.etichette === false ? 40 : 170, x1 = 940, H = 62, top = 46;
+  const X = posizioni(n, x0, x1), yAsse = top + c.righe.length * H;
+  let s = `<svg class="graf" viewBox="0 0 1000 ${yAsse + 56}" role="img">`;
+  c.punti.forEach((p, i) => s += `<line x1="${X(i)}" y1="${top - 30}" x2="${X(i)}" y2="${yAsse}" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`);
+  c.righe.forEach((r, k) => {
+    const y = top + k * H, col = C[r.c];
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    if (c.etichette !== false) s += `<text x="20" y="${y + 10}" font-size="28" font-weight="800" fill="${col}">${r.t}</text>`;
+    r.pezzi.forEach(([a, b, pa, pb]) => {
+      if (a !== b) s += `<line x1="${X(a)}" y1="${y}" x2="${X(b)}" y2="${y}" stroke="${col}" stroke-width="9" stroke-linecap="round"/>`;
+      const pallino = (i, pieno) => { if (i >= 0 && i < n) s += `<circle cx="${X(i)}" cy="${y}" r="12" fill="${pieno ? col : '#fff'}" stroke="${col}" stroke-width="4"/>`; };
+      pallino(a, pa); if (b !== a) pallino(b, pb);
+    });
+    s += '</g>';
+  });
+  if (c.sol) {
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    c.sol.forEach(([a, b]) => s += `<rect x="${X(a)}" y="${top - 30}" width="${X(b) - X(a)}" height="${yAsse - top + 30}" fill="${C.verde}" fill-opacity=".17" rx="8"/>`);
+    s += '</g>';
+  }
+  s += asse(c.punti, X, yAsse, x0, x1);
+  return s + '</svg>';
+}
+
+// Tabella dei segni: linea piena = +, tratteggiata = −
+function segni(c) {
+  const n = c.punti.length, x0 = 250, x1 = 940, H = 66, top = 50;
+  const X = posizioni(n, x0, x1), tutte = [...c.righe, { t: 'Frazione', s: c.ris, ris: true }];
+  const yAsse = top + tutte.length * H - 10;
+  let s = `<svg class="graf" viewBox="0 0 1000 ${yAsse + 56}" role="img">`;
+  c.punti.forEach((p, i) => s += `<line x1="${X(i)}" y1="${top - 34}" x2="${X(i)}" y2="${yAsse}" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`);
+  tutte.forEach((r, k) => {
+    const y = top + k * H;
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    s += `<text x="20" y="${y + 10}" font-size="27" font-weight="800" fill="${r.ris ? C.testo : C.tenue}">${r.t}</text>`;
+    for (let j = 0; j <= n; j++) {
+      const a = X(j - 1), b = X(j), m = (a + b) / 2, piu = r.s[j] === '+';
+      if (r.ris) {
+        const scelto = c.scelti.includes(j);
+        if (scelto) s += `<rect x="${a + 6}" y="${y - 30}" width="${b - a - 12}" height="48" rx="10" fill="${C.verde}" fill-opacity=".17"/>`;
+        s += `<text x="${m}" y="${y + 12}" font-size="40" font-weight="900" text-anchor="middle" fill="${piu ? C.verde : C.rosso}">${piu ? '+' : '−'}</text>`;
+      } else {
+        s += `<line x1="${a + 8}" y1="${y}" x2="${b - 8}" y2="${y}" stroke="${C.testo}" stroke-width="5" ${piu ? '' : 'stroke-dasharray="14 10"'}/>`;
+        s += `<text x="${m}" y="${y - 14}" font-size="30" font-weight="900" text-anchor="middle" fill="${piu ? C.verde : C.rosso}">${piu ? '+' : '−'}</text>`;
+      }
+    }
+    s += '</g>';
+  });
+  s += asse(c.punti, X, yAsse, x0, x1);
+  return s + '</svg>';
+}
+
+// Parabola vera, disegnata in scala. modo: '>', '<', '≥', '≤' oppure ''
+let nClip = 0;
+function parabola(c) {
+  const W = 600, Hh = 340, { f, xmin, xmax, ymin, ymax } = c, modo = c.modo || '';
+  const px = x => (x - xmin) / (xmax - xmin) * W, py = y => Hh - (y - ymin) / (ymax - ymin) * Hh, yA = py(0);
+  let pts = [];
+  for (let i = 0; i <= 200; i++) { const x = xmin + (xmax - xmin) * i / 200; pts.push(`${px(x).toFixed(1)},${py(f(x)).toFixed(1)}`); }
+  const d = 'M' + pts.join(' L'), id = 'cl' + (nClip++);
+  let s = `<svg class="graf par" viewBox="-10 0 ${W + 40} ${Hh + 40}" role="img"><defs>`;
+  s += `<clipPath id="${id}a"><rect x="-10" y="0" width="${W + 40}" height="${Hh}"/></clipPath>`;
+  s += `<clipPath id="${id}"><rect x="-10" y="${modo === '>' || modo === '≥' ? 0 : yA}" width="${W + 40}" height="${modo === '>' || modo === '≥' ? yA : Hh - yA}"/></clipPath></defs>`;
+  // griglia leggera e asse y
+  if (xmin < 0 && xmax > 0) s += `<line x1="${px(0)}" y1="0" x2="${px(0)}" y2="${Hh}" stroke="#d9d3c4" stroke-width="2"/>`;
+  s += `<line x1="-10" y1="${yA}" x2="${W + 14}" y2="${yA}" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<polygon points="${W + 14},${yA - 8} ${W + 28},${yA} ${W + 14},${yA + 8}" fill="${C.testo}"/>`;
+  s += `<path d="${d}" fill="none" stroke="${C.blu}" stroke-width="5" clip-path="url(#${id}a)"/>`;
+  if (modo) {
+    s += `<path d="${d}" fill="none" stroke="${C.verde}" stroke-width="10" stroke-linecap="round" clip-path="url(#${id})"/>`;
+    // tratti verdi sull'asse dove la disequazione è vera
+    const vera = y => modo === '>' ? y > 1e-9 : modo === '<' ? y < -1e-9 : modo === '≥' ? y > -1e-9 : y < 1e-9;
+    let inizio = null;
+    for (let i = 0; i <= 600; i++) {
+      const x = xmin + (xmax - xmin) * i / 600, ok = vera(f(x)) && !(c.radici || []).some(r => Math.abs(r - x) < (xmax - xmin) / 600 && (modo === '>' || modo === '<'));
+      if (ok && inizio === null) inizio = x;
+      if ((!ok || i === 600) && inizio !== null) {
+        s += `<line x1="${px(inizio)}" y1="${yA}" x2="${px(x)}" y2="${yA}" stroke="${C.verde}" stroke-width="12" stroke-linecap="round" opacity=".55"/>`;
+        inizio = null;
+      }
+    }
+  }
+  (c.radici || []).forEach(r => {
+    const pieno = modo === '≥' || modo === '≤';
+    s += `<circle cx="${px(r)}" cy="${yA}" r="11" fill="${pieno ? C.verde : '#fff'}" stroke="${modo ? C.verde : C.blu}" stroke-width="4"/>`;
+    s += `<text x="${px(r)}" y="${yA + 42}" font-size="30" font-weight="800" text-anchor="middle" fill="${C.testo}">${String(r).replace('-', '−')}</text>`;
+  });
+  return s + '</svg>';
+}
+
+// Retta semplice per "perché si gira il verso"
+function rettaNumeri() {
+  const X = x => 40 + (x + 6) * 60;
+  let s = `<svg class="graf" viewBox="0 0 800 150" role="img">`;
+  s += `<line x1="20" y1="80" x2="780" y2="80" stroke="${C.testo}" stroke-width="3"/>`;
+  for (let x = -6; x <= 6; x++) s += `<line x1="${X(x)}" y1="72" x2="${X(x)}" y2="88" stroke="${C.testo}" stroke-width="2"/>`;
+  s += `<text x="${X(0)}" y="122" font-size="24" text-anchor="middle" fill="${C.tenue}">0</text>`;
+  [[3, C.blu], [5, C.blu], [-3, C.arancio], [-5, C.arancio]].forEach(([v, col]) => {
+    s += `<circle cx="${X(v)}" cy="80" r="11" fill="${col}"/>`;
+    s += `<text x="${X(v)}" y="50" font-size="28" font-weight="800" text-anchor="middle" fill="${col}">${String(v).replace('-', '−')}</text>`;
+  });
+  s += `<path d="M${X(-3)} 120 Q ${X(-4)} 140 ${X(-5)} 120" fill="none" stroke="${C.arancio}" stroke-width="3"/>`;
+  s += `<path d="M${X(3)} 120 Q ${X(4)} 140 ${X(5)} 120" fill="none" stroke="${C.blu}" stroke-width="3"/>`;
+  return s + '</svg>';
+}
+
+
+
+// ---------- numeri scritti bene: −2, ½, 7/2, 2,5 ----------
+const FRAZ = { '0.5': '½', '-0.5': '−½', '0.25': '¼', '-0.25': '−¼', '0.75': '¾', '-0.75': '−¾' };
+function num(v) {
+  v = Math.round(v * 1000) / 1000;
+  if (Number.isInteger(v)) return String(v).replace('-', '−');
+  if (FRAZ[String(v)]) return FRAZ[String(v)];
+  for (const d of [2, 3, 4]) {
+    const n = v * d;
+    if (Math.abs(n - Math.round(n)) < 1e-9) return (v < 0 ? '−' : '') + Math.abs(Math.round(n)) + '/' + d;
+  }
+  return String(parseFloat(v.toFixed(2))).replace('.', ',').replace('-', '−');
+}
+// "y = 2x − 3" a partire da m e q
+function eqRetta(m, q) {
+  let s = 'y = ';
+  if (m === 0) return s + num(q);
+  s += m === 1 ? 'x' : m === -1 ? '−x' : num(m) + 'x';
+  if (q > 0) s += ' + ' + num(q); else if (q < 0) s += ' − ' + num(-q);
+  return s;
+}
+
+// ---------- il piano cartesiano ----------
+// cose: { tipo: 'punto' | 'seg' | 'retta' | 'testo' | 'angolo', ..., c: colore, passo: true }
+let nPiano = 0;
+function piano(c) {
+  const [xmin, xmax] = c.x || [-6, 6], [ymin, ymax] = c.y || [-5, 5];
+  const u = c.u || 44, pl = 20, pr = 40, pt = 36, pb = 20;
+  const W = pl + (xmax - xmin) * u + pr, H = pt + (ymax - ymin) * u + pb;
+  const X = x => pl + (x - xmin) * u, Y = y => pt + (ymax - y) * u, id = 'pc' + (nPiano++);
+  let s = `<svg class="graf piano" viewBox="0 0 ${W} ${H}" role="img" data-xmin="${xmin}" data-xmax="${xmax}" data-ymin="${ymin}" data-ymax="${ymax}" data-u="${u}" data-pl="${pl}" data-pt="${pt}">`;
+  s += `<defs><clipPath id="${id}"><rect x="${X(xmin)}" y="${Y(ymax)}" width="${(xmax - xmin) * u}" height="${(ymax - ymin) * u}"/></clipPath></defs>`;
+  // quadrettatura
+  for (let x = xmin; x <= xmax; x++) s += `<line x1="${X(x)}" y1="${Y(ymin)}" x2="${X(x)}" y2="${Y(ymax)}" stroke="#ece6d8" stroke-width="1.5"/>`;
+  for (let y = ymin; y <= ymax; y++) s += `<line x1="${X(xmin)}" y1="${Y(y)}" x2="${X(xmax)}" y2="${Y(y)}" stroke="#ece6d8" stroke-width="1.5"/>`;
+  // assi con le frecce
+  if (ymin <= 0 && ymax >= 0) {
+    s += `<line x1="${X(xmin)}" y1="${Y(0)}" x2="${X(xmax) + 22}" y2="${Y(0)}" stroke="${C.testo}" stroke-width="3"/>`;
+    s += `<polygon points="${X(xmax) + 22},${Y(0) - 7} ${X(xmax) + 36},${Y(0)} ${X(xmax) + 22},${Y(0) + 7}" fill="${C.testo}"/>`;
+    s += `<text x="${X(xmax) + 22}" y="${Y(0) - 14}" font-size="24" font-weight="900" fill="${C.blu}">x</text>`;
+    for (let x = xmin + 1; x < xmax; x++) if (x !== 0) s += `<text x="${X(x)}" y="${Y(0) + 19}" font-size="16" text-anchor="middle" fill="#9aa0ad">${num(x)}</text>`;
+  }
+  if (xmin <= 0 && xmax >= 0) {
+    s += `<line x1="${X(0)}" y1="${Y(ymin)}" x2="${X(0)}" y2="${Y(ymax) - 22}" stroke="${C.testo}" stroke-width="3"/>`;
+    s += `<polygon points="${X(0) - 7},${Y(ymax) - 22} ${X(0)},${Y(ymax) - 36} ${X(0) + 7},${Y(ymax) - 22}" fill="${C.testo}"/>`;
+    s += `<text x="${X(0) + 14}" y="${Y(ymax) - 18}" font-size="24" font-weight="900" fill="${C.arancio}">y</text>`;
+    for (let y = ymin + 1; y < ymax; y++) if (y !== 0) s += `<text x="${X(0) - 8}" y="${Y(y) + 5}" font-size="16" text-anchor="end" fill="#9aa0ad">${num(y)}</text>`;
+    if (ymin <= 0 && ymax >= 0) s += `<text x="${X(0) - 8}" y="${Y(0) + 19}" font-size="16" font-weight="800" text-anchor="end" fill="${C.testo}">O</text>`;
+  }
+  // le cose disegnate: prima rette e segmenti, poi punti e scritte sopra
+  const ordine = { retta: 0, seg: 1, angolo: 1, punto: 2, testo: 3 };
+  [...(c.cose || [])].sort((a, b) => ordine[a.tipo] - ordine[b.tipo]).forEach(k => {
+    const col = C[k.c] || k.c || C.blu;
+    let g = '';
+    if (k.tipo === 'retta') {
+      const sp = k.spess || 5, op = k.opac || 1;
+      if (k.xv !== undefined) g += `<line x1="${X(k.xv)}" y1="${Y(ymin)}" x2="${X(k.xv)}" y2="${Y(ymax)}" stroke="${col}" stroke-width="${sp}" opacity="${op}" clip-path="url(#${id})"/>`;
+      else g += `<line x1="${X(xmin - 1)}" y1="${Y(k.m * (xmin - 1) + k.q)}" x2="${X(xmax + 1)}" y2="${Y(k.m * (xmax + 1) + k.q)}" stroke="${col}" stroke-width="${sp}" opacity="${op}" stroke-linecap="round" clip-path="url(#${id})"/>`;
+      if (k.n) {
+        // l'etichetta va vicino al bordo destro, dentro il piano
+        let lx, ly;
+        if (k.xv !== undefined) { lx = k.xv + 0.2; ly = ymax - 0.6; }
+        else { lx = xmax - 0.4; ly = k.m * lx + k.q; if (ly > ymax - 0.4 || ly < ymin + 0.4) { ly = ly > ymax ? ymax - 0.5 : ymin + 0.5; lx = (ly - k.q) / k.m; } }
+        g += `<text x="${X(lx)}" y="${Y(ly) - 10}" font-size="20" font-weight="800" text-anchor="end" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="5">${k.n}</text>`;
+      }
+    }
+    if (k.tipo === 'seg') {
+      g += `<line x1="${X(k.a[0])}" y1="${Y(k.a[1])}" x2="${X(k.b[0])}" y2="${Y(k.b[1])}" stroke="${col}" stroke-width="${k.spess || 5}" stroke-linecap="round" ${k.tratt ? 'stroke-dasharray="10 8"' : ''}/>`;
+      if (k.t) { const mx = (k.a[0] + k.b[0]) / 2 + (k.dx || 0), my = (k.a[1] + k.b[1]) / 2 + (k.dy || 0); g += `<text x="${X(mx)}" y="${Y(my) + 7}" font-size="22" font-weight="900" text-anchor="middle" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="5">${k.t}</text>`; }
+    }
+    if (k.tipo === 'angolo') {
+      // quadratino dell'angolo retto nel vertice, lungo le due direzioni
+      const n1 = Math.hypot(...k.d1), n2 = Math.hypot(...k.d2), l = 0.38;
+      const p1 = [k.x + k.d1[0] / n1 * l, k.y + k.d1[1] / n1 * l], p2 = [k.x + k.d2[0] / n2 * l, k.y + k.d2[1] / n2 * l];
+      const p3 = [p1[0] + k.d2[0] / n2 * l, p1[1] + k.d2[1] / n2 * l];
+      g += `<polyline points="${X(p1[0])},${Y(p1[1])} ${X(p3[0])},${Y(p3[1])} ${X(p2[0])},${Y(p2[1])}" fill="none" stroke="${col}" stroke-width="3"/>`;
+    }
+    if (k.tipo === 'punto') {
+      if (k.proiez) {
+        g += `<line x1="${X(k.x)}" y1="${Y(k.y)}" x2="${X(k.x)}" y2="${Y(0)}" stroke="${C.arancio}" stroke-width="3" stroke-dasharray="7 6"/>`;
+        g += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(k.x)}" y2="${Y(0)}" stroke="${C.blu}" stroke-width="5"/>`;
+      }
+      g += `<circle cx="${X(k.x)}" cy="${Y(k.y)}" r="${k.r || 9}" fill="${col}" stroke="#fff" stroke-width="3"/>`;
+      if (k.n !== undefined) {
+        const t = k.n + (k.coord ? `(${num(k.x)}; ${num(k.y)})` : '');
+        const dx = k.dx !== undefined ? k.dx : 0.25, dy = k.dy !== undefined ? k.dy : 0.3;
+        g += `<text x="${X(k.x + dx)}" y="${Y(k.y + dy)}" font-size="21" font-weight="900" text-anchor="${dx < 0 ? 'end' : 'start'}" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="5">${t}</text>`;
+      }
+    }
+    if (k.tipo === 'testo') g += `<text x="${X(k.x)}" y="${Y(k.y)}" font-size="${k.size || 22}" font-weight="900" text-anchor="${k.anchor || 'middle'}" fill="${col}" paint-order="stroke" stroke="#fff" stroke-width="5">${k.t}</text>`;
+    s += k.passo ? `<g class="passo">${g}</g>` : g;
+  });
+  return s + '</svg>';
+}
+
+// da un clic sul disegno alle coordinate del piano
+function coordinate(svg, e) {
+  const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse()), d = svg.dataset;
+  return [+d.xmin + (p.x - d.pl) / d.u, +d.ymax - (p.y - d.pt) / d.u];
+}
+
+// punti da trascinare: stato = { A: [x, y], B: [x, y] }, disegna(stato) riscrive il disegno
+function trascinabile(el, stato, disegna) {
+  let preso = null;
+  const limita = (v, a, b) => Math.max(a, Math.min(b, v));
+  el.style.touchAction = 'none';
+  el.addEventListener('pointerdown', e => {
+    const svg = el.querySelector('svg'); if (!svg) return;
+    const [x, y] = coordinate(svg, e);
+    let meglio = 1.2;
+    for (const k in stato) { const d = Math.hypot(stato[k][0] - x, stato[k][1] - y); if (d < meglio) { meglio = d; preso = k; } }
+    if (preso) { el.setPointerCapture(e.pointerId); e.preventDefault(); }
+  });
+  el.addEventListener('pointermove', e => {
+    if (!preso) return;
+    const svg = el.querySelector('svg'), d = svg.dataset, [x, y] = coordinate(svg, e);
+    const nx = limita(Math.round(x), +d.xmin + 1, +d.xmax - 1), ny = limita(Math.round(y), +d.ymin + 1, +d.ymax - 1);
+    if (nx !== stato[preso][0] || ny !== stato[preso][1]) { stato[preso] = [nx, ny]; disegna(stato); }
+  });
+  const lascia = () => { preso = null; };
+  el.addEventListener('pointerup', lascia); el.addEventListener('pointercancel', lascia);
+  disegna(stato);
+}
+
+// ---------- tutti i disegni fissi ----------
+const disegni = {
+  'g-assi': () => piano({ cose: [
+    { tipo: 'punto', x: 0, y: 0, c: 'verde', r: 10, n: '', passo: true },
+    { tipo: 'testo', x: 4.2, y: -0.9, t: 'asse x', c: 'blu', passo: true },
+    { tipo: 'testo', x: 1.6, y: 4.2, t: 'asse y', c: 'arancio', passo: true },
+  ] }),
+  'g-coord': () => piano({ cose: [
+    { tipo: 'punto', x: 3, y: 2, c: 'verde', n: 'P', coord: true, proiez: true },
+    { tipo: 'testo', x: 1.5, y: -0.9, t: '3 a destra', c: 'blu' },
+    { tipo: 'testo', x: 4.6, y: 1.1, t: '2 su', c: 'arancio' },
+  ] }),
+  'g-quadranti': () => piano({ cose: [
+    { tipo: 'testo', x: 3, y: 3, t: 'I  (+; +)', size: 26, c: 'blu' },
+    { tipo: 'testo', x: -3, y: 3, t: 'II  (−; +)', size: 26, c: 'arancio' },
+    { tipo: 'testo', x: -3, y: -3, t: 'III  (−; −)', size: 26, c: 'viola' },
+    { tipo: 'testo', x: 3, y: -3, t: 'IV  (+; −)', size: 26, c: 'verde' },
+  ] }),
+  'g-fila': () => piano({ cose: [
+    { tipo: 'seg', a: [1, 3], b: [5, 3], c: 'blu', t: '4', dy: 0.45 },
+    { tipo: 'punto', x: 1, y: 3, c: 'blu', n: 'A', dx: -0.2, dy: 0.35 }, { tipo: 'punto', x: 5, y: 3, c: 'blu', n: 'B' },
+    { tipo: 'seg', a: [-3, -2], b: [-3, 2], c: 'arancio', t: '4', dx: -0.5, passo: true },
+    { tipo: 'punto', x: -3, y: -2, c: 'arancio', n: 'C', passo: true }, { tipo: 'punto', x: -3, y: 2, c: 'arancio', n: 'D', passo: true },
+  ] }),
+  'g-pitagora': () => piano({ x: [-1, 6], y: [-1, 6], u: 60, cose: [
+    { tipo: 'seg', a: [1, 1], b: [4, 1], c: 'blu', tratt: true, t: '3', dy: -0.45 },
+    { tipo: 'seg', a: [4, 1], b: [4, 5], c: 'arancio', tratt: true, t: '4', dx: 0.4 },
+    { tipo: 'angolo', x: 4, y: 1, d1: [-1, 0], d2: [0, 1], c: 'tenue' },
+    { tipo: 'seg', a: [1, 1], b: [4, 5], c: 'verde', spess: 6, t: 'd = 5', dx: -0.9, dy: 0.3 },
+    { tipo: 'punto', x: 1, y: 1, c: 'testo', n: 'A', coord: true, dx: -0.2, dy: -0.55 },
+    { tipo: 'punto', x: 4, y: 5, c: 'testo', n: 'B', coord: true, dx: -0.2 },
+  ] }),
+  'g-medio': () => piano({ x: [-1, 8], y: [-1, 7], u: 52, cose: [
+    { tipo: 'seg', a: [2, 1], b: [6, 5], c: 'testo', spess: 4 },
+    { tipo: 'punto', x: 2, y: 1, c: 'blu', n: 'A', coord: true, dy: -0.6 },
+    { tipo: 'punto', x: 6, y: 5, c: 'arancio', n: 'B', coord: true, dx: -0.2 },
+    { tipo: 'punto', x: 4, y: 3, c: 'viola', n: 'M', coord: true, r: 11, dx: 0.35, dy: -0.3, passo: true },
+  ] }),
+  'g-tabella': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: 1, c: 'blu', n: 'y = 2x + 1', passo: true },
+    ...[[-1, -1], [0, 1], [1, 3], [2, 5]].map(([x, y]) => ({ tipo: 'punto', x, y, c: 'arancio', n: '', coord: false })),
+  ] }),
+  'g-disegno': () => piano({ cose: [
+    { tipo: 'punto', x: 0, y: 3, c: 'arancio', n: '', coord: true, dx: 0.3, passo: true },
+    { tipo: 'punto', x: 3, y: 0, c: 'arancio', n: '', coord: true, dx: 0.2, dy: 0.4, passo: true },
+    { tipo: 'retta', m: -1, q: 3, c: 'blu', n: 'y = −x + 3', passo: true },
+  ] }),
+  'g-segni-m': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: 0, c: 'blu', n: 'm = 2' },
+    { tipo: 'retta', m: -1, q: 1, c: 'arancio', n: 'm = −1', passo: true },
+    { tipo: 'retta', m: 0, q: -3, c: 'viola', n: 'm = 0', passo: true },
+  ] }),
+  'g-m-punti': () => piano({ x: [-1, 6], y: [-1, 8], u: 48, cose: [
+    { tipo: 'retta', m: 2, q: 0, c: '#c9d6f5', spess: 4 },
+    { tipo: 'seg', a: [1, 2], b: [3, 2], c: 'blu', tratt: true, t: '2', dy: -0.5, passo: true },
+    { tipo: 'seg', a: [3, 2], b: [3, 6], c: 'arancio', tratt: true, t: '4', dx: 0.45, passo: true },
+    { tipo: 'punto', x: 1, y: 2, c: 'testo', n: 'A', coord: true, dx: -0.2, dy: 0.45 },
+    { tipo: 'punto', x: 3, y: 6, c: 'testo', n: 'B', coord: true, dx: -0.2 },
+  ] }),
+  'g-speciali': () => piano({ cose: [
+    { tipo: 'retta', m: 0, q: 3, c: 'blu', n: 'y = 3' },
+    { tipo: 'retta', xv: -2, c: 'arancio', n: 'x = −2', passo: true },
+    { tipo: 'retta', m: 1, q: 0, c: 'viola', n: 'y = x', passo: true },
+  ] }),
+  'g-due-punti': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: -1, c: 'verde', n: 'y = 2x − 1', passo: true },
+    { tipo: 'punto', x: 1, y: 1, c: 'blu', n: 'A', coord: true, dy: -0.6 },
+    { tipo: 'punto', x: 3, y: 5, c: 'arancio', n: 'B', coord: true, dx: -0.2 },
+  ] }),
+  'g-parallele': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: 1, c: 'blu', n: 'y = 2x + 1' },
+    { tipo: 'retta', m: 2, q: -3, c: 'arancio', n: 'y = 2x − 3', passo: true },
+  ] }),
+  'g-perp-perche': () => piano({ x: [-2, 5], y: [-3, 4], u: 58, cose: [
+    { tipo: 'retta', m: 2, q: 0, c: 'blu', n: 'm = 2' },
+    { tipo: 'seg', a: [0, 0], b: [1, 0], c: 'blu', tratt: true, t: '1', dy: -0.45 },
+    { tipo: 'seg', a: [1, 0], b: [1, 2], c: 'blu', tratt: true, t: '2', dx: 0.35 },
+    { tipo: 'retta', m: -0.5, q: 0, c: 'arancio', n: 'm\' = −½', passo: true },
+    { tipo: 'seg', a: [0, 0], b: [2, 0], c: 'arancio', tratt: true, passo: true },
+    { tipo: 'seg', a: [2, 0], b: [2, -1], c: 'arancio', tratt: true, t: '1', dx: 0.35, passo: true },
+    { tipo: 'angolo', x: 0, y: 0, d1: [1, 2], d2: [2, -1], c: 'testo', passo: true },
+  ] }),
+  'g-par-perp': () => piano({ cose: [
+    { tipo: 'retta', m: 3, q: -4, c: 'tenue', n: 'y = 3x − 4' },
+    { tipo: 'retta', m: 3, q: -8, c: 'blu', n: 'parallela', passo: true },
+    { tipo: 'retta', m: -1 / 3, q: 2, c: 'arancio', n: 'perpendicolare', passo: true },
+    { tipo: 'punto', x: 3, y: 1, c: 'verde', n: 'P', dx: -0.3, dy: -0.75 },
+  ] }),
+  'g-improprio': () => piano({ cose: [-4, -2, 0, 2, 4].map((q, i) => ({ tipo: 'retta', m: 2, q, c: ['blu', 'arancio', 'viola', 'verde', 'blu'][i], n: q === 4 ? 'm = 2' : '', passo: i > 0 })) }),
+  'g-fascio-es': () => piano({ x: [-3, 6], y: [-2, 8], u: 42, cose: [
+    ...[-1, 0, 1, 3].map(m => ({ tipo: 'retta', m, q: 2 - m, c: '#d9d3c4', spess: 3 })),
+    { tipo: 'retta', m: 2, q: 0, c: 'verde', n: 'y = 2x' },
+    { tipo: 'punto', x: 1, y: 2, c: 'testo', n: 'centro', dx: 0.3, dy: -0.4 },
+    { tipo: 'punto', x: 3, y: 6, c: 'arancio', n: '', coord: true, dx: 0.3, dy: -0.2 },
+  ] }),
+  'g-dpr-idea': () => piano({ x: [-2, 7], y: [-2, 6], u: 50, cose: [
+    { tipo: 'retta', m: -0.75, q: 3, c: 'blu', n: 'retta' },
+    { tipo: 'seg', a: [5, 4], b: [0, 3], c: 'tenue', tratt: true, spess: 3 },
+    { tipo: 'seg', a: [5, 4], b: [5.5, -1.125], c: 'tenue', tratt: true, spess: 3 },
+    { tipo: 'seg', a: [5, 4], b: [2.72, 0.96], c: 'verde', spess: 6, passo: true, t: 'd', dx: -0.3, dy: 0.4 },
+    { tipo: 'angolo', x: 2.72, y: 0.96, d1: [4, -3], d2: [3, 4], c: 'verde', passo: true },
+    { tipo: 'punto', x: 5, y: 4, c: 'arancio', n: 'P' },
+  ] }),
+  'g-es1': () => piano({ x: [-3, 5], y: [-1, 7], u: 52, cose: [
+    { tipo: 'seg', a: [-1, 2], b: [3, 5], c: 'verde', spess: 5, t: '5', dx: -0.4, dy: 0.4 },
+    { tipo: 'punto', x: -1, y: 2, c: 'blu', n: 'A', coord: true, dx: -0.2, dy: -0.6 },
+    { tipo: 'punto', x: 3, y: 5, c: 'arancio', n: 'B', coord: true, dx: -0.2 },
+    { tipo: 'punto', x: 1, y: 3.5, c: 'viola', n: 'M', dx: 0.3, dy: -0.4 },
+  ] }),
+  'g-es2': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: -3, c: 'verde', n: 'y = 2x − 3' },
+    { tipo: 'punto', x: 1, y: -1, c: 'blu', n: 'A', coord: true, dy: -0.6 },
+    { tipo: 'punto', x: 3, y: 3, c: 'arancio', n: 'B', coord: true, dx: -0.2 },
+  ] }),
+  'g-es3': () => piano({ cose: [
+    { tipo: 'retta', m: 2, q: -1, c: 'blu', n: 'y = 2x − 1' },
+    { tipo: 'retta', m: -0.5, q: 4, c: 'verde', n: 'y = −½x + 4' },
+    { tipo: 'angolo', x: 2, y: 3, d1: [1, 2], d2: [2, -1], c: 'testo' },
+    { tipo: 'punto', x: 2, y: 3, c: 'arancio', n: 'P', dx: -0.3, dy: 0.4 },
+  ] }),
+};
+for (const [id, fn] of Object.entries(disegni)) { const el = document.getElementById(id); if (el) el.innerHTML = fn(); }
+
+// ---------- gioco: trova il punto ----------
+(() => {
+  const el = document.getElementById('w-clicca'); if (!el) return;
+  const bersagli = [[-2, 3], [4, -1], [0, 2], [-3, -4], [5, 0], [-1, -2]];
+  let i = 0, trovati = [], sbaglio = null;
+  const dom = document.getElementById('clicca-domanda'), esito = document.getElementById('clicca-esito');
+  const disegna = () => {
+    const cose = trovati.map(([x, y]) => ({ tipo: 'punto', x, y, c: 'verde', n: '', coord: true }));
+    if (sbaglio) cose.push({ tipo: 'punto', x: sbaglio[0], y: sbaglio[1], c: 'rosso', n: '', coord: true });
+    el.innerHTML = piano({ cose });
+    dom.innerHTML = i < bersagli.length ? `Clicca il punto <span class="formula">(${num(bersagli[i][0])}; ${num(bersagli[i][1])})</span>` : 'Tutti trovati!';
+  };
+  el.addEventListener('click', e => {
+    if (i >= bersagli.length) return;
+    const [x, y] = coordinate(el.querySelector('svg'), e).map(Math.round);
+    if (x === bersagli[i][0] && y === bersagli[i][1]) {
+      trovati.push([x, y]); sbaglio = null; i++;
+      esito.innerHTML = '<b class="verde">Giusto!</b>';
+    } else {
+      sbaglio = [x, y];
+      esito.innerHTML = `<b class="rosso">No.</b> Hai cliccato (${num(x)}; ${num(y)}). ${x !== bersagli[i][0] ? 'Controlla la x: destra o sinistra.' : 'La x è giusta. Controlla la y: su o giù.'}`;
+    }
+    disegna();
+  });
+  el.style.cursor = 'crosshair';
+  disegna();
+})();
+
+// ---------- prova: distanza e punto medio con punti da trascinare ----------
+(() => {
+  const el = document.getElementById('w-dist'), info = document.getElementById('w-dist-info'); if (!el) return;
+  trascinabile(el, { A: [-2, -1], B: [3, 3] }, ({ A, B }) => {
+    const dx = B[0] - A[0], dy = B[1] - A[1], d2 = dx * dx + dy * dy, d = Math.sqrt(d2);
+    const M = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+    el.innerHTML = piano({ cose: [
+      { tipo: 'seg', a: A, b: [B[0], A[1]], c: 'blu', tratt: true },
+      { tipo: 'seg', a: [B[0], A[1]], b: B, c: 'arancio', tratt: true },
+      { tipo: 'seg', a: A, b: B, c: 'verde', spess: 6 },
+      { tipo: 'punto', x: M[0], y: M[1], c: 'viola', n: 'M', r: 8, dx: 0.25, dy: -0.55 },
+      { tipo: 'punto', x: A[0], y: A[1], c: 'testo', n: 'A', r: 13 },
+      { tipo: 'punto', x: B[0], y: B[1], c: 'testo', n: 'B', r: 13 },
+    ] });
+    const rad = Number.isInteger(d) ? `<b class="verde">${d}</b>` : `<b class="verde">≈ ${num(d)}</b>`;
+    info.innerHTML = `<p class="formula piccola">A(${num(A[0])}; ${num(A[1])}) &nbsp; B(${num(B[0])}; ${num(B[1])})</p>
+      <p class="riga-calc">Orizzontale: <b class="blu">${Math.abs(dx)}</b> &nbsp; Verticale: <b class="arancio">${Math.abs(dy)}</b></p>
+      <p class="formula piccola riga-calc">d = √(${Math.abs(dx)}² + ${Math.abs(dy)}²) = √${d2} = ${rad}</p>
+      <p class="formula piccola" style="margin:0"><b class="viola">M(${num(M[0])}; ${num(M[1])})</b></p>`;
+  });
+})();
+
+// ---------- prova: muovi m e q ----------
+(() => {
+  const el = document.getElementById('w-mq'); if (!el) return;
+  const im = document.getElementById('mq-m'), iq = document.getElementById('mq-q');
+  const disegna = () => {
+    const m = +im.value, q = +iq.value;
+    document.getElementById('mq-mv').textContent = num(m);
+    document.getElementById('mq-qv').textContent = num(q);
+    document.getElementById('mq-eq').textContent = eqRetta(m, q);
+    el.innerHTML = piano({ cose: [
+      { tipo: 'retta', m, q, c: 'blu' },
+      { tipo: 'seg', a: [0, q], b: [1, q], c: 'testo', tratt: true, spess: 3 },
+      { tipo: 'seg', a: [1, q], b: [1, q + m], c: 'blu', tratt: true, spess: 4, t: m ? num(m) : '', dx: 0.45 },
+      { tipo: 'punto', x: 0, y: q, c: 'arancio', n: 'q', dx: -0.35, dy: 0.3 },
+    ] });
+  };
+  im.oninput = iq.oninput = disegna; disegna();
+})();
+
+// ---------- prova: la perpendicolare ----------
+(() => {
+  const el = document.getElementById('w-perp'); if (!el) return;
+  const scegli = m => {
+    const mp = -1 / m;
+    document.querySelectorAll('#tasti-perp button').forEach(b => b.classList.toggle('scelto', +b.dataset.m === m));
+    document.getElementById('perp-testo').innerHTML = `<span class="blu">m = ${num(m)}</span> → <span class="arancio">m' = ${num(mp)}</span>`;
+    el.innerHTML = piano({ cose: [
+      { tipo: 'retta', m, q: 0, c: 'blu', n: eqRetta(m, 0) },
+      { tipo: 'retta', m: mp, q: 0, c: 'arancio', n: eqRetta(mp, 0) },
+      { tipo: 'angolo', x: 0, y: 0, d1: [1, m], d2: [-m, 1].map(v => v * (m > 0 ? 1 : -1)), c: 'testo' },
+    ] });
+  };
+  document.querySelectorAll('#tasti-perp button').forEach(b => b.onclick = () => scegli(+b.dataset.m));
+  scegli(2);
+})();
+
+// ---------- prova: il fascio per (1; 2) ----------
+(() => {
+  const el = document.getElementById('w-fascio'); if (!el) return;
+  const im = document.getElementById('fa-m');
+  const disegna = () => {
+    const m = +im.value;
+    document.getElementById('fa-mv').textContent = num(m);
+    document.getElementById('fa-eq').innerHTML = `y − 2 = ${num(m)}(x − 1) → <b>${eqRetta(m, 2 - m)}</b>`;
+    el.innerHTML = piano({ cose: [
+      ...[-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3].map(k => ({ tipo: 'retta', m: k, q: 2 - k, c: '#d9d3c4', spess: 3 })),
+      { tipo: 'retta', xv: 1, c: '#d9d3c4', spess: 3 },
+      { tipo: 'retta', m, q: 2 - m, c: 'blu', spess: 6 },
+      { tipo: 'punto', x: 1, y: 2, c: 'arancio', n: 'centro', coord: true, r: 11, dx: 0.35, dy: -0.6 },
+    ] });
+  };
+  im.oninput = disegna; disegna();
+})();
+
+// ---------- prova: distanza di P dalla retta 3x + 4y − 12 = 0 ----------
+(() => {
+  const el = document.getElementById('w-dpr'), info = document.getElementById('w-dpr-info'); if (!el) return;
+  const a = 3, b = 4, c = -12;
+  trascinabile(el, { P: [4, 4] }, ({ P }) => {
+    const v = a * P[0] + b * P[1] + c, d = Math.abs(v) / 5;
+    const H = [P[0] - a * v / 25, P[1] - b * v / 25];
+    el.innerHTML = piano({ cose: [
+      { tipo: 'retta', m: -0.75, q: 3, c: 'blu', n: '3x + 4y − 12 = 0' },
+      ...(v !== 0 ? [{ tipo: 'seg', a: P, b: H, c: 'verde', spess: 5 }, { tipo: 'angolo', x: H[0], y: H[1], d1: [4, -3], d2: [P[0] - H[0], P[1] - H[1]], c: 'verde' }] : []),
+      { tipo: 'punto', x: P[0], y: P[1], c: 'arancio', n: 'P', coord: true, r: 13 },
+    ] });
+    info.innerHTML = `<p class="formula piccola">a = 3, b = 4, c = −12</p>
+      <p class="formula piccola riga-calc">Sopra: |3 · ${P[0] < 0 ? '(' + num(P[0]) + ')' : P[0]} + 4 · ${P[1] < 0 ? '(' + num(P[1]) + ')' : P[1]} − 12| = |${num(v)}| = ${Math.abs(v)}</p>
+      <p class="formula piccola riga-calc">Sotto: √(9 + 16) = 5</p>
+      <p class="formula piccola" style="margin:0">d = <span class="fr"><span>${Math.abs(v)}</span><span>5</span></span> = <b class="verde">${num(d)}</b></p>`;
+  });
+})();
+
+// ---------- quiz ----------
+document.querySelectorAll('.quiz').forEach(q => {
+  const giusta = +q.dataset.giusta, bottoni = q.querySelectorAll('.scelte button'), esito = q.querySelector('.esito');
+  bottoni.forEach((b, i) => b.onclick = () => {
+    bottoni.forEach(x => x.classList.remove('giusto', 'sbagliato'));
+    b.classList.add(i === giusta ? 'giusto' : 'sbagliato');
+    esito.innerHTML = (i === giusta ? '<span class="verde">Giusto!</span> ' : '<span class="rosso">No.</span> ') + q.dataset.spiega;
+  });
+});
+
+// ---------- navigazione ----------
+const schermate = [...document.querySelectorAll('.schermata')];
+let attuale = 0;
+
+document.getElementById('indice').innerHTML = schermate.slice(1).map((s, i) =>
+  `<li><button data-vai="${i + 1}"><b>${i + 1}</b>${s.dataset.titolo}</button></li>`).join('');
+document.querySelectorAll('[data-vai]').forEach(b => b.onclick = () => mostra(+b.dataset.vai));
+
+function mostra(n) {
+  schermate[attuale].classList.remove('attiva');
+  attuale = Math.max(0, Math.min(schermate.length - 1, n));
+  schermate[attuale].classList.add('attiva');
+  document.getElementById('contatore').textContent = `${attuale + 1} / ${schermate.length}`;
+  history.replaceState(null, '', '#' + (attuale + 1));
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Avanti: prima mostra il prossimo passo nascosto, poi passa alla schermata dopo
+function avanti() {
+  const prossimo = schermate[attuale].querySelector('.passo:not(.visto)');
+  if (prossimo) {
+    prossimo.classList.add('visto');
+    const box = (prossimo.closest('.card') || prossimo);
+    if (box.getBoundingClientRect().bottom > innerHeight - 90) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else mostra(attuale + 1);
+}
+
+function indietro() {
+  const visti = schermate[attuale].querySelectorAll('.passo.visto');
+  if (visti.length) visti[visti.length - 1].classList.remove('visto');
+  else mostra(attuale - 1);
+}
+
+document.getElementById('avanti').onclick = avanti;
+document.getElementById('indietro').onclick = indietro;
+document.getElementById('vai-indice').onclick = () => mostra(0);
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input')) return;
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); avanti(); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); indietro(); }
+});
+
+mostra((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>

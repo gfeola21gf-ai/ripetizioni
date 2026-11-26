@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equazioni di grado superiore</title>
+<meta name="materiale:studente" content="Nico, Diego">
+<meta name="materiale:tipo" content="teoria">
+<meta name="materiale:materia" content="Matematica">
+<meta name="materiale:argomento" content="Le equazioni di grado superiore al secondo">
+<meta name="materiale:descrizione" content="Come si risolvono le equazioni di 3° grado e oltre: raccoglimento, prodotti notevoli, raccoglimento a coppie, Ruffini, binomie, biquadratiche e trinomie, con tanti esempi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sfondo: #fdfaf3;
+    --carta: #ffffff;
+    --testo: #1f2430;
+    --tenue: #6b7180;
+    --blu: #2563eb;
+    --arancio: #ea7a12;
+    --viola: #8b3fd9;
+    --verde: #15925a;
+    --rosso: #d23b3b;
+    --bordo: #e6e0d2;
+    --giallo: #fff1c2;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--sfondo); color: var(--testo);
+    font-family: "Nunito", system-ui, sans-serif; font-size: 28px; line-height: 1.4;
+  }
+  .schermata {
+    display: none; min-height: 100vh; padding: 40px 64px 120px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .schermata.attiva { display: block; }
+  .etichetta {
+    display: inline-block; font-weight: 900; font-size: 19px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--arancio); margin-bottom: 6px;
+  }
+  h1 { font-size: 68px; margin: 0 0 28px; line-height: 1.1; }
+  h2 { font-size: 46px; margin: 0 0 24px; line-height: 1.15; }
+  h3 { font-size: 30px; margin: 0 0 12px; }
+  p { margin: 0 0 14px; }
+  .grande { font-size: 34px; font-weight: 700; }
+  .tenue { color: var(--tenue); }
+  .card {
+    background: var(--carta); border: 2px solid var(--bordo); border-radius: 20px;
+    padding: 24px 30px; margin-bottom: 18px;
+  }
+  .card.regola { border-color: var(--arancio); background: #fff8ef; }
+  .card.ok { border-color: var(--verde); background: #f0faf4; }
+  .passo { opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .35s; }
+  .passo.visto { opacity: 1; transform: none; }
+  .formula {
+    font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 38px;
+    white-space: nowrap;
+  }
+  .formula.piccola { font-size: 30px; }
+  .fr { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; }
+  .fr > span { padding: 0 6px; line-height: 1.15; }
+  .fr > span:first-child { border-bottom: 3px solid currentColor; }
+  .sistema { display: inline-flex; align-items: stretch; gap: 10px; margin: 6px 0; }
+  .graffa { width: 26px; display: block; color: var(--tenue); }
+  .graffa svg { width: 100%; height: 100%; display: block; }
+  .righe { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 4px 0; }
+  .blu { color: var(--blu); } .arancio { color: var(--arancio); } .viola { color: var(--viola); }
+  .verde { color: var(--verde); } .rosso { color: var(--rosso); }
+  .evidenzia { background: var(--giallo); padding: 0 8px; border-radius: 6px; }
+  .due { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .tre { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .passi { counter-reset: n; list-style: none; padding: 0; margin: 0; }
+  .passi > li { counter-increment: n; position: relative; padding-left: 58px; margin: 16px 0; }
+  .passi > li::before {
+    content: counter(n); position: absolute; left: 0; top: 0;
+    width: 42px; height: 42px; border-radius: 50%; background: var(--blu); color: #fff;
+    font-size: 24px; font-weight: 900; display: grid; place-items: center;
+  }
+  .freccia { color: var(--tenue); margin: 0 10px; }
+  .riga-calc { margin: 8px 0; }
+  .pill {
+    display: inline-block; font-weight: 900; font-size: 22px; padding: 2px 14px; border-radius: 999px;
+    background: var(--giallo); margin-right: 8px;
+  }
+  svg text { font-family: "Nunito", sans-serif; }
+  .graf { width: 100%; height: auto; display: block; }
+  .graf.par { max-height: 300px; margin: 0 auto; }
+
+  /* indice */
+  .indice { columns: 2; column-gap: 40px; padding: 0; list-style: none; margin: 0; }
+  .indice li { break-inside: avoid; margin: 0 0 10px; }
+  .indice button {
+    font: inherit; font-size: 26px; text-align: left; width: 100%; background: var(--carta);
+    border: 2px solid var(--bordo); border-radius: 14px; padding: 10px 18px; cursor: pointer; color: var(--testo);
+  }
+  .indice button:hover { border-color: var(--blu); }
+  .indice b { color: var(--blu); margin-right: 8px; }
+
+  /* quiz */
+  .quiz .scelte { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0; }
+  .quiz button, .tasti button {
+    font: inherit; font-size: 28px; font-weight: 700; background: var(--carta); color: var(--testo);
+    border: 3px solid var(--bordo); border-radius: 14px; padding: 8px 22px; cursor: pointer; min-width: 90px;
+  }
+  .quiz button:hover, .tasti button:hover { border-color: var(--blu); }
+  .quiz button.giusto { border-color: var(--verde); background: #e3f6eb; }
+  .quiz button.sbagliato { border-color: var(--rosso); background: #fde8e8; }
+  .quiz .esito { min-height: 40px; font-weight: 700; margin: 0; }
+  .tasti { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+  .tasti button.scelto { border-color: var(--verde); background: #e3f6eb; }
+
+  /* prova un numero */
+  .prova input[type=range] { width: 100%; accent-color: var(--verde); height: 36px; }
+  .prova .numero { font-size: 56px; font-weight: 900; text-align: center; margin: 0; }
+  .prova .esiti { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+  .prova .esiti div { font-size: 30px; font-weight: 700; }
+  .prova .verdetto { font-size: 32px; font-weight: 900; border-radius: 14px; padding: 10px 18px; text-align: center; }
+  .prova .verdetto.si { background: #e3f6eb; color: var(--verde); }
+  .prova .verdetto.no { background: #fde8e8; color: var(--rosso); }
+
+  .barra {
+    position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between;
+    align-items: center; gap: 12px; padding: 12px 24px; background: rgba(253,250,243,.96);
+    border-top: 2px solid var(--bordo); font-size: 20px; color: var(--tenue); z-index: 5;
+  }
+  .barra button {
+    font: inherit; font-weight: 700; background: var(--carta); border: 2px solid var(--bordo);
+    border-radius: 12px; padding: 8px 18px; cursor: pointer; color: var(--testo);
+  }
+  .barra .centro { display: flex; align-items: center; gap: 14px; }
+
+  @media (max-width: 860px) {
+    body { font-size: 19px; }
+    .schermata { padding: 20px 16px 100px; }
+    h1 { font-size: 38px; } h2 { font-size: 28px; } h3 { font-size: 22px; }
+    .formula { font-size: 24px; } .formula.piccola { font-size: 20px; }
+    .grande { font-size: 22px; }
+    .due, .tre { grid-template-columns: 1fr; }
+    .indice { columns: 1; }
+    .indice button, .quiz button, .tasti button { font-size: 19px; }
+    .prova .numero { font-size: 36px; } .prova .esiti div, .prova .verdetto { font-size: 20px; }
+    .card { padding: 16px; }
+    .barra { padding: 10px 12px; font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<!--
+  MODELLO DI LEZIONE (Nico e Diego).
+  Ogni <section class="schermata"> è una schermata; data-titolo è il nome che compare nell'indice.
+  class="passo" = compare con freccia → / spazio, nell'ordine in cui è scritto.
+  Colori fissi: 1ª cosa blu, 2ª arancio, 3ª viola; verde = soluzione/giusto; rosso = errore/impossibile.
+  Card: .card normale · .card.regola (arancione: la regola da ricordare) · .card.ok (verde: il risultato).
+  Sostituisci tutte le schermate qui sotto con quelle del nuovo argomento.
+-->
+
+<!-- ============ TITOLO ============ -->
+<section class="schermata" data-titolo="Inizio">
+  <span class="etichetta">Matematica</span>
+  <h1>Le equazioni di grado<br>superiore al secondo</h1>
+  <div class="card" style="display:flex;align-items:center;gap:30px;flex-wrap:wrap">
+    <p class="formula" style="margin:0">x³ − 2x² − 5x + 6 = 0</p>
+    <p class="grande" style="margin:0">Alla fine della lezione sapremo risolvere questo.</p>
+  </div>
+  <h3 style="margin-top:28px">Le parti della lezione</h3>
+  <ul class="indice" id="indice"></ul>
+</section>
+
+<!-- ============ RIPASSO: PRODOTTO ZERO ============ -->
+<section class="schermata" data-titolo="Ripasso: il prodotto che fa zero">
+  <span class="etichetta">Ripasso · parte 1</span>
+  <h2>Il prodotto che fa zero</h2>
+  <div class="card">
+    <p>Moltiplico due numeri e viene 0.</p>
+    <p>Allora almeno uno dei due è 0.</p>
+    <p class="formula">7 · <span class="evidenzia">0</span> = 0 &nbsp;&nbsp; <span class="evidenzia">0</span> · 5 = 0</p>
+  </div>
+  <div class="card regola passo">
+    <p class="formula" style="margin:0 0 8px"><span class="blu">A</span> · <span class="arancio">B</span> = 0</p>
+    <p class="grande" style="margin:0">vuol dire <span class="blu">A = 0</span> oppure <span class="arancio">B = 0</span>.</p>
+  </div>
+  <div class="card passo">
+    <h3>Perché ci serve?</h3>
+    <p>Un'equazione grande, scritta come prodotto, si spezza in equazioni piccole.</p>
+    <p class="formula piccola"><span class="blu">(x − 3)</span> · <span class="arancio">(x + 1)</span> = 0</p>
+    <p class="formula piccola riga-calc"><span class="blu">x − 3 = 0 → x = 3</span></p>
+    <p class="riga-calc">oppure</p>
+    <p class="formula piccola riga-calc" style="margin:0"><span class="arancio">x + 1 = 0 → x = −1</span></p>
+  </div>
+  <div class="card passo">
+    <p style="margin:0"><b>Funziona solo con lo 0.</b> Se il prodotto fa 6, i numeri possono essere 2 · 3, 1 · 6, 12 · 0,5… non so niente.</p>
+  </div>
+</section>
+
+<!-- ============ RIPASSO: 2° GRADO ============ -->
+<section class="schermata" data-titolo="Ripasso: 2° grado">
+  <span class="etichetta">Ripasso · parte 1</span>
+  <h2>Le equazioni di 2° grado</h2>
+  <div class="card">
+    <p class="formula">ax² + bx + c = 0</p>
+    <p class="formula piccola">Δ = b² − 4ac &nbsp;&nbsp;&nbsp; x = <span class="fr"><span>−b ± √Δ</span><span>2a</span></span></p>
+  </div>
+  <div class="tre passo">
+    <div class="card ok"><p class="formula piccola" style="margin-bottom:6px">Δ &gt; 0</p><p style="margin:0">Due soluzioni.</p></div>
+    <div class="card ok"><p class="formula piccola" style="margin-bottom:6px">Δ = 0</p><p style="margin:0">Una soluzione (due uguali).</p></div>
+    <div class="card"><p class="formula piccola rosso" style="margin-bottom:6px">Δ &lt; 0</p><p style="margin:0">Nessuna soluzione.</p></div>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">x² − x − 6 = 0</p>
+    <p class="formula piccola riga-calc">Δ = 1 + 24 = 25</p>
+    <p class="formula piccola riga-calc" style="margin:0">x = <span class="fr"><span>1 ± 5</span><span>2</span></span> → <b class="verde">x = 3, x = −2</b></p>
+  </div>
+  <div class="card regola passo">
+    <p class="grande" style="margin:0">Il 2° grado lo sappiamo risolvere sempre. Il nostro obiettivo: arrivare a pezzi di 1° e 2° grado.</p>
+  </div>
+</section>
+
+<!-- ============ RIPASSO: SCOMPOSIZIONI ============ -->
+<section class="schermata" data-titolo="Ripasso: le scomposizioni">
+  <span class="etichetta">Ripasso · parte 1</span>
+  <h2>Le scomposizioni che servono</h2>
+  <p class="tenue">Scomporre vuol dire scrivere come prodotto.</p>
+  <div class="due">
+    <div class="card">
+      <h3 class="blu">Raccoglimento</h3>
+      <p class="formula piccola" style="margin:0">x³ − 5x = <b>x</b>(x² − 5)</p>
+    </div>
+    <div class="card passo">
+      <h3 class="blu">Differenza di quadrati</h3>
+      <p class="formula piccola" style="margin:0">x² − 9 = (x − 3)(x + 3)</p>
+    </div>
+    <div class="card passo">
+      <h3 class="blu">Differenza di cubi</h3>
+      <p class="formula piccola" style="margin:0">x³ − 8 = (x − 2)(x² + 2x + 4)</p>
+    </div>
+    <div class="card passo">
+      <h3 class="blu">Somma di cubi</h3>
+      <p class="formula piccola" style="margin:0">x³ + 1 = (x + 1)(x² − x + 1)</p>
+    </div>
+  </div>
+  <div class="card passo">
+    <p style="margin:0"><b>Somma di quadrati:</b> x² + 4 <span class="rosso">non si scompone</span>. E x² + 4 = 0 non ha soluzioni: x² non è mai negativo.</p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Quiz: scomponi">
+  <span class="etichetta">Ripasso · parte 1</span>
+  <h2>Quiz veloce</h2>
+  <div class="card quiz" data-giusta="1" data-spiega="Il quadrato di 5 è 25: x² − 25 = (x − 5)(x + 5).">
+    <p class="formula">x² − 25</p>
+    <div class="scelte"><button>(x − 5)²</button><button>(x − 5)(x + 5)</button><button>non si scompone</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="0" data-spiega="Tutti e due i pezzi hanno x²: lo raccolgo. x⁴ + 3x² = x²(x² + 3).">
+    <p class="formula">x⁴ + 3x²</p>
+    <div class="scelte"><button>x²(x² + 3)</button><button>x(x³ + 3)</button><button>(x² + 3)²</button></div>
+    <p class="esito"></p>
+  </div>
+  <div class="card quiz" data-giusta="2" data-spiega="È una somma di quadrati: non si scompone.">
+    <p class="formula">x² + 16</p>
+    <div class="scelte"><button>(x + 4)²</button><button>(x − 4)(x + 4)</button><button>non si scompone</button></div>
+    <p class="esito"></p>
+  </div>
+</section>
+
+<!-- ============ L'IDEA ============ -->
+<section class="schermata" data-titolo="Il grado e le soluzioni">
+  <span class="etichetta">L'idea · parte 2</span>
+  <h2>Il grado e le soluzioni</h2>
+  <div class="due">
+    <div class="card">
+      <p>Il <b>grado</b> è l'esponente più alto della x.</p>
+      <p class="formula piccola">x³ − 4x = 0 <span class="tenue">→ grado 3</span></p>
+      <p class="formula piccola">x⁴ − 5x² + 4 = 0 <span class="tenue">→ grado 4</span></p>
+      <div class="card regola passo" style="margin:14px 0 0">
+        <p style="margin:0"><b>Grado 3: al massimo 3 soluzioni.</b><br>Grado 4: al massimo 4. E così via.</p>
+      </div>
+    </div>
+    <div class="card passo">
+      <p class="tenue">Le soluzioni sono i punti dove la curva tocca l'asse x. Scegli:</p>
+      <div class="tasti" id="tasti-cub">
+        <button data-k="3">3 soluzioni</button><button data-k="2">2 soluzioni</button><button data-k="1">1 soluzione</button>
+      </div>
+      <div id="g-cub"></div>
+      <p class="formula piccola" id="t-cub" style="margin:0">&nbsp;</p>
+    </div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Il metodo">
+  <span class="etichetta">L'idea · parte 2</span>
+  <h2>Il metodo in 4 passi</h2>
+  <div class="card">
+    <ol class="passi">
+      <li>Porto tutto a sinistra. A destra resta <b>= 0</b>.</li>
+      <li class="passo">Scompongo: scrivo il polinomio come prodotto di pezzi piccoli.<br><span class="tenue">Pezzi di 1° grado e di 2° grado.</span></li>
+      <li class="passo">Metto ogni pezzo <b>= 0</b> e lo risolvo.</li>
+      <li class="passo">Scrivo <b>tutte</b> le soluzioni trovate.</li>
+    </ol>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">x³ − 4x = 0</p>
+    <p class="formula piccola riga-calc"><span class="blu">x</span> · <span class="arancio">(x − 2)</span> · <span class="viola">(x + 2)</span> = 0</p>
+    <p class="formula piccola riga-calc" style="margin:0"><span class="blu">x = 0</span> &nbsp; <span class="arancio">x = 2</span> &nbsp; <span class="viola">x = −2</span></p>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Attenzione: non dividere per x">
+  <span class="etichetta">L'idea · parte 2</span>
+  <h2>Non si divide per x</h2>
+  <div class="due">
+    <div class="card" style="border-color:var(--rosso)">
+      <h3 class="rosso">Sbagliato</h3>
+      <p class="formula piccola riga-calc">x³ = 9x</p>
+      <p class="formula piccola riga-calc">divido per x: x² = 9</p>
+      <p class="formula piccola riga-calc">x = ±3</p>
+      <p class="rosso" style="margin:0"><b>Ho perso x = 0.</b></p>
+    </div>
+    <div class="card ok passo">
+      <h3 class="verde">Giusto</h3>
+      <p class="formula piccola riga-calc">x³ − 9x = 0</p>
+      <p class="formula piccola riga-calc">x(x² − 9) = 0</p>
+      <p class="formula piccola riga-calc">x = 0, x = ±3</p>
+      <p class="verde" style="margin:0"><b>3 soluzioni.</b></p>
+    </div>
+  </div>
+  <div class="card passo">
+    <h3>Perché?</h3>
+    <p style="margin:0">Provo x = 0: 0³ = 9 · 0 → 0 = 0. Vero! Dividendo per x faccio finta che x non sia 0. Invece può esserlo. Allora porto tutto a sinistra e <b>raccolgo</b>.</p>
+  </div>
+</section>
+
+<!-- ============ CASO 1 ============ -->
+<section class="schermata" data-titolo="Caso 1: raccoglimento">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 1: raccolgo la x</h2>
+  <p class="tenue">Quando lo uso: manca il termine noto (il numero senza x).</p>
+  <div class="due">
+    <div class="card">
+      <p class="formula piccola riga-calc">x³ − 4x = 0</p>
+      <p class="formula piccola riga-calc passo">x(x² − 4) = 0</p>
+      <p class="formula piccola riga-calc passo"><span class="blu">x = 0</span></p>
+      <p class="formula piccola riga-calc passo" style="margin:0"><span class="arancio">x² − 4 = 0 → x² = 4 → x = ±2</span></p>
+    </div>
+    <div class="card passo">
+      <p class="tenue">Il pezzo di 2° grado senza la x di 1° grado si risolve senza Δ:</p>
+      <p class="formula piccola">x² = 4 → x = +2 oppure x = −2</p>
+      <p style="margin:0">Tutti e due: (+2)² = 4 e (−2)² = 4.</p>
+    </div>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 0, x = 2, x = −2</span></p></div>
+</section>
+
+<section class="schermata" data-titolo="Caso 1: la soluzione doppia">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 1: raccolgo x²</h2>
+  <div class="card">
+    <p class="formula piccola riga-calc">x⁴ − 9x² = 0</p>
+    <p class="formula piccola riga-calc passo">x²(x² − 9) = 0</p>
+    <p class="formula piccola riga-calc passo"><span class="blu">x² = 0 → x = 0</span> <span class="tenue">(conta due volte)</span></p>
+    <p class="formula piccola riga-calc passo" style="margin:0"><span class="arancio">x² − 9 = 0 → x = ±3</span></p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 0, x = 3, x = −3</span></p></div>
+  <div class="card regola passo">
+    <p style="margin:0">Raccolgo la x con l'esponente <b>più piccolo</b>. In x⁴ − 9x² c'è x² in tutti e due i termini: raccolgo x².</p>
+  </div>
+</section>
+
+<!-- ============ CASO 2 ============ -->
+<section class="schermata" data-titolo="Caso 2: prodotti notevoli">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 2: prodotti notevoli</h2>
+  <p class="tenue">Quando lo uso: ci sono solo due termini, ed entrambi sono quadrati o cubi.</p>
+  <div class="due">
+    <div class="card">
+      <h3>Differenza di quadrati</h3>
+      <p class="formula piccola riga-calc">x⁴ − 16 = 0</p>
+      <p class="formula piccola riga-calc passo">(<span class="blu">x² − 4</span>)(<span class="arancio">x² + 4</span>) = 0</p>
+      <p class="formula piccola riga-calc passo"><span class="blu">x² = 4 → x = ±2</span></p>
+      <p class="formula piccola riga-calc passo"><span class="arancio">x² = −4</span> → <span class="rosso">impossibile</span></p>
+      <p class="verde passo" style="margin:0"><b>Soluzioni: x = 2, x = −2</b></p>
+    </div>
+    <div class="card passo">
+      <h3>Differenza di cubi</h3>
+      <p class="formula piccola riga-calc">x³ − 8 = 0</p>
+      <p class="formula piccola riga-calc passo">(<span class="blu">x − 2</span>)(<span class="arancio">x² + 2x + 4</span>) = 0</p>
+      <p class="formula piccola riga-calc passo"><span class="blu">x = 2</span></p>
+      <p class="formula piccola riga-calc passo"><span class="arancio">Δ = 4 − 16 &lt; 0</span> → <span class="rosso">nessuna</span></p>
+      <p class="verde passo" style="margin:0"><b>Soluzione: x = 2</b></p>
+    </div>
+  </div>
+  <div class="card regola passo">
+    <p style="margin:0">Un pezzo può non avere soluzioni. Non è un errore: lo scrivo e vado avanti con gli altri pezzi.</p>
+  </div>
+</section>
+
+<!-- ============ CASO 3 ============ -->
+<section class="schermata" data-titolo="Caso 3: raccoglimento parziale">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 3: raccolgo a coppie</h2>
+  <p class="tenue">Quando lo uso: 4 termini che, presi a coppie, hanno un pezzo uguale.</p>
+  <div class="card">
+    <p class="formula piccola riga-calc"><span class="blu">x³ + 2x²</span> <span class="arancio">− 9x − 18</span> = 0</p>
+    <p class="formula piccola riga-calc passo"><span class="blu">x²(x + 2)</span> <span class="arancio">− 9(x + 2)</span> = 0</p>
+    <p class="tenue passo">Le due coppie hanno lo stesso pezzo (x + 2): lo raccolgo.</p>
+    <p class="formula piccola riga-calc passo">(x + 2)(x² − 9) = 0</p>
+    <p class="formula piccola riga-calc passo">x + 2 = 0 → x = −2</p>
+    <p class="formula piccola riga-calc passo" style="margin:0">x² − 9 = 0 → x = ±3</p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = −2, x = 3, x = −3</span></p></div>
+  <div class="card passo">
+    <p style="margin:0"><b>Attenzione al segno:</b> − 9x − 18 = <b>−</b>9(x + 2). Con il − davanti, dentro la parentesi i segni si girano.</p>
+  </div>
+</section>
+
+<!-- ============ CASO 4: RUFFINI ============ -->
+<section class="schermata" data-titolo="Caso 4: Ruffini, trovo il numero">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 4: Ruffini</h2>
+  <p class="tenue">Quando lo uso: non riesco a raccogliere né a usare i prodotti notevoli.</p>
+  <div class="due">
+    <div class="card">
+      <p class="formula piccola">x³ − 6x² + 11x − 6 = 0</p>
+      <div class="card regola passo" style="margin:10px 0">
+        <p style="margin:0">Se un numero fa diventare il polinomio <b>0</b>, allora <b>(x − numero)</b> è un suo pezzo.</p>
+      </div>
+      <p class="passo">Dove lo cerco? Tra i <b>divisori del termine noto</b> (il numero senza x), con il + e con il −.</p>
+      <p class="formula piccola passo" style="margin:0">−6 → ±1, ±2, ±3, ±6</p>
+    </div>
+    <div class="card passo">
+      <h3>Prova i divisori</h3>
+      <p class="tenue">Clicca un numero: lo metto al posto della x.</p>
+      <div id="prova-div"></div>
+    </div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Caso 4: la tabella di Ruffini">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 4: la tabella</h2>
+  <p class="tenue">P(1) = 0, quindi divido per (x − 1).</p>
+  <div class="due">
+    <div class="card" id="g-ruf"></div>
+    <div class="card">
+      <ol class="passi">
+        <li class="passo">In alto i coefficienti. A sinistra il <span class="arancio"><b>1</b></span>.</li>
+        <li class="passo">Abbasso il primo: <span class="blu"><b>1</b></span>.</li>
+        <li class="passo">Moltiplico per 1 e scrivo sotto il −6. Sommo: −6 + 1 = <span class="blu"><b>−5</b></span>.</li>
+        <li class="passo">Ripeto: 11 − 5 = <span class="blu"><b>6</b></span>; −6 + 6 = <span class="verde"><b>0</b></span>.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">(x − 1)(<span class="blu">x² − 5x + 6</span>) = 0</p>
+    <p class="formula piccola riga-calc">x − 1 = 0 → x = 1</p>
+    <p class="formula piccola riga-calc">Δ = 25 − 24 = 1</p>
+    <p class="formula piccola riga-calc" style="margin:0">x = <span class="fr"><span>5 ± 1</span><span>2</span></span> → x = 3, x = 2</p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 1, x = 2, x = 3</span></p></div>
+</section>
+
+<!-- ============ CASO 5: BINOMIE ============ -->
+<section class="schermata" data-titolo="Caso 5: binomie">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 5: xⁿ = numero</h2>
+  <p class="tenue">Si chiamano <i>binomie</i>: solo due termini, la x con un esponente e un numero.</p>
+  <div class="tre">
+    <div class="card">
+      <p class="formula piccola">x⁴ = 81</p>
+      <p class="passo">Esponente <b>pari</b>, numero positivo: due soluzioni.</p>
+      <p class="formula piccola verde passo" style="margin:0">x = ±3</p>
+    </div>
+    <div class="card passo">
+      <p class="formula piccola">x³ = −27</p>
+      <p class="passo">Esponente <b>dispari</b>: una soluzione, con lo stesso segno.</p>
+      <p class="formula piccola verde passo" style="margin:0">x = −3</p>
+    </div>
+    <div class="card passo">
+      <p class="formula piccola">x⁴ = −16</p>
+      <p class="passo">Esponente <b>pari</b>, numero negativo.</p>
+      <p class="formula piccola rosso passo" style="margin:0">impossibile</p>
+    </div>
+  </div>
+  <div class="card passo">
+    <h3>Perché?</h3>
+    <p style="margin:0">(−3)⁴ = (−3)(−3)(−3)(−3) = 81: con un numero pari di meno, il segno sparisce. Quindi x⁴ non è mai negativo.<br>(−3)³ = −27: con un numero dispari di meno, il − resta.</p>
+  </div>
+</section>
+
+<!-- ============ CASO 6: BIQUADRATICHE ============ -->
+<section class="schermata" data-titolo="Caso 6: biquadratiche">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 6: x⁴ e x²</h2>
+  <p class="tenue">Si chiamano <i>biquadratiche</i>: ci sono solo x⁴, x² e un numero.</p>
+  <div class="card">
+    <p class="formula piccola riga-calc">x⁴ − 5x² + 4 = 0</p>
+    <p class="passo">x⁴ è (x²)². Chiamo <b class="viola">t = x²</b>:</p>
+    <p class="formula piccola riga-calc passo">t² − 5t + 4 = 0 &nbsp;<span class="tenue">→ 2° grado!</span></p>
+    <p class="formula piccola riga-calc passo">Δ = 25 − 16 = 9</p>
+    <p class="formula piccola riga-calc passo">t = <span class="fr"><span>5 ± 3</span><span>2</span></span> → <span class="viola">t = 4, t = 1</span></p>
+  </div>
+  <div class="card regola passo"><p style="margin:0"><b>Non mi fermo a t!</b> Torno alla x: x² = t.</p></div>
+  <div class="due passo">
+    <div class="card"><p class="formula piccola" style="margin:0"><span class="blu">x² = 4 → x = ±2</span></p></div>
+    <div class="card"><p class="formula piccola" style="margin:0"><span class="arancio">x² = 1 → x = ±1</span></p></div>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = ±1, x = ±2</span> <span class="tenue">(4 soluzioni)</span></p></div>
+</section>
+
+<section class="schermata" data-titolo="Caso 6: quando t è negativo">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 6: t negativo</h2>
+  <div class="card">
+    <p class="formula piccola riga-calc">x⁴ + 3x² − 4 = 0</p>
+    <p class="riga-calc">Chiamo <b class="viola">t = x²</b>:</p>
+    <p class="formula piccola riga-calc passo">t² + 3t − 4 = 0</p>
+    <p class="formula piccola riga-calc passo">Δ = 9 + 16 = 25</p>
+    <p class="formula piccola riga-calc passo">t = <span class="fr"><span>−3 ± 5</span><span>2</span></span> → <span class="viola">t = 1, t = −4</span></p>
+  </div>
+  <div class="due passo">
+    <div class="card ok"><p class="formula piccola" style="margin:0">x² = 1 → x = ±1</p></div>
+    <div class="card" style="border-color:var(--rosso)"><p class="formula piccola" style="margin:0">x² = −4 → <span class="rosso">impossibile</span></p></div>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 1, x = −1</span></p></div>
+  <div class="card regola passo"><p style="margin:0">t = x² non può essere negativo. Se t viene negativo, quel pezzo non dà soluzioni.</p></div>
+</section>
+
+<!-- ============ CASO 7: TRINOMIE ============ -->
+<section class="schermata" data-titolo="Caso 7: trinomie">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Caso 7: x⁶ e x³</h2>
+  <p class="tenue">Si chiamano <i>trinomie</i>. Stessa idea delle biquadratiche: un esponente è il doppio dell'altro.</p>
+  <div class="card">
+    <p class="formula piccola riga-calc">x⁶ − 9x³ + 8 = 0</p>
+    <p class="passo">x⁶ è (x³)². Chiamo <b class="viola">t = x³</b>:</p>
+    <p class="formula piccola riga-calc passo">t² − 9t + 8 = 0</p>
+    <p class="formula piccola riga-calc passo">Δ = 81 − 32 = 49</p>
+    <p class="formula piccola riga-calc passo">t = <span class="fr"><span>9 ± 7</span><span>2</span></span> → <span class="viola">t = 8, t = 1</span></p>
+  </div>
+  <div class="due passo">
+    <div class="card"><p class="formula piccola" style="margin:0"><span class="blu">x³ = 8 → x = 2</span></p></div>
+    <div class="card"><p class="formula piccola" style="margin:0"><span class="arancio">x³ = 1 → x = 1</span></p></div>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 1, x = 2</span></p></div>
+  <div class="card passo"><p style="margin:0">x³ ha esponente dispari: una sola soluzione, niente ±. E va bene anche se t è negativo: x³ = −8 → x = −2.</p></div>
+</section>
+
+<!-- ============ QUIZ CHE CASO È ============ -->
+<section class="schermata" data-titolo="Quiz: che caso è?">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Quiz: che caso è?</h2>
+  <div class="due">
+    <div class="card quiz" data-giusta="1" data-spiega="Solo x⁴, x² e un numero: biquadratica, con t = x².">
+      <p class="formula piccola">x⁴ − 7x² + 12 = 0</p>
+      <div class="scelte"><button>Raccolgo</button><button>t = x²</button><button>Ruffini</button></div>
+      <p class="esito"></p>
+    </div>
+    <div class="card quiz" data-giusta="0" data-spiega="Manca il termine noto: raccolgo x². x²(x − 5) = 0 → x = 0, x = 5.">
+      <p class="formula piccola">x³ − 5x² = 0</p>
+      <div class="scelte"><button>Raccolgo</button><button>t = x²</button><button>Ruffini</button></div>
+      <p class="esito"></p>
+    </div>
+    <div class="card quiz" data-giusta="2" data-spiega="Non si raccoglie e non è un prodotto notevole. Divisori di −6: provo −1 → −1 + 7 − 6 = 0. Ruffini con −1.">
+      <p class="formula piccola">x³ − 7x − 6 = 0</p>
+      <div class="scelte"><button>Raccolgo</button><button>t = x²</button><button>Ruffini</button></div>
+      <p class="esito"></p>
+    </div>
+    <div class="card quiz" data-giusta="1" data-spiega="Solo x⁵ e un numero: binomia. x⁵ = 32 → x = 2 (dispari: una soluzione).">
+      <p class="formula piccola">x⁵ − 32 = 0</p>
+      <div class="scelte"><button>t = x³</button><button>xⁿ = numero</button><button>Ruffini</button></div>
+      <p class="esito"></p>
+    </div>
+    <div class="card quiz" data-giusta="0" data-spiega="x⁶, x³ e un numero: trinomia, con t = x³. t = 1, t = −8 → x = 1, x = −2.">
+      <p class="formula piccola">x⁶ + 7x³ − 8 = 0</p>
+      <div class="scelte"><button>t = x³</button><button>t = x²</button><button>Raccolgo</button></div>
+      <p class="esito"></p>
+    </div>
+  </div>
+</section>
+
+<section class="schermata" data-titolo="Come scelgo il metodo">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Come scelgo il metodo</h2>
+  <p class="tenue">Dopo aver portato tutto a sinistra, mi faccio queste domande, in ordine.</p>
+  <div class="card">
+    <ol class="passi">
+      <li>Manca il numero senza x? → <b>raccolgo la x</b>.</li>
+      <li class="passo">Ci sono solo due termini? → <b>xⁿ = numero</b> o <b>prodotto notevole</b>.</li>
+      <li class="passo">Ci sono solo x⁴, x² e un numero? → <b>t = x²</b>.<br><span class="tenue">Con x⁶, x³ e un numero: t = x³.</span></li>
+      <li class="passo">4 termini con coppie simili? → <b>raccolgo a coppie</b>.</li>
+      <li class="passo">Niente di tutto questo? → <b>Ruffini</b>, con i divisori del numero senza x.</li>
+    </ol>
+  </div>
+  <div class="card regola passo"><p style="margin:0">Dopo un passo, ogni pezzo di 3° grado o più si scompone ancora, con le stesse domande.</p></div>
+</section>
+
+<!-- ============ ERRORI ============ -->
+<section class="schermata" data-titolo="Errori da evitare">
+  <span class="etichetta">I casi · parte 3</span>
+  <h2>Errori da evitare</h2>
+  <div class="card">
+    <ol class="passi">
+      <li><b>Non divido per x</b>: perdo x = 0. Porto tutto a sinistra e raccolgo.</li>
+      <li class="passo">x² = 9 dà <b>due</b> soluzioni: x = 3 e x = −3.</li>
+      <li class="passo">Con t = x² <b>non mi fermo a t</b>: torno alla x.</li>
+      <li class="passo">x² = numero negativo → <b>impossibile</b>. x³ = numero negativo → va bene.</li>
+      <li class="passo">In Ruffini, se manca un termine, scrivo <b>0</b> al suo posto.<br><span class="tenue">x³ − 7x + 6 → 1, 0, −7, 6.</span></li>
+      <li class="passo">Alla fine scrivo le soluzioni di <b>tutti</b> i pezzi.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ ESERCIZI SVOLTI ============ -->
+<section class="schermata" data-titolo="Esercizio 1">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 1</h2>
+  <div class="card"><p class="formula" style="margin:0">2x³ − 18x = 0</p></div>
+  <p class="card passo tenue" style="margin-bottom:18px">Manca il numero senza x: raccolgo 2x.</p>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">2x(x² − 9) = 0</p>
+    <p class="formula piccola riga-calc" style="margin:0"><span class="blu">2x = 0 → x = 0</span> &nbsp;&nbsp; <span class="arancio">x² = 9 → x = ±3</span></p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 0, x = 3, x = −3</span></p></div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 2">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 2</h2>
+  <div class="card"><p class="formula" style="margin:0">x⁴ − 13x² + 36 = 0</p></div>
+  <p class="card passo tenue" style="margin-bottom:18px">Solo x⁴, x² e un numero: t = x².</p>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">t² − 13t + 36 = 0</p>
+    <p class="formula piccola riga-calc">Δ = 169 − 144 = 25 → t = <span class="fr"><span>13 ± 5</span><span>2</span></span></p>
+    <p class="formula piccola riga-calc" style="margin:0"><span class="viola">t = 9, t = 4</span></p>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola riga-calc" style="margin:0"><span class="blu">x² = 9 → x = ±3</span> &nbsp;&nbsp; <span class="arancio">x² = 4 → x = ±2</span></p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = ±2, x = ±3</span></p></div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 3">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 3</h2>
+  <div class="card"><p class="formula" style="margin:0">x³ − 3x² − 4x + 12 = 0</p></div>
+  <p class="card passo tenue" style="margin-bottom:18px">4 termini: provo a raccogliere a coppie.</p>
+  <div class="card passo">
+    <p class="formula piccola riga-calc"><span class="blu">x²(x − 3)</span> <span class="arancio">− 4(x − 3)</span> = 0</p>
+    <p class="formula piccola riga-calc">(x − 3)(x² − 4) = 0</p>
+    <p class="formula piccola riga-calc" style="margin:0">x = 3 &nbsp;&nbsp; x² = 4 → x = ±2</p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = 3, x = 2, x = −2</span></p></div>
+</section>
+
+<section class="schermata" data-titolo="Esercizio 4 (quello iniziale)">
+  <span class="etichetta">Esercizi</span>
+  <h2>Esercizio 4</h2>
+  <div class="card"><p class="formula" style="margin:0">x³ − 2x² − 5x + 6 = 0</p></div>
+  <div class="due">
+    <div class="card passo">
+      <p class="tenue">Le coppie non si somigliano: Ruffini. Divisori di 6: ±1, ±2, ±3, ±6.</p>
+      <p class="formula piccola" style="margin:0">P(1) = 1 − 2 − 5 + 6 = <b class="verde">0</b></p>
+    </div>
+    <div class="card passo" id="g-ruf2"></div>
+  </div>
+  <div class="card passo">
+    <p class="formula piccola riga-calc">(x − 1)(x² − x − 6) = 0</p>
+    <p class="formula piccola riga-calc">x − 1 = 0 → x = 1</p>
+    <p class="formula piccola riga-calc">Δ = 1 + 24 = 25</p>
+    <p class="formula piccola riga-calc" style="margin:0">x = <span class="fr"><span>1 ± 5</span><span>2</span></span> → x = 3, x = −2</p>
+  </div>
+  <div class="card ok passo"><p class="grande" style="margin:0">Soluzioni: <span class="formula verde">x = −2, x = 1, x = 3</span></p></div>
+</section>
+
+<!-- ============ ORA TOCCA A VOI ============ -->
+<section class="schermata" data-titolo="Ora tocca a voi">
+  <span class="etichetta">Esercizi</span>
+  <h2>Ora tocca a voi</h2>
+  <p class="tenue">Sul quaderno. Poi controlliamo insieme.</p>
+  <div class="due">
+    <div class="card"><p class="pill">A</p><p class="formula piccola">x³ − 25x = 0</p><p class="verde passo" style="margin:8px 0 0"><b>x = 0, x = 5, x = −5</b></p></div>
+    <div class="card"><p class="pill">B</p><p class="formula piccola">x⁴ − 10x² + 9 = 0</p><p class="verde passo" style="margin:8px 0 0"><b>x = ±1, x = ±3</b></p></div>
+    <div class="card"><p class="pill">C</p><p class="formula piccola">x³ + 1 = 0</p><p class="verde passo" style="margin:8px 0 0"><b>x = −1</b></p></div>
+    <div class="card"><p class="pill">D</p><p class="formula piccola">x³ − 7x + 6 = 0</p><p class="verde passo" style="margin:8px 0 0"><b>x = 1, x = 2, x = −3</b> <span class="tenue">(Ruffini con 1)</span></p></div>
+  </div>
+</section>
+
+<div class="barra">
+  <button id="indietro">←</button>
+  <div class="centro">
+    <button id="vai-indice">Indice</button>
+    <span id="contatore">1 / 1</span>
+  </div>
+  <button id="avanti">→</button>
+</div>
+
+
+<script>
+// ---------- colori ----------
+const C = { blu: '#2563eb', arancio: '#ea7a12', viola: '#8b3fd9', verde: '#15925a', rosso: '#d23b3b', testo: '#1f2430', tenue: '#9aa0ad' };
+
+// ---------- graffa disegnata (si allunga con le righe) ----------
+document.querySelectorAll('.graffa').forEach(g => {
+  g.innerHTML = '<svg viewBox="0 0 20 100" preserveAspectRatio="none"><path d="M18 2 Q9 2 9 14 L9 38 Q9 50 2 50 Q9 50 9 62 L9 86 Q9 98 18 98" fill="none" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>';
+});
+
+// ---------- posizioni sulla retta: punti in ordine, distanza uguale ----------
+// indice -1 = meno infinito (bordo sinistro), indice n = più infinito (bordo destro)
+function posizioni(n, x0, x1) {
+  return i => i < 0 ? x0 : i >= n ? x1 : x0 + (i + 1) * (x1 - x0) / (n + 1);
+}
+
+function asse(punti, X, y, x0, x1) {
+  let s = `<line x1="${x0 - 20}" y1="${y}" x2="${x1 + 10}" y2="${y}" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<polygon points="${x1 + 10},${y - 8} ${x1 + 26},${y} ${x1 + 10},${y + 8}" fill="${C.testo}"/>`;
+  punti.forEach((p, i) => s += `<text x="${X(i)}" y="${y + 38}" font-size="30" font-weight="800" text-anchor="middle" fill="${C.testo}">${p}</text>`);
+  return s;
+}
+
+// Grafico del sistema: una riga per disequazione, linea piena dove è vera
+// pezzi: [da, a, pienoDa, pienoA]
+function grafico(c) {
+  const n = c.punti.length, x0 = c.etichette === false ? 40 : 170, x1 = 940, H = 62, top = 46;
+  const X = posizioni(n, x0, x1), yAsse = top + c.righe.length * H;
+  let s = `<svg class="graf" viewBox="0 0 1000 ${yAsse + 56}" role="img">`;
+  c.punti.forEach((p, i) => s += `<line x1="${X(i)}" y1="${top - 30}" x2="${X(i)}" y2="${yAsse}" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`);
+  c.righe.forEach((r, k) => {
+    const y = top + k * H, col = C[r.c];
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    if (c.etichette !== false) s += `<text x="20" y="${y + 10}" font-size="28" font-weight="800" fill="${col}">${r.t}</text>`;
+    r.pezzi.forEach(([a, b, pa, pb]) => {
+      if (a !== b) s += `<line x1="${X(a)}" y1="${y}" x2="${X(b)}" y2="${y}" stroke="${col}" stroke-width="9" stroke-linecap="round"/>`;
+      const pallino = (i, pieno) => { if (i >= 0 && i < n) s += `<circle cx="${X(i)}" cy="${y}" r="12" fill="${pieno ? col : '#fff'}" stroke="${col}" stroke-width="4"/>`; };
+      pallino(a, pa); if (b !== a) pallino(b, pb);
+    });
+    s += '</g>';
+  });
+  if (c.sol) {
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    c.sol.forEach(([a, b]) => s += `<rect x="${X(a)}" y="${top - 30}" width="${X(b) - X(a)}" height="${yAsse - top + 30}" fill="${C.verde}" fill-opacity=".17" rx="8"/>`);
+    s += '</g>';
+  }
+  s += asse(c.punti, X, yAsse, x0, x1);
+  return s + '</svg>';
+}
+
+// Tabella dei segni: linea piena = +, tratteggiata = −
+function segni(c) {
+  const n = c.punti.length, x0 = 250, x1 = 940, H = 66, top = 50;
+  const X = posizioni(n, x0, x1), tutte = [...c.righe, { t: 'Frazione', s: c.ris, ris: true }];
+  const yAsse = top + tutte.length * H - 10;
+  let s = `<svg class="graf" viewBox="0 0 1000 ${yAsse + 56}" role="img">`;
+  c.punti.forEach((p, i) => s += `<line x1="${X(i)}" y1="${top - 34}" x2="${X(i)}" y2="${yAsse}" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`);
+  tutte.forEach((r, k) => {
+    const y = top + k * H;
+    s += `<g class="${c.statico ? '' : 'passo'}">`;
+    s += `<text x="20" y="${y + 10}" font-size="27" font-weight="800" fill="${r.ris ? C.testo : C.tenue}">${r.t}</text>`;
+    for (let j = 0; j <= n; j++) {
+      const a = X(j - 1), b = X(j), m = (a + b) / 2, piu = r.s[j] === '+';
+      if (r.ris) {
+        const scelto = c.scelti.includes(j);
+        if (scelto) s += `<rect x="${a + 6}" y="${y - 30}" width="${b - a - 12}" height="48" rx="10" fill="${C.verde}" fill-opacity=".17"/>`;
+        s += `<text x="${m}" y="${y + 12}" font-size="40" font-weight="900" text-anchor="middle" fill="${piu ? C.verde : C.rosso}">${piu ? '+' : '−'}</text>`;
+      } else {
+        s += `<line x1="${a + 8}" y1="${y}" x2="${b - 8}" y2="${y}" stroke="${C.testo}" stroke-width="5" ${piu ? '' : 'stroke-dasharray="14 10"'}/>`;
+        s += `<text x="${m}" y="${y - 14}" font-size="30" font-weight="900" text-anchor="middle" fill="${piu ? C.verde : C.rosso}">${piu ? '+' : '−'}</text>`;
+      }
+    }
+    s += '</g>';
+  });
+  s += asse(c.punti, X, yAsse, x0, x1);
+  return s + '</svg>';
+}
+
+// Parabola vera, disegnata in scala. modo: '>', '<', '≥', '≤' oppure ''
+let nClip = 0;
+function parabola(c) {
+  const W = 600, Hh = 340, { f, xmin, xmax, ymin, ymax } = c, modo = c.modo || '';
+  const px = x => (x - xmin) / (xmax - xmin) * W, py = y => Hh - (y - ymin) / (ymax - ymin) * Hh, yA = py(0);
+  let pts = [];
+  for (let i = 0; i <= 200; i++) { const x = xmin + (xmax - xmin) * i / 200; pts.push(`${px(x).toFixed(1)},${py(f(x)).toFixed(1)}`); }
+  const d = 'M' + pts.join(' L'), id = 'cl' + (nClip++);
+  let s = `<svg class="graf par" viewBox="-10 0 ${W + 40} ${Hh + 40}" role="img"><defs>`;
+  s += `<clipPath id="${id}a"><rect x="-10" y="0" width="${W + 40}" height="${Hh}"/></clipPath>`;
+  s += `<clipPath id="${id}"><rect x="-10" y="${modo === '>' || modo === '≥' ? 0 : yA}" width="${W + 40}" height="${modo === '>' || modo === '≥' ? yA : Hh - yA}"/></clipPath></defs>`;
+  // griglia leggera e asse y
+  if (xmin < 0 && xmax > 0) s += `<line x1="${px(0)}" y1="0" x2="${px(0)}" y2="${Hh}" stroke="#d9d3c4" stroke-width="2"/>`;
+  s += `<line x1="-10" y1="${yA}" x2="${W + 14}" y2="${yA}" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<polygon points="${W + 14},${yA - 8} ${W + 28},${yA} ${W + 14},${yA + 8}" fill="${C.testo}"/>`;
+  s += `<path d="${d}" fill="none" stroke="${C.blu}" stroke-width="5" clip-path="url(#${id}a)"/>`;
+  if (modo) {
+    s += `<path d="${d}" fill="none" stroke="${C.verde}" stroke-width="10" stroke-linecap="round" clip-path="url(#${id})"/>`;
+    // tratti verdi sull'asse dove la disequazione è vera
+    const vera = y => modo === '>' ? y > 1e-9 : modo === '<' ? y < -1e-9 : modo === '≥' ? y > -1e-9 : y < 1e-9;
+    let inizio = null;
+    for (let i = 0; i <= 600; i++) {
+      const x = xmin + (xmax - xmin) * i / 600, ok = vera(f(x)) && !(c.radici || []).some(r => Math.abs(r - x) < (xmax - xmin) / 600 && (modo === '>' || modo === '<'));
+      if (ok && inizio === null) inizio = x;
+      if ((!ok || i === 600) && inizio !== null) {
+        s += `<line x1="${px(inizio)}" y1="${yA}" x2="${px(x)}" y2="${yA}" stroke="${C.verde}" stroke-width="12" stroke-linecap="round" opacity=".55"/>`;
+        inizio = null;
+      }
+    }
+  }
+  (c.radici || []).forEach(r => {
+    const pieno = modo === '≥' || modo === '≤';
+    s += `<circle cx="${px(r)}" cy="${yA}" r="11" fill="${pieno ? C.verde : '#fff'}" stroke="${modo ? C.verde : C.blu}" stroke-width="4"/>`;
+    s += `<text x="${px(r)}" y="${yA + 42}" font-size="30" font-weight="800" text-anchor="middle" fill="${C.testo}">${String(r).replace('-', '−')}</text>`;
+  });
+  return s + '</svg>';
+}
+
+// Retta semplice per "perché si gira il verso"
+function rettaNumeri() {
+  const X = x => 40 + (x + 6) * 60;
+  let s = `<svg class="graf" viewBox="0 0 800 150" role="img">`;
+  s += `<line x1="20" y1="80" x2="780" y2="80" stroke="${C.testo}" stroke-width="3"/>`;
+  for (let x = -6; x <= 6; x++) s += `<line x1="${X(x)}" y1="72" x2="${X(x)}" y2="88" stroke="${C.testo}" stroke-width="2"/>`;
+  s += `<text x="${X(0)}" y="122" font-size="24" text-anchor="middle" fill="${C.tenue}">0</text>`;
+  [[3, C.blu], [5, C.blu], [-3, C.arancio], [-5, C.arancio]].forEach(([v, col]) => {
+    s += `<circle cx="${X(v)}" cy="80" r="11" fill="${col}"/>`;
+    s += `<text x="${X(v)}" y="50" font-size="28" font-weight="800" text-anchor="middle" fill="${col}">${String(v).replace('-', '−')}</text>`;
+  });
+  s += `<path d="M${X(-3)} 120 Q ${X(-4)} 140 ${X(-5)} 120" fill="none" stroke="${C.arancio}" stroke-width="3"/>`;
+  s += `<path d="M${X(3)} 120 Q ${X(4)} 140 ${X(5)} 120" fill="none" stroke="${C.blu}" stroke-width="3"/>`;
+  return s + '</svg>';
+}
+
+
+// Tabella di Ruffini: coefficienti a, numero r
+function ruffini(a, r) {
+  const n = a.length, W = 118, x0 = 110, f = v => String(v).replace('-', '−');
+  const b = [a[0]]; for (let i = 1; i < n; i++) b.push(a[i] + r * b[i - 1]);
+  const larg = x0 + n * W + 20, cx = i => x0 + i * W + W / 2;
+  let s = `<svg class="graf" viewBox="0 0 ${larg} 250" role="img" style="max-width:${larg}px;margin:0 auto">`;
+  s += `<line x1="${x0}" y1="20" x2="${x0}" y2="170" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<line x1="20" y1="165" x2="${larg - 10}" y2="165" stroke="${C.testo}" stroke-width="3"/>`;
+  s += `<line x1="${x0 + (n - 1) * W + 8}" y1="175" x2="${x0 + (n - 1) * W + 8}" y2="240" stroke="${C.tenue}" stroke-width="2" stroke-dasharray="6 6"/>`;
+  s += `<text x="${x0 / 2}" y="140" font-size="38" font-weight="900" text-anchor="middle" fill="${C.arancio}">${f(r)}</text>`;
+  a.forEach((v, i) => s += `<text x="${cx(i)}" y="62" font-size="36" font-weight="800" text-anchor="middle" fill="${C.testo}">${f(v)}</text>`);
+  for (let i = 1; i < n; i++) s += `<text x="${cx(i)}" y="140" font-size="32" font-weight="700" text-anchor="middle" fill="${C.tenue}">${f(r * b[i - 1])}</text>`;
+  b.forEach((v, i) => s += `<text x="${cx(i)}" y="222" font-size="38" font-weight="900" text-anchor="middle" fill="${i === n - 1 ? (v === 0 ? C.verde : C.rosso) : C.blu}">${f(v)}</text>`);
+  return s + '</svg>';
+}
+
+const disegni = {
+  'g-ruf': () => ruffini([1, -6, 11, -6], 1),
+  'g-ruf2': () => ruffini([1, -2, -5, 6], 1),
+};
+for (const [id, fn] of Object.entries(disegni)) { const el = document.getElementById(id); if (el) el.innerHTML = fn(); }
+
+// ---------- grado e soluzioni: tre curve ----------
+const cubiche = {
+  3: { f: x => x ** 3 - 4 * x, radici: [-2, 0, 2], ymin: -8, ymax: 8, t: 'x³ − 4x = 0 → x = −2, 0, 2' },
+  2: { f: x => x ** 3 - 3 * x + 2, radici: [-2, 1], ymin: -6, ymax: 8, t: 'x³ − 3x + 2 = 0 → x = −2, 1' },
+  1: { f: x => x ** 3 + x - 2, radici: [1], ymin: -8, ymax: 8, t: 'x³ + x − 2 = 0 → x = 1' },
+};
+const sceltaCub = k => {
+  document.querySelectorAll('#tasti-cub button').forEach(x => x.classList.toggle('scelto', x.dataset.k === String(k)));
+  const c = cubiche[k];
+  document.getElementById('g-cub').innerHTML = parabola({ f: c.f, xmin: -3, xmax: 3, ymin: c.ymin, ymax: c.ymax, radici: c.radici });
+  document.getElementById('t-cub').textContent = c.t;
+};
+document.querySelectorAll('#tasti-cub button').forEach(b => b.onclick = () => sceltaCub(b.dataset.k));
+sceltaCub(3);
+
+// ---------- prova i divisori (Ruffini) ----------
+function provaDivisori(id, a, divisori) {
+  const el = document.getElementById(id); if (!el) return;
+  const f = v => String(v).replace('-', '−'), g = a.length - 1;
+  el.innerHTML = `<div class="tasti">${divisori.map(d => `<button data-d="${d}">${f(d)}</button>`).join('')}</div><p class="formula piccola" style="white-space:normal;margin:0">&nbsp;</p>`;
+  const out = el.querySelector('p');
+  el.querySelectorAll('button').forEach(b => b.onclick = () => {
+    el.querySelectorAll('button').forEach(x => x.classList.toggle('scelto', x === b));
+    const d = +b.dataset.d;
+    const termini = a.map((c, i) => c * d ** (g - i));
+    const somma = termini.reduce((s, v) => s + v, 0);
+    const scritto = termini.map((v, i) => i === 0 ? f(v) : (v < 0 ? ' − ' + (-v) : ' + ' + v)).join('');
+    out.innerHTML = `P(${f(d)}) = ${scritto} = <b class="${somma === 0 ? 'verde' : 'rosso'}">${f(somma)}</b>` +
+      (somma === 0 ? `<br><span class="verde">Trovato! (x − ${f(d)}) è un pezzo.</span>`.replace('x − −', 'x + ') : '');
+  });
+}
+provaDivisori('prova-div', [1, -6, 11, -6], [1, -1, 2, -2, 3, -3, 6, -6]);
+
+// ---------- "prova un numero" ----------
+function prova(id, cfg) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = `${cfg.titolo ? `<h3>${cfg.titolo}</h3>` : ''}<p class="numero">x = <span></span></p>
+    <input type="range" min="${cfg.min}" max="${cfg.max}" step="${cfg.step}" value="${cfg.inizio}">
+    <div class="esiti"></div><div class="verdetto"></div>`;
+  const input = el.querySelector('input'), num = el.querySelector('.numero span'),
+        esiti = el.querySelector('.esiti'), verd = el.querySelector('.verdetto');
+  const mostra = () => {
+    const x = +input.value, ok = cfg.dis.map(d => d.f(x));
+    num.textContent = String(+x.toFixed(1)).replace('-', '−');
+    esiti.innerHTML = cfg.dis.map((d, i) => `<div style="color:${C[d.c]}">${ok[i] ? '✔' : '✘'} &nbsp;${d.t}</div>`).join('');
+    const tutte = ok.every(Boolean);
+    verd.className = 'verdetto ' + (tutte ? 'si' : 'no');
+    verd.textContent = tutte ? 'Vanno bene tutte: è soluzione!' : 'Non va bene per tutte: non è soluzione.';
+  };
+  input.oninput = mostra; mostra();
+}
+
+// ---------- quiz ----------
+document.querySelectorAll('.quiz').forEach(q => {
+  const giusta = +q.dataset.giusta, bottoni = q.querySelectorAll('.scelte button'), esito = q.querySelector('.esito');
+  bottoni.forEach((b, i) => b.onclick = () => {
+    bottoni.forEach(x => x.classList.remove('giusto', 'sbagliato'));
+    b.classList.add(i === giusta ? 'giusto' : 'sbagliato');
+    esito.innerHTML = (i === giusta ? '<span class="verde">Giusto!</span> ' : '<span class="rosso">No.</span> ') + q.dataset.spiega;
+  });
+});
+
+// ---------- navigazione ----------
+const schermate = [...document.querySelectorAll('.schermata')];
+let attuale = 0;
+
+document.getElementById('indice').innerHTML = schermate.slice(1).map((s, i) =>
+  `<li><button data-vai="${i + 1}"><b>${i + 1}</b>${s.dataset.titolo}</button></li>`).join('');
+document.querySelectorAll('[data-vai]').forEach(b => b.onclick = () => mostra(+b.dataset.vai));
+
+function mostra(n) {
+  schermate[attuale].classList.remove('attiva');
+  attuale = Math.max(0, Math.min(schermate.length - 1, n));
+  schermate[attuale].classList.add('attiva');
+  document.getElementById('contatore').textContent = `${attuale + 1} / ${schermate.length}`;
+  history.replaceState(null, '', '#' + (attuale + 1));
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Avanti: prima mostra il prossimo passo nascosto, poi passa alla schermata dopo
+function avanti() {
+  const prossimo = schermate[attuale].querySelector('.passo:not(.visto)');
+  if (prossimo) {
+    prossimo.classList.add('visto');
+    const box = (prossimo.closest('.card') || prossimo);
+    if (box.getBoundingClientRect().bottom > innerHeight - 90) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else mostra(attuale + 1);
+}
+
+function indietro() {
+  const visti = schermate[attuale].querySelectorAll('.passo.visto');
+  if (visti.length) visti[visti.length - 1].classList.remove('visto');
+  else mostra(attuale - 1);
+}
+
+document.getElementById('avanti').onclick = avanti;
+document.getElementById('indietro').onclick = indietro;
+document.getElementById('vai-indice').onclick = () => mostra(0);
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input')) return;
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); avanti(); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); indietro(); }
+});
+
+mostra((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>
